@@ -30,7 +30,7 @@
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub">
-                    <li><a class="" href="widget.html">用户管理</a></li>
+                    <li><a class="" href="{{route('users.index')}}">用户管理</a></li>
                 </ul>
             </li>
         </ul>
