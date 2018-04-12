@@ -4,9 +4,12 @@
 
 @section('styles')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-reset.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
 @stop
 
 @section('content')
+
+    @include('common.error')
 
     <div class="row" style="margin: -15px;">
         <div class="span6">
@@ -29,7 +32,7 @@
                         <form class="form-inline" role="form" action="{{route('users.index')}}" method="get">
                             <div class="form-group">
                                 <label class="sr-only" for="keyword">关键字</label>
-                                <input type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">
+                                <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">
                             </div>
                             <button type="submit" class="btn btn-info">搜索</button>
                             <a href="{{route('users.create')}}" class="btn btn-success">添加用户</a>
@@ -55,8 +58,14 @@
                                 <td>{{$user->created_at}}</td>
                                 <td>
                                     <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-xs"><i class="icon-pencil"></i></a>
-                                    <button class="btn btn-info btn-xs"><i class="icon-refresh"></i></button>
-                                    <form action="{{ route('users.destroy', $user->id) }}" method="post" style="display: inline">
+                                    <form action="{{ route('users.destroy', $user->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认重置密码么？')">
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="btn btn-info btn-xs">
+                                            <i class="icon-refresh"></i>
+                                        </button>
+                                    </form>
+
+                                    <form action="{{ route('users.destroy', $user->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认删除该用户么？')">
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
                                         <button type="submit" class="btn btn-danger btn-xs">
@@ -69,9 +78,55 @@
                     </tbody>
                 </table>
                 <div style="margin-left: 10px">
-                    {!! $users->render() !!}
+                    {!! $users->appends(['keyword' => $keyword])->render() !!}
                 </div>
             </section>
         </div>
     </div>
 @endsection
+
+@section('scripts')
+
+    <script type="text/javascript"  src="{{ asset('js/sweetalert.min.js') }}"></script>
+
+    <script>
+        function alert(obj, mes) {
+            swal({
+                    title: mes,
+                    text: "",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "确定！",
+                    cancelButtonText: "取消！",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function(isConfirm){
+                    if (isConfirm) {
+                        obj.submit();
+                    } else {
+                        swal("操作被取消!", "","error");
+                        swal({
+                            title: "操作被取消！",
+                            type: "error",
+                            timer: 1000,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            return false;
+        }
+    </script>
+    @if (Session::has('alert'))
+        <script>
+            swal({
+                title: "{{ Session::get('alert') }}",
+                type: "success",
+                timer: 1000,
+                showConfirmButton: false
+            });
+        </script>
+    @endif
+
+@stop

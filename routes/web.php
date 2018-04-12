@@ -31,3 +31,4 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 
 
 Route::resource('users', 'UsersController', ['only' => ['index','create', 'update', 'edit', 'store', 'destroy']]);
+Route::post('users/{user}', 'UsersController@reset')->name('users.reset');

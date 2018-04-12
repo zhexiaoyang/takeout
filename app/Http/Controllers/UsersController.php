@@ -10,9 +10,14 @@ class UsersController extends Controller
 {
     public function index(Request $request)
     {
-//        dd($request->keyword);
-        $users = User::paginate(10);
-        return view('users.index', compact('users'));
+        $keyword = $request->keyword;
+        $users = User::select('id','name','phone','created_at');
+        if ($keyword)
+        {
+            $users = $users->where('name','like',"%{$keyword}%")->orWhere('phone', 'like', "%{$keyword}%");
+        }
+        $users = $users->paginate(10);
+        return view('users.index', compact('users', 'keyword'));
     }
 
     public function edit(User $user)
@@ -46,6 +51,15 @@ class UsersController extends Controller
     {
         $user->delete();
 
-        return redirect()->route('users.index')->with('success', '成功删除用户！');
+        return redirect()->route('users.index')->with('alert', '成功删除用户！');
+    }
+
+    public function reset(User $user)
+    {
+        $user->password = substr($user->phone, -6);
+
+        $user->save();
+
+        return redirect()->route('users.index')->with('alert', '成功修改用户密码！');
     }
 }
