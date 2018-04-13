@@ -58,6 +58,7 @@
                                 <td>{{$user->created_at}}</td>
                                 <td>
                                     <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-xs"><i class="icon-pencil"></i></a>
+                                    @if(Auth::user()->hasRole('Superman'))
                                     <form action="{{ route('users.destroy', $user->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认重置密码么？')">
                                         {{ csrf_field() }}
                                         <button type="submit" class="btn btn-info btn-xs">
@@ -72,6 +73,7 @@
                                             <i class="icon-trash"></i>
                                         </button>
                                     </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

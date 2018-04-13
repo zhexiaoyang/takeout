@@ -23,16 +23,18 @@
                     <li><a class="" href="font_awesome.html">Font Awesome</a></li>
                 </ul>
             </li>
-            <li class="sub-menu">
-                <a href="javascript:;" class="">
-                    <i class="icon-user"></i>
-                    <span>权限管理</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub">
-                    <li><a class="" href="{{route('users.index')}}">用户管理</a></li>
-                </ul>
-            </li>
+            @if(Auth::user()->hasRole('Maintainer'))
+                <li class="sub-menu">
+                    <a href="javascript:;" class="">
+                        <i class="icon-user"></i>
+                        <span>权限管理</span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub">
+                        <li><a class="" href="{{route('users.index')}}">用户管理</a></li>
+                    </ul>
+                </li>
+            @endif
         </ul>
         <!-- sidebar menu end-->
     </div>

@@ -10,6 +10,7 @@ class UsersController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('before', User::class);
         $keyword = $request->keyword;
         $users = User::select('id','name','phone','created_at');
         if ($keyword)
@@ -22,13 +23,13 @@ class UsersController extends Controller
 
     public function edit(User $user)
     {
-//        $this->authorize('update', $user);
+        $this->authorize('before', User::class);
         return view('users.create_and_edit', compact('user'));
     }
 
     public function update(UserRequest $request, User $user)
     {
-//        $this->authorize('update', $user);
+        $this->authorize('before', User::class);
         $user->update($request->all());
 
         return redirect()->route('users.edit', $user->id)->with('success', '更新成功！');
@@ -36,11 +37,13 @@ class UsersController extends Controller
 
     public function create(User $user)
     {
+        $this->authorize('before', User::class);
         return view('users.create_and_edit', compact('user'));
     }
 
     public function store(UserRequest $request, User $user)
     {
+        $this->authorize('before', User::class);
         $user->fill($request->all());
         $user->password = $request->password;
         $user->save();
@@ -49,6 +52,8 @@ class UsersController extends Controller
 
     public function destroy(User $user)
     {
+        $this->authorize('destroy', $user);
+
         $user->delete();
 
         return redirect()->route('users.index')->with('alert', '成功删除用户！');
@@ -56,6 +61,8 @@ class UsersController extends Controller
 
     public function reset(User $user)
     {
+        $this->authorize('before', User::class);
+
         $user->password = substr($user->phone, -6);
 
         $user->save();
