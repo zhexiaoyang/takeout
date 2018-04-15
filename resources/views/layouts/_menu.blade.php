@@ -23,7 +23,7 @@
                     <li><a class="" href="font_awesome.html">Font Awesome</a></li>
                 </ul>
             </li>
-            @if(Auth::user()->hasRole('Maintainer'))
+            @if(Auth::user()->hasPermissionTo('manage_users'))
                 <li class="sub-menu">
                     <a href="javascript:;" class="">
                         <i class="icon-user"></i>
@@ -35,6 +35,16 @@
                     </ul>
                 </li>
             @endif
+            <li class="sub-menu">
+                <a href="javascript:;" class="">
+                    <i class="icon-user"></i>
+                    <span>商品管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub">
+                    <li><a class="" href="{{route('users.index')}}">品库列表</a></li>
+                </ul>
+            </li>
         </ul>
         <!-- sidebar menu end-->
     </div>
