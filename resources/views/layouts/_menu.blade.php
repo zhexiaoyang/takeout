@@ -23,6 +23,28 @@
                     <li><a class="" href="font_awesome.html">Font Awesome</a></li>
                 </ul>
             </li>
+            <li class="sub-menu">
+                <a href="javascript:;" class="">
+                    <i class="icon-user"></i>
+                    <span>商品管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub">
+                    <li><a class="" href="{{route('deopts.index')}}">品库列表</a></li>
+                </ul>
+            </li>
+            @if(Auth::user()->hasPermissionTo('manage_users'))
+                <li class="sub-menu">
+                    <a href="javascript:;" class="">
+                        <i class="icon-user"></i>
+                        <span>门店管理</span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub">
+                        <li><a class="" href="{{route('users.index')}}">门店列表</a></li>
+                    </ul>
+                </li>
+            @endif
             @if(Auth::user()->hasPermissionTo('manage_users'))
                 <li class="sub-menu">
                     <a href="javascript:;" class="">
@@ -35,16 +57,6 @@
                     </ul>
                 </li>
             @endif
-            <li class="sub-menu">
-                <a href="javascript:;" class="">
-                    <i class="icon-user"></i>
-                    <span>商品管理</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub">
-                    <li><a class="" href="{{route('users.index')}}">品库列表</a></li>
-                </ul>
-            </li>
         </ul>
         <!-- sidebar menu end-->
     </div>

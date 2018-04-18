@@ -25,3 +25,4 @@ Route::group(['middleware' => ['auth']], function ($router) {
     Route::post('users/{user}', 'UsersController@reset')->name('users.reset');
 
 });
+Route::resource('deopts', 'DeoptsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
