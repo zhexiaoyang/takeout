@@ -30,6 +30,7 @@
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub">
+                    <li><a class="" href="{{route('categories.index')}}">商品分类</a></li>
                     <li><a class="" href="{{route('deopts.index')}}">品库列表</a></li>
                 </ul>
             </li>
@@ -41,7 +42,7 @@
                         <span class="arrow"></span>
                     </a>
                     <ul class="sub">
-                        <li><a class="" href="{{route('users.index')}}">门店列表</a></li>
+                        <li><a class="" href="{{route('shops.index')}}">门店列表</a></li>
                     </ul>
                 </li>
             @endif
