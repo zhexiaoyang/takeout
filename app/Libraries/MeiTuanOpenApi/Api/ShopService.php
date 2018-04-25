@@ -14,7 +14,7 @@ class ShopService extends RpcService
      * @param $properties 店铺属性
      * @return mixed
      */
-    public function create_shop($shop)
+    public function create_shop(Shop $shop)
     {
         $params = [
             "app_poi_code" => $shop->id,
@@ -33,15 +33,39 @@ class ShopService extends RpcService
             "invoice_support" => $shop->invoice_support,
             "invoice_min_price" => $shop->invoice_min_price,
 //            "invoice_description" => $shop->invoice_description,
-            "third_tag_name" => 'OTC,中药',
+            "third_tag_name" => 'OTC',
 //            "pre_book" => $shop->pre_book,
 //            "time_select" => $shop->time_select,
-//            "app_brand_code" => $shop->app_brand_code,
+            "mt_type_id" => 179,
         ];
-        return $this->client->call("/poi/save", $params);
+
+        $result = json_decode($this->client->call("/poi/save", $params), true);
+
+        if ($result && $result['data'] == 'ok')
+        {
+            $shop->meituan_id = $shop->id;
+            $shop->save();
+            $this->upArea($shop);
+            return true;
+        }
+
+        return false;
     }
 
-    public function update_shop($shop)
+    public function upArea(Shop $shop)
+    {
+        $params = [
+            'app_poi_code' => $shop->id,
+            'app_shipping_code' => 1,
+            'type' => 1,
+            'area' => json_encode([['x' => ($shop->latitude*1000000 + 1000), 'y' => ($shop->longitude*1000000 +1000)], ['x' => ($shop->latitude*1000000 + 1000), 'y' => ($shop->longitude*1000000 -1000)], ['x' => ($shop->latitude*1000000 - 1000), 'y' => ($shop->longitude*1000000 - 1000)], ['x' => ($shop->latitude*1000000 - 1000), 'y' => ($shop->longitude*1000000 + 1000)]]),
+            'min_price' => $shop->min_price,
+            'shipping_fee' => $shop->shipping_fee
+        ];
+        return $this->client->call("/shipping/save", $params);
+    }
+
+    public function update_shop(Shop $shop)
     {
         $params = [
             "app_poi_code" => $shop->id,
@@ -59,6 +83,8 @@ class ShopService extends RpcService
             "is_online" => $shop->is_online,
             "invoice_support" => $shop->invoice_support,
             "invoice_min_price" => $shop->invoice_min_price,
+            "third_tag_name" => 'OTC',
+            "mt_type_id" => 179,
         ];
         return $this->client->call("/poi/save", $params);
     }

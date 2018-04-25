@@ -17,7 +17,14 @@ class CategoryService extends RpcService
             "category_name" => $category->name,
             "sequence" => $category->sort,
         ];
-        return $this->client->call("/medicineCat/save", $params);
+        $result = json_decode($this->client->call("/medicineCat/save", $params), true);
+        if ($result && $result['data'] == 'ok')
+        {
+            $category->meituan_id = $category->id;
+            $category->save();
+            return true;
+        }
+        return false;
     }
 
     public function update($category)

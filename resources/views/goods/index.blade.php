@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', '标品库')
+@section('title', '商品列表')
 
 @section('styles')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-reset.css') }}">
@@ -18,7 +18,7 @@
                     <a href="{{route('index.index')}}">主页</a> <span class="divider">></span>
                 </li>
                 <li>
-                    <span>标品库</span>
+                    <span>商品列表</span>
                 </li>
             </ul>
         </div>
@@ -27,54 +27,53 @@
         <div class="col-lg-12">
             <section class="panel">
                 <header class="panel-heading">
-                    标品库
+                    商品列表
                     <div class="panel-body">
-                        <form class="form-inline" role="form" action="{{route('deopts.index')}}" method="get">
+                        <form class="form-inline" role="form" action="{{route('goods.index')}}" method="get">
                             <div class="form-group">
                                 <label class="sr-only" for="keyword">关键字</label>
                                 <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">
                             </div>
                             <button type="submit" class="btn btn-info">搜索</button>
-{{--                            <a href="{{route('deopts.create')}}" class="btn btn-success">添加标品</a>--}}
+                            <a href="{{route('deopts.index')}}" class="btn btn-success">品库列表</a>
                         </form>
                     </div>
                 </header>
                 <table class="table table-striped table-advance table-hover">
                     <thead>
                     <tr>
-                        {{--<th>ID</th>--}}
+                        <th>GID</th>
+                        <th>门店</th>
                         <th>通用名/商品名称</th>
                         <th>分类</th>
                         <th>规格</th>
-                        <th>UPC</th>
-                        <th>是否OTC</th>
+                        <th>排序</th>
+                        <th>百度ID</th>
+                        <th>美团ID</th>
+                        <th>饿了么ID</th>
                         <th>编辑</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach ($deopts as $deopt)
+                    @foreach ($goods as $good)
                         <tr>
-                            {{--<td>{{$deopt->id}}</td>--}}
+                            <td>{{$good->deopt->id}}</td>
+                            <td>{{$good->shop->name}}</td>
                             <td>
-                                {{$deopt->common_name}}
+                                {{$good->deopt->common_name}}
                                 <br>
-                                {{$deopt->name}}
+                                {{$good->deopt->name}}
                             </td>
-                            <td>{{$deopt->category}}</td>
-                            <td>{{$deopt->spec}}</td>
-                            <td>{{$deopt->upc}}</td>
+                            <td>{{$good->category->name}}</td>
+                            <td>{{$good->deopt->spec}}</td>
+                            <td>{{$good->sort}}</td>
+                            <td>{{$good->baidu_id}}</td>
+                            <td>{{$good->meituan_id}}</td>
+                            <td>{{$good->ele_id}}</td>
                             <td>
-                                @if($deopt->is_otc)
-                                    <p class="btn btn-success btn-xs">是</p>
-                                @else
-                                    <p class="btn btn-error btn-xs">否</p>
-                                @endif
-                            </td>
-                            <td>
-                                {{--<a href="{{ route('deopts.edit', $deopt->id) }}" class="btn btn-primary btn-xs"><i class="icon-pencil"></i></a>--}}
-                                <a href="{{ route('goods.deopt', $deopt->id) }}" class="btn btn-primary btn-xs">上传商品</a>
+                                <a href="{{ route('goods.edit', $good->id) }}" class="btn btn-primary btn-xs">编辑</a>
                                 @if(Auth::user()->hasRole('Superman'))
-                                    <form action="{{ route('deopts.destroy', $deopt->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认删除该商品么？')">
+                                    <form action="{{ route('goods.destroy', $good->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认删除该商品么？')">
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
                                         <button type="submit" class="btn btn-danger btn-xs">删除</button>
@@ -86,7 +85,7 @@
                     </tbody>
                 </table>
                 <div style="margin-left: 10px">
-                    {!! $deopts->appends(['keyword' => $keyword])->render() !!}
+                    {!! $goods->appends(['keyword' => $keyword])->render() !!}
                 </div>
             </section>
         </div>
@@ -134,6 +133,11 @@
                 showConfirmButton: false
             });
         </script>
+    @endif
+    @if (Session::has('alert_err'))
+    <script>
+        swal("出错啦！", "{{ Session::get('alert_err') }}")
+    </script>
     @endif
 
 @stop

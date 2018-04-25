@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Shop;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use MeiTuanOpenApi\Api\CategoryService;
 use MeiTuanOpenApi\Config\Config;

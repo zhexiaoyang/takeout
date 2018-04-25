@@ -31,6 +31,7 @@
                 </a>
                 <ul class="sub">
                     <li><a class="" href="{{route('categories.index')}}">商品分类</a></li>
+                    <li><a class="" href="{{route('goods.index')}}">商品列表</a></li>
                     <li><a class="" href="{{route('deopts.index')}}">品库列表</a></li>
                 </ul>
             </li>

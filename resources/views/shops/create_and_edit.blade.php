@@ -82,11 +82,15 @@
                 <div class="form-group">
                 	<label for="standby_tel-field">门店电话</label>
                 	<input class="form-control" type="text" name="standby_tel" id="standby_tel-field" value="{{ old('standby_tel', $shop->standby_tel ) }}" />
-                </div> 
+                </div>
                 <div class="form-group">
                     <label for="shipping_fee-field">配送费</label>
                     <input class="form-control" type="text" name="shipping_fee" id="shipping_fee-field" value="{{ old('shipping_fee', $shop->shipping_fee ) }}" />
-                </div> 
+                </div>
+                <div class="form-group">
+                    <label for="shipping_fee-field">起送价</label>
+                    <input class="form-control" type="text" name="min_price" id="min_price-field" value="{{ old('min_price', $shop->min_price ) }}" />
+                </div>
                 <div class="form-group">
                 	<label for="shipping_time-field">营业时间 （ 7:00-9:00,11:30-19:00 ）</label>
                 	<input class="form-control" type="text" name="shipping_time" id="shipping_time-field" value="{{ old('shipping_time', $shop->shipping_time ) }}" />
@@ -98,34 +102,22 @@
                 <div class="form-group">
                     <label for="open_level-field">门店的营业状态</label>
                     <div class="radios">
-                        <label class="label_radio" for="radios-01" style="display: inline;margin-right: 20px;">
-                            <input name="open_level" id="radios-01" value="1" type="radios" @if(old('open_level', $shop->open_level ) == 1) checked @endif />可配送
-                        </label>
-                        <label class="label_radio" for="radios-02" style="display: inline;margin-right: 20px;">
-                            <input name="open_level" id="radios-02" value="3" type="radios" @if(old('open_level', $shop->open_level ) == 3) checked @endif />休息中
-                        </label>
+                            <input name="open_level" id="radios-01" value="1" type="radio" @if(old('open_level', $shop->open_level ) == 1) checked @endif />可配送
+                            <input name="open_level" id="radios-02" value="3" type="radio" @if(old('open_level', $shop->open_level ) == 3) checked @endif />休息中
                     </div>
                 </div> 
                 <div class="form-group">
                     <label for="is_online-field">门店上下线状态</label>
                     <div class="radios">
-                        <label class="label_radio" for="radios-04" style="display: inline;margin-right: 20px;">
-                            <input name="is_online" id="radios-04" value="1" type="radios" @if(old('is_online', $shop->is_online ) == 1) checked @endif />上线
-                        </label>
-                        <label class="label_radio" for="radios-03" style="display: inline;margin-right: 20px;">
-                            <input name="is_online" id="radios-03" value="0" type="radios" @if(old('is_online', $shop->is_online ) === 0) checked @endif />下线
-                        </label>
+                            <input name="is_online" id="radios-04" value="1" type="radio" @if(old('is_online', $shop->is_online ) == 1) checked @endif />上线
+                            <input name="is_online" id="radios-03" value="0" type="radio" @if(old('is_online', $shop->is_online ) === 0) checked @endif />下线
                     </div>
                 </div> 
                 <div class="form-group">
                     <label for="invoice_support-field">门店是否支持发票</label>
                     <div class="radios">
-                        <label class="label_radio" for="radios-05" style="display: inline;margin-right: 20px;">
-                            <input name="invoice_support" id="radios-05" value="1" type="radios" @if(old('invoice_support', $shop->invoice_support ) == 1) checked @endif />支持
-                        </label>
-                        <label class="label_radio" for="radios-06" style="display: inline;margin-right: 20px;">
-                            <input name="invoice_support" id="radios-06" value="0" type="radios" @if(old('invoice_support', $shop->invoice_support ) === 0) checked @endif />不支持
-                        </label>
+                            <input name="invoice_support" id="radios-05" value="1" type="radio" @if(old('invoice_support', $shop->invoice_support ) == 1) checked @endif />支持
+                            <input name="invoice_support" id="radios-06" value="0" type="radio" @if(old('invoice_support', $shop->invoice_support ) === 0) checked @endif />不支持
                     </div>
                 </div> 
                 <div class="form-group">

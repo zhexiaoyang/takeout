@@ -53,7 +53,7 @@ class ShopsController extends Controller
             $shop_server->create_shop($shop);
         }
 
-		return redirect()->route('shops.show', $shop->id)->with('message', 'Created successfully.');
+		return redirect()->route('shops.index')->with('alert', '创建成功');
 	}
 
 	public function edit(Shop $shop)
