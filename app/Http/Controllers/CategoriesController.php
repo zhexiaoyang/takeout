@@ -13,13 +13,13 @@ class CategoriesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth');
     }
 
 	public function index(Request $request)
 	{
         $keyword = $request->keyword;
-        $category = Category::select('id','name', 'sort','ele_id','baidu_id','meituan_id','shop_id');
+        $category = Category::allowShops()->select('id','name', 'sort','ele_id','baidu_id','meituan_id','shop_id');
         if ($keyword)
         {
             $category = $category->where('name','like',"%{$keyword}%");
@@ -35,7 +35,7 @@ class CategoriesController extends Controller
 
 	public function create(Category $category)
 	{
-	    $shops = Shop::select('id','name')->get();
+	    $shops = Shop::allowShops()->select('id','name')->get();
 //	    dd($shops);
 		return view('categories.create_and_edit', compact('category','shops'));
 	}
@@ -60,7 +60,7 @@ class CategoriesController extends Controller
 	public function edit(Category $category)
 	{
         $this->authorize('update', $category);
-        $shops = Shop::select('id','name')->get();
+        $shops = Shop::allowShops()->select('id','name')->get();
 		return view('categories.create_and_edit', compact('category', 'shops'));
 	}
 

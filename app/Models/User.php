@@ -28,6 +28,25 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function shops()
+    {
+        return $this->belongsToMany(Shop::class);
+    }
+
+    public function shopIds()
+    {
+        $result = [];
+        $shops = $this->shops;
+//        dd($shops);
+        if (!empty($shops))
+        {
+            foreach ($shops as $shop) {
+                $result[] = $shop->id;
+            }
+        }
+        return $result;
+    }
+
     public function setPasswordAttribute($value)
     {
         // 如果值的长度等于 60，即认为是已经做过加密的情况

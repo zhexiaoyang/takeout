@@ -30,7 +30,7 @@
                                 <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">
                             </div>
                             <button type="submit" class="btn btn-info">搜索</button>
-                            <a href="{{route('categories.create')}}" class="btn btn-success">添加商品分类</a>
+{{--                            <a href="{{route('categories.create')}}" class="btn btn-success">添加商品分类</a>--}}
                         </form>
                     </div>
                 </header>
@@ -39,8 +39,8 @@
                     <tr>
                         <th>ID</th>
                         <th>名称</th>
+                        <th>门店</th>
                         <th>排序</th>
-                        <th>门店ID</th>
                         <th>百度ID</th>
                         <th>美团ID</th>
                         <th>饿了么ID</th>
@@ -52,8 +52,8 @@
                         <tr>
                             <td>{{$shop->id}}</td>
                             <td>{{$shop->name}}</td>
+                            <td>{{$shop->shop->name}}</td>
                             <td>{{$shop->sort}}</td>
-                            <td>{{$shop->shop_id}}</td>
                             <td>{{$shop->baidu_id}}</td>
                             <td>{{$shop->meituan_id}}</td>
                             <td>{{$shop->ele_id}}</td>

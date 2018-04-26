@@ -28,16 +28,16 @@
         <div class="col-lg-6">
             @include('layouts._message')
             <section class="panel">
-                <header class="panel-heading">
-                    <h3>
-                        <i class="icon-edit"></i>
-                        @if($category->id)
-                            编辑分类
-                        @else
-                            新建分类
-                        @endif
-                    </h3>
-                </header>
+                {{--<header class="panel-heading">--}}
+                    {{--<h3>--}}
+                        {{--<i class="icon-edit"></i>--}}
+                        {{--@if($category->id)--}}
+                            {{--编辑分类--}}
+                        {{--@else--}}
+                            {{--新建分类--}}
+                        {{--@endif--}}
+                    {{--</h3>--}}
+                {{--</header>--}}
                 <div class="panel-body">
                     @if($category->id)
                         <form action="{{ route('categories.update', $category->id) }}" method="POST" accept-charset="UTF-8">

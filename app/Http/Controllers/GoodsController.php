@@ -16,13 +16,13 @@ class GoodsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth');
     }
 
 	public function index(Request $request)
 	{
         $keyword = $request->keyword;
-        $good = Good::select('id','ele_id','baidu_id','meituan_id','shop_id','deopt_id', 'category_id', 'sort', 'stock');
+        $good = Good::allowShops()->select('id','ele_id','baidu_id','meituan_id','shop_id','deopt_id', 'category_id', 'sort', 'stock');
         if ($keyword)
         {
             $good = $good->where('name','like',"%{$keyword}%");
@@ -107,7 +107,7 @@ class GoodsController extends Controller
 
 	public function deopt(Deopt $deopt, Good $good)
     {
-        $shops = Shop::select('id', 'name')->get();
+        $shops = Shop::allowShops()->select('id', 'name')->get();
         return view('goods.create_and_edit', compact('deopt', 'good', 'shops'));
     }
 }

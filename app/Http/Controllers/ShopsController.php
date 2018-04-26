@@ -13,13 +13,13 @@ class ShopsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth');
     }
 
     public function index(Request $request)
 	{
         $keyword = $request->keyword;
-        $shops = Shop::select('id','name', 'address','ele_id','baidu_id','meituan_id');
+        $shops = Shop::allowShops()->select('id','name', 'address','ele_id','baidu_id','meituan_id');
         if ($keyword)
         {
             $shops = $shops->where('name','like',"%{$keyword}%");

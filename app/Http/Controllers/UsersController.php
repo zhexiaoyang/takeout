@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -31,13 +32,26 @@ class UsersController extends Controller
     public function edit(User $user)
     {
         $this->authorize('before', User::class);
-        return view('users.create_and_edit', compact('user'));
+        $shops = Shop::select('id', 'name')->get();
+        return view('users.create_and_edit', compact('user','shops'));
     }
 
     public function update(UserRequest $request, User $user)
     {
         $this->authorize('before', User::class);
-        $user->update($request->all());
+        if ( $user->update($request->all()) )
+        {
+            $shops = isset($request->shop_ids)?$request->shop_ids:[];
+            $old_shops = $user->shops;
+            if (!empty($old_shops))
+            {
+                foreach ($old_shops as $shop)
+                {
+                    $user->shops()->detach($shop->id);
+                }
+            }
+            $user->shops()->attach($shops);
+        }
 
         return redirect()->route('users.edit', $user->id)->with('success', '更新成功！');
     }
