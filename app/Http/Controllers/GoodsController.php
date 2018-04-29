@@ -74,6 +74,7 @@ class GoodsController extends Controller
                     $good_create_status = $server->create($good);
                     if (!$good_create_status)
                     {
+                        $good->delete();
                         continue;
                     }
                 }
@@ -92,17 +93,38 @@ class GoodsController extends Controller
 	public function update(GoodRequest $request, Good $good)
 	{
 		$this->authorize('update', $good);
-		$good->update($request->all());
-
-		return redirect()->route('goods.show', $good->id)->with('message', 'Updated successfully.');
+        if (!empty($request->sync) && in_array(1, $request->sync))
+        {
+            $good->update($request->all());
+            $shop_server = New GoodsService(New Config(env('MT_APPID'),env('MT_SECRET')));
+            $res = $shop_server->update($good);
+            $res = json_decode($res, true);
+            if (!$res || $res['data'] != 'ok')
+            {
+                return back()->withErrors(isset($res['error']['msg'])?'美团返回错误：'.$res['error']['msg']:'更新失败');
+            }
+        }
+        return back()->with('alert', '更新成功');
 	}
 
 	public function destroy(Good $good)
 	{
 		$this->authorize('destroy', $good);
-		$good->delete();
 
-		return redirect()->route('goods.index')->with('message', 'Deleted successfully.');
+        $shop_server = New GoodsService(New Config(env('MT_APPID'),env('MT_SECRET')));
+        $res = $shop_server->destroy($good);
+        $res = json_decode($res, true);
+        if (!$res || $res['data'] != 'ok')
+        {
+            $good->meituan_id = 0;
+        }
+
+        if (!$good->metuan_id && !$good->ele_id && !$good->baidu_id)
+        {
+            $good->delete();
+        }
+
+		return redirect()->back()->with('alert', '删除成功！');
 	}
 
 	public function deopt(Deopt $deopt, Good $good)

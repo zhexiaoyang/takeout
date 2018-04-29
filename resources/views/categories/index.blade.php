@@ -2,6 +2,11 @@
 
 @section('title', '商品分类列表')
 
+@section('styles')
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-reset.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
+@stop
+
 @section('content')
 
     @include('common.error')

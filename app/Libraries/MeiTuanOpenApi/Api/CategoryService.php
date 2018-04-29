@@ -38,4 +38,13 @@ class CategoryService extends RpcService
         return $this->client->call("/medicineCat/update", $params);
     }
 
+    public function destroy($category)
+    {
+        $params = [
+            "app_poi_code" => $category->shop_id,
+            "category_code" => $category->id,
+        ];
+        return $this->client->call("/medicineCat/delete", $params);
+    }
+
 }

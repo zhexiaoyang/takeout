@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Deopt;
+use App\Models\Good;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ShopRequest;
+use MeiTuanOpenApi\Api\CategoryService;
+use MeiTuanOpenApi\Api\GoodsService;
 use MeiTuanOpenApi\Api\ShopService;
 use MeiTuanOpenApi\Config\Config;
 
@@ -50,10 +55,39 @@ class ShopsController extends Controller
 		if (!empty($request->sync) && in_array(1, $request->sync))
         {
             $shop_server = New ShopService(New Config(env('MT_APPID'),env('MT_SECRET')));
-            $shop_server->create_shop($shop);
+            $res = $shop_server->create_shop($shop);
+            $res = json_decode($res, true);
+            if ($res && $res['data'] == 'ok')
+            {
+                $shop->meituan_id = $shop->id;
+                $shop->save();
+                $shop_server->upArea($shop);
+                $category_server = New CategoryService(New Config(env('MT_APPID'),env('MT_SECRET')));
+                $category = new Category;
+                $category->name = '我的分类';
+                $category->shop_id = $shop->id;
+                $category->sort = 100;
+                $category->save();
+                $category_server->create($category);
+                $good_server = New GoodsService(New Config(env('MT_APPID'),env('MT_SECRET')));
+                $good = new Good;
+                $good->shop_id = $shop->id;
+                $good->deopt_id = 1;
+                $good->price = 999;
+                $good->stock = 999;
+                $good->online = 1;
+                $good->sort = 999;
+                $good->category_id= $category->id;
+                $good->save();
+                $good_server->create($good);
+                $category->delete();
+                $good->delete();
+            }else{
+//                $shop->delete();
+                return back()->withErrors(isset($res['error']['msg'])?'美团返回错误：'.$res['error']['msg']:'超时了，请核对是否创建成功');
+            }
         }
-
-		return redirect()->route('shops.index')->with('alert', '创建成功');
+        return redirect()->route('shops.index')->with('alert', '创建成功');
 	}
 
 	public function edit(Shop $shop)
@@ -68,13 +102,16 @@ class ShopsController extends Controller
 
         if (!empty($request->sync) && in_array(1, $request->sync))
         {
+            $shop->update($request->all());
             $shop_server = New ShopService(New Config(env('MT_APPID'),env('MT_SECRET')));
-            $shop_server->update_shop($shop);
+            $res = $shop_server->update_shop($shop);
+            $res = json_decode($res, true);
+            if (!$res || $res['data'] != 'ok')
+            {
+                return back()->withErrors(isset($res['error']['msg'])?'美团返回错误：'.$res['error']['msg']:'更新失败');
+            }
         }
-
-        $shop->update($request->all());
-
-		return redirect()->route('shops.index', $shop->id)->with('alert', '更新成功');
+		return back()->with('alert', '更新成功');
 	}
 
 	public function destroy(Shop $shop)

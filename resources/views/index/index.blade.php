@@ -11,7 +11,7 @@
                 </div>
                 <div class="value">
                     <h1>22</h1>
-                    <p>New Users</p>
+                    <p>管理员数量</p>
                 </div>
             </section>
         </div>

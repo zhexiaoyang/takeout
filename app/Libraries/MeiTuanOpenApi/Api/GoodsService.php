@@ -37,15 +37,31 @@ class GoodsService extends RpcService
         return false;
     }
 
-    public function update($category)
+    public function update($good)
     {
         $params = [
-            "app_poi_code" => $category->shop_id,
-            "category_code" => $category->id,
-            "category_name" => $category->name,
-            "sequence" => $category->sort,
+            "app_poi_code" => $good->shop_id,
+            'app_medicine_code' => $good->deopt->id,
+            'upc' => $good->deopt->upc,
+            'medicine_no' => $good->deopt->approval,
+            'spec' => $good->deopt->spec,
+            'price' => $good->price,
+            'stock' => $good->stock,
+            'category_code' => $good->category->id,
+            'category_name' => $good->category->name,
+            'is_sold_out' => $good->online,
+            'sequence' => $good->sort,
         ];
         return $this->client->call("/medicine/update", $params);
+    }
+
+    public function destroy($good)
+    {
+        $params = [
+            "app_poi_code" => $good->shop_id,
+            'app_medicine_code' => $good->deopt->id,
+        ];
+        return $this->client->call("/medicine/delete", $params);
     }
 
 }

@@ -24,7 +24,7 @@ class CategoriesController extends Controller
         {
             $category = $category->where('name','like',"%{$keyword}%");
         }
-        $categories = $category->paginate(10);
+        $categories = $category->paginate(3);
 		return view('categories.index', compact('categories','keyword'));
 	}
 
@@ -81,8 +81,20 @@ class CategoriesController extends Controller
 	public function destroy(Category $category)
 	{
 		$this->authorize('destroy', $category);
-		$category->delete();
 
-		return redirect()->route('categories.index')->with('message', 'Deleted successfully.');
+        $server = New CategoryService(New Config(env('MT_APPID'),env('MT_SECRET')));
+        $res = $server->destroy($category);
+        $res = json_decode($res, true);
+        if (!$res || $res['data'] != 'ok')
+        {
+            $category->meituan_id = 0;
+        }
+
+        if (!$category->metuan_id && !$category->ele_id && !$category->baidu_id)
+        {
+            $category->delete();
+        }
+
+        return redirect()->back()->with('alert', '删除成功！');
 	}
 }

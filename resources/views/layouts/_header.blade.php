@@ -9,65 +9,6 @@
     <div class="nav notify-row" id="top_menu">
         <!--  notification start -->
         <ul class="nav top-menu">
-            <!-- settings start -->
-            <li class="dropdown">
-                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                    <i class="icon-tasks"></i>
-                    <span class="badge bg-success">6</span>
-                </a>
-                <ul class="dropdown-menu extended tasks-bar">
-                    <div class="notify-arrow notify-arrow-green"></div>
-                    <li>
-                        <p class="green">You have 6 pending tasks</p>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <div class="task-info">
-                                <div class="desc">Dashboard v1.3</div>
-                                <div class="percent">40%</div>
-                            </div>
-                            <div class="progress progress-striped">
-                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                    <span class="sr-only">40% Complete (success)</span>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="external">
-                        <a href="#">See All Tasks</a>
-                    </li>
-                </ul>
-            </li>
-            <!-- settings end -->
-            <!-- inbox dropdown start-->
-            <li id="header_inbox_bar" class="dropdown">
-                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                    <i class="icon-envelope-alt"></i>
-                    <span class="badge bg-important">5</span>
-                </a>
-                <ul class="dropdown-menu extended inbox">
-                    <div class="notify-arrow notify-arrow-red"></div>
-                    <li>
-                        <p class="red">You have 5 new messages</p>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="photo"><img alt="avatar" src="img/avatar-mini.jpg"></span>
-                            <span class="subject">
-                                    <span class="from">Jonathan Smith</span>
-                                    <span class="time">Just now</span>
-                                    </span>
-                            <span class="message">
-                                        Hello, this is an example msg.
-                                    </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">See all messages</a>
-                    </li>
-                </ul>
-            </li>
-            <!-- inbox dropdown end -->
             <!-- notification dropdown start-->
             <li id="header_notification_bar" class="dropdown">
                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -78,17 +19,17 @@
                 <ul class="dropdown-menu extended notification">
                     <div class="notify-arrow notify-arrow-yellow"></div>
                     <li>
-                        <p class="yellow">You have 7 new notifications</p>
+                        <p class="yellow">你有7条通知</p>
                     </li>
                     <li>
                         <a href="#">
                             <span class="label label-danger"><i class="icon-bolt"></i></span>
-                            Server #3 overloaded.
+                            你好，我是通知
                             <span class="small italic">34 mins</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#">See all notifications</a>
+                        <a href="#">请尽快处理</a>
                     </li>
                 </ul>
             </li>
@@ -100,7 +41,7 @@
         <!--search & user info start-->
         <ul class="nav pull-right top-menu">
             <li class="dropdown open">
-                <input type="text" class="form-control search" placeholder="Search">
+                <input type="text" class="form-control search" placeholder="订单号...">
                 {{--<ul class="dropdown-menu extended inbox">--}}
                     {{--<div class="notify-arrow notify-arrow-red"></div>--}}
                     {{--<li>--}}

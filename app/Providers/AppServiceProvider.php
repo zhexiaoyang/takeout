@@ -16,7 +16,6 @@ class AppServiceProvider extends ServiceProvider
 	{
 Schema::defaultStringLength(191);
 		\App\Models\User::observe(\App\Observers\UserObserver::class);
-		\App\Models\Order::observe(\App\Observers\OrderObserver::class);
 		\App\Models\Good::observe(\App\Observers\GoodObserver::class);
 		\App\Models\Category::observe(\App\Observers\CategoryObserver::class);
 		\App\Models\Shop::observe(\App\Observers\ShopObserver::class);

@@ -18,7 +18,10 @@ class Good extends Model
     }
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class)->withDefault([
+            'name' => '',
+            'id' => 0
+        ]);
     }
 
     public function scopeAllowShops($query)

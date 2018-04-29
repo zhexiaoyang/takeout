@@ -1,5 +1,13 @@
 @extends('layouts.app')
 
+
+@section('title', ($good->id?'编辑':'新建').'商品')
+
+@section('styles')
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-reset.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
+@stop
+
 @section('content')
 
     @include('common.error')
@@ -52,7 +60,7 @@
                         <div class="form-group">
                             <label for="name-field">同步到平台</label>
                             <div class="checkboxes">
-                                <input name="sync[]" id="checkbox-01" value="1" type="checkbox" />美团
+                                <input name="sync[]" id="checkbox-01" value="1" type="checkbox" @if($good->meituan_id) checked @endif/>美团
                                 <input name="sync[]" id="checkbox-02" value="2" type="checkbox" />百度
                                 <input name="sync[]" id="checkbox-03" value="3" type="checkbox" />饿了么
                             </div>
@@ -123,6 +131,18 @@
 
 @endsection
 
+
 @section('scripts')
     <script src="{{ asset('js/form-component.js') }}"></script>
+    <script type="text/javascript"  src="{{ asset('js/sweetalert.min.js') }}"></script>
+    @if (Session::has('alert'))
+        <script>
+            swal({
+                title: "{{ Session::get('alert') }}",
+                type: "success",
+                timer: 1000,
+                showConfirmButton: false
+            });
+        </script>
+    @endif
 @endsection

@@ -39,17 +39,7 @@ class ShopService extends RpcService
             "mt_type_id" => 179,
         ];
 
-        $result = json_decode($this->client->call("/poi/save", $params), true);
-
-        if ($result && $result['data'] == 'ok')
-        {
-            $shop->meituan_id = $shop->id;
-            $shop->save();
-            $this->upArea($shop);
-            return true;
-        }
-
-        return false;
+        return $this->client->call("/poi/save", $params);
     }
 
     public function upArea(Shop $shop)
@@ -69,6 +59,7 @@ class ShopService extends RpcService
     {
         $params = [
             "app_poi_code" => $shop->id,
+//            "app_poi_code" => 't_3Wp0e1dv7T',
             "name" => $shop->name,
             "address" => $shop->address,
             "latitude" => $shop->latitude,
