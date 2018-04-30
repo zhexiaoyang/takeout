@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-
 @section('title', ($good->id?'编辑':'新建').'商品')
 
 @section('styles')

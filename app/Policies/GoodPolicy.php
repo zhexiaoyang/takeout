@@ -15,6 +15,6 @@ class GoodPolicy extends Policy
 
     public function destroy(User $user, Good $good)
     {
-        return true;
+        return $user->hasPermissionTo('good_del');
     }
 }

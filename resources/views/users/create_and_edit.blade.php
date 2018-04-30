@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', ($user->id?'编辑':'新建').'用户')
+
 @section('content')
 
     @include('common.error')
@@ -68,7 +70,21 @@
                                 <button type="submit" class="btn btn-info">保存</button>
                             </div>
                             <div class="col-lg-6">
-
+                                <div class="form-group">
+                                    <label>分配权限</label>
+                                    <div>
+                                        <label class="checkbox-inline">
+                                            <input type="radio" name="role" @if(!$user->hasAllRoles(\Spatie\Permission\Models\Role::all())) checked @endif value=""> 普通权限
+                                        </label>
+                                        @if(!empty($roles))
+                                            @foreach($roles as $role)
+                                                <label class="checkbox-inline">
+                                                    <input type="radio" name="role" @if($user->hasRole($role->name)) checked @endif value="{{$role->name}}"> {{config('wm.roles')[$role->name]}}
+                                                </label>
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label>绑定药店</label>
                                     <div>

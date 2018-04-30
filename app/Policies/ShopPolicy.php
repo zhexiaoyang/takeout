@@ -9,8 +9,10 @@ class ShopPolicy extends Policy
 {
     public function update(User $user, Shop $shop)
     {
-        // return $shop->user_id == $user->id;
-        return true;
+        if ($user->can('shop_edit')) {
+            return true;
+        }
+        return false;
     }
 
     public function destroy(User $user, Shop $shop)

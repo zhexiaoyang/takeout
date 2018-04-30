@@ -6,6 +6,7 @@ use App\Http\Requests\UserRequest;
 use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class UsersController extends Controller
 {
@@ -33,7 +34,8 @@ class UsersController extends Controller
     {
         $this->authorize('before', User::class);
         $shops = Shop::select('id', 'name')->get();
-        return view('users.create_and_edit', compact('user','shops'));
+        $roles = Role::all();
+        return view('users.create_and_edit', compact('user', 'shops', 'roles'));
     }
 
     public function update(UserRequest $request, User $user)
@@ -42,15 +44,10 @@ class UsersController extends Controller
         if ( $user->update($request->all()) )
         {
             $shops = isset($request->shop_ids)?$request->shop_ids:[];
-            $old_shops = $user->shops;
-            if (!empty($old_shops))
-            {
-                foreach ($old_shops as $shop)
-                {
-                    $user->shops()->detach($shop->id);
-                }
-            }
+            $user->shops()->detach();
             $user->shops()->attach($shops);
+            $roles = isset($request->role)?[$request->role]:[];
+            $user->syncRoles([$roles]);
         }
 
         return redirect()->route('users.edit', $user->id)->with('success', '更新成功！');
@@ -59,7 +56,9 @@ class UsersController extends Controller
     public function create(User $user)
     {
         $this->authorize('before', User::class);
-        return view('users.create_and_edit', compact('user'));
+        $shops = Shop::select('id', 'name')->get();
+        $roles = Role::all();
+        return view('users.create_and_edit', compact('user', 'shops', 'roles'));
     }
 
     public function store(UserRequest $request, User $user)

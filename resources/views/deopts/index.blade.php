@@ -71,9 +71,9 @@
                                 @endif
                             </td>
                             <td>
-                                {{--<a href="{{ route('deopts.edit', $deopt->id) }}" class="btn btn-primary btn-xs"><i class="icon-pencil"></i></a>--}}
+                                <a href="{{ route('deopts.show', $deopt->id) }}" class="btn btn-primary btn-xs">查看</a>
                                 <a href="{{ route('goods.deopt', $deopt->id) }}" class="btn btn-primary btn-xs">上传商品</a>
-                                @if(Auth::user()->hasRole('Superman'))
+                                @if(Auth::user()->hasPermissionTo('deopt_delete'))
                                     <form action="{{ route('deopts.destroy', $deopt->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认删除该商品么？')">
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}

@@ -15,6 +15,9 @@ class DeoptPolicy extends Policy
 
     public function destroy(User $user, Deopt $deopt)
     {
-        return true;
+        if ($user->can('deopt_delete')) {
+            return true;
+        }
+        return false;
     }
 }

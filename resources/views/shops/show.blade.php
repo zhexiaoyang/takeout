@@ -2,94 +2,75 @@
 
 @section('content')
 
-<div class="container">
-    <div class="col-md-10 col-md-offset-1">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h1>Shop / Show #{{ $shop->id }}</h1>
-            </div>
-
-            <div class="panel-body">
-                <div class="well well-sm">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <a class="btn btn-link" href="{{ route('shops.index') }}"><i class="glyphicon glyphicon-backward"></i> Back</a>
-                        </div>
-                        <div class="col-md-6">
-                             <a class="btn btn-sm btn-warning pull-right" href="{{ route('shops.edit', $shop->id) }}">
-                                <i class="glyphicon glyphicon-edit"></i> Edit
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <label>Name</label>
-<p>
-	{{ $shop->name }}
-</p> <label>Address</label>
-<p>
-	{{ $shop->address }}
-</p> <label>Latitude</label>
-<p>
-	{{ $shop->latitude }}
-</p> <label>Longitude</label>
-<p>
-	{{ $shop->longitude }}
-</p> <label>Pic_url</label>
-<p>
-	{{ $shop->pic_url }}
-</p> <label>Pic_url_large</label>
-<p>
-	{{ $shop->pic_url_large }}
-</p> <label>Phone</label>
-<p>
-	{{ $shop->phone }}
-</p> <label>Standby_tel</label>
-<p>
-	{{ $shop->standby_tel }}
-</p> <label>Shipping_fee</label>
-<p>
-	{{ $shop->shipping_fee }}
-</p> <label>Shipping_time</label>
-<p>
-	{{ $shop->shipping_time }}
-</p> <label>Promotion_info</label>
-<p>
-	{{ $shop->promotion_info }}
-</p> <label>Open_level</label>
-<p>
-	{{ $shop->open_level }}
-</p> <label>Is_online</label>
-<p>
-	{{ $shop->is_online }}
-</p> <label>Invoice_support</label>
-<p>
-	{{ $shop->invoice_support }}
-</p> <label>Invoice_min_price</label>
-<p>
-	{{ $shop->invoice_min_price }}
-</p> <label>Invoice_description</label>
-<p>
-	{{ $shop->invoice_description }}
-</p> <label>Third_tag_name</label>
-<p>
-	{{ $shop->third_tag_name }}
-</p> <label>Pre_book</label>
-<p>
-	{{ $shop->pre_book }}
-</p> <label>Time_select</label>
-<p>
-	{{ $shop->time_select }}
-</p> <label>App_brand_code</label>
-<p>
-	{{ $shop->app_brand_code }}
-</p> <label>Mt_type_id</label>
-<p>
-	{{ $shop->mt_type_id }}
-</p>
-            </div>
+    <div class="row" style="margin: -15px;">
+        <div class="span6">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="{{route('index.index')}}">主页</a> <span class="divider">></span>
+                </li>
+                <li>
+                    <a href="{{route('shops.index')}}">门店列表</a> <span class="divider">></span>
+                </li>
+                <li>
+                    <span>门店信息</span>
+                </li>
+            </ul>
         </div>
     </div>
+
+    <div class="row">
+        <section class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    药店信息
+                </header>
+                <div class="panel-body">
+
+                <label>药店名称</label>
+                <p>
+                    {{ $shop->name }}
+                </p> <label>地址</label>
+                <p>
+                    {{ $shop->address }}
+                </p> <label>经度</label>
+                <p>
+                    {{ $shop->latitude }}
+                </p> <label>纬度</label>
+                <p>
+                    {{ $shop->longitude }}
+                </p> <label>Logo图片</label>
+                <p>
+                    <img src="{{ $shop->pic_url }}" alt="">
+                </p> <label>客服电话</label>
+                <p>
+                    {{ $shop->phone }}
+                </p> <label>门店电话</label>
+                <p>
+                    {{ $shop->standby_tel }}
+                </p> <label>配送费</label>
+                <p>
+                    {{ $shop->shipping_fee }}
+                </p> <label>配送时间</label>
+                <p>
+                    {{ $shop->shipping_time }}
+                </p> <label>推广信息</label>
+                <p>
+                    {{ $shop->promotion_info }}
+                </p> <label>营业状态</label>
+                <p>
+                    {{ $shop->open_level==1?'营业':'休息' }}
+                </p> <label>上线状态</label>
+                <p>
+                    {{ $shop->is_online==1?'上线':'下线' }}
+                </p> <label>是否支持发票</label>
+                <p>
+                    {{ $shop->invoice_support==1?'是':'否' }}
+                </p> <label>开发票最小金额</label>
+                <p>
+                    {{ $shop->invoice_min_price }}
+                </p>
+            </div>
+        </section>
 </div>
 
 @endsection

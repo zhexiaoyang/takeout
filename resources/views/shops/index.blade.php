@@ -35,7 +35,9 @@
                                 <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">
                             </div>
                             <button type="submit" class="btn btn-info">搜索</button>
-                            <a href="{{route('shops.create')}}" class="btn btn-success">添加门店</a>
+                            @if(Auth::user()->hasPermissionTo('shop_add'))
+                                <a href="{{route('shops.create')}}" class="btn btn-success">添加门店</a>
+                            @endif
                         </form>
                     </div>
                 </header>
@@ -61,14 +63,10 @@
                                 <td>{{$shop->baidu_id}}</td>
                                 <td>{{$shop->ele_id}}</td>
                                 <td>
+                                    <a href="{{ route('shops.show', $shop->id) }}" class="btn btn-primary btn-xs">查看</a>
+                                    @if(Auth::user()->hasPermissionTo('shop_edit'))
                                     <a href="{{ route('shops.edit', $shop->id) }}" class="btn btn-primary btn-xs">编辑</a>
-                                    {{--@if(Auth::user()->hasRole('Superman'))--}}
-                                        {{--<form action="{{ route('shops.destroy', $shop->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认删除该门店么？')">--}}
-                                            {{--{{ csrf_field() }}--}}
-                                            {{--{{ method_field('DELETE') }}--}}
-                                            {{--<button type="submit" class="btn btn-danger btn-xs">删除</button>--}}
-                                        {{--</form>--}}
-                                    {{--@endif--}}
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

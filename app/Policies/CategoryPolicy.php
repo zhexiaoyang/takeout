@@ -15,6 +15,6 @@ class CategoryPolicy extends Policy
 
     public function destroy(User $user, Category $category)
     {
-        return true;
+        return $user->hasPermissionTo('category_del');
     }
 }

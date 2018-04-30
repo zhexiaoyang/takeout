@@ -64,7 +64,7 @@
                             <td>{{$shop->ele_id}}</td>
                             <td>
                                 <a href="{{ route('categories.edit', $shop->id) }}" class="btn btn-primary btn-xs">编辑</a>
-                                @if(Auth::user()->hasRole('Superman'))
+                                @if(Auth::user()->hasPermissionTo('category_delete'))
                                 <form action="{{ route('categories.destroy', $shop->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认删除该商品分类么？')">
                                 {{ csrf_field() }}
                                 {{ method_field('DELETE') }}
