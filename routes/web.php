@@ -30,3 +30,5 @@ Route::resource('shops', 'ShopsController', ['only' => ['index', 'show', 'create
 Route::resource('categories', 'CategoriesController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
 Route::resource('goods', 'GoodsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
 Route::get('goods/deopt/{deopt}', 'GoodsController@deopt')->name('goods.deopt');
+
+Route::resource('orders', 'OrdersController', ['only' => ['index', 'show', 'create']]);

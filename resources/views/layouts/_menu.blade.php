@@ -18,6 +18,16 @@
             <li class="sub-menu">
                 <a href="javascript:;" class="">
                     <i class="icon-user"></i>
+                    <span>订单管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub">
+                    <li><a class="" href="{{route('orders.index')}}">订单列表</a></li>
+                </ul>
+            </li>
+            <li class="sub-menu">
+                <a href="javascript:;" class="">
+                    <i class="icon-user"></i>
                     <span>门店管理</span>
                     <span class="arrow"></span>
                 </a>
