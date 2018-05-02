@@ -14,10 +14,16 @@ class OrdersController extends Controller
         $this->middleware('auth', ['except' => ['index', 'show']]);
     }
 
-	public function index()
+	public function index(Request $request)
 	{
-		$orders = Order::paginate();
-		return view('orders.index', compact('orders'));
+        $keyword = $request->keyword;
+        $orders = Order::select('id','name','phone','created_at');
+        if ($keyword)
+        {
+            $orders = $orders->where('name','like',"%{$keyword}%")->orWhere('phone', 'like', "%{$keyword}%");
+        }
+        $orders = $orders->paginate(10);
+		return view('orders.index', compact('orders','keyword'));
 	}
 
     public function show(Order $order)

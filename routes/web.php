@@ -32,3 +32,4 @@ Route::resource('goods', 'GoodsController', ['only' => ['index', 'show', 'create
 Route::get('goods/deopt/{deopt}', 'GoodsController@deopt')->name('goods.deopt');
 
 Route::resource('orders', 'OrdersController', ['only' => ['index', 'show', 'create']]);
+Route::resource('order_details', 'OrderDetailsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
