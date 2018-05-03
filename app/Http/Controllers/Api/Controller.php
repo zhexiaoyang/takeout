@@ -9,4 +9,10 @@ use App\Http\Controllers\Controller as BaseController;
 class Controller extends BaseController
 {
     use Helpers;
+
+    public function __construct()
+    {
+
+
+    }
 }
