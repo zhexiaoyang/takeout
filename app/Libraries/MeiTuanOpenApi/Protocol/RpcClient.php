@@ -19,7 +19,7 @@ class RpcClient
         $this->api_request_url = $config->get_request_url() . "/api/v1";
     }
 
-    public function call($action, array $params)
+    public function call($action, array $params, $type='POST')
     {
 
         $params_head = array(
@@ -33,7 +33,7 @@ class RpcClient
 
         $url = $this->api_request_url.$action."?sig=".$sig."&".$this->concatParams($params);
 
-        return $this->post($url, $params);
+        return $this->post($url, $params, $type);
     }
 
     private function generate_signature($action, $params) {

@@ -6,18 +6,20 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
+use MeiTuanOpenApi\Api\OrderService;
+use MeiTuanOpenApi\Config\Config;
 
 class OrdersController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth');
     }
 
 	public function index(Request $request)
 	{
         $keyword = $request->keyword;
-        $orders = Order::select('id','name','phone','created_at');
+        $orders = Order::select('id','order_id','shop_id','created_at','recipient_address','recipient_phone','recipient_name','total');
         if ($keyword)
         {
             $orders = $orders->where('name','like',"%{$keyword}%")->orWhere('phone', 'like', "%{$keyword}%");
@@ -31,36 +33,21 @@ class OrdersController extends Controller
         return view('orders.show', compact('order'));
     }
 
-	public function create(Order $order)
-	{
-		return view('orders.create_and_edit', compact('order'));
-	}
+    public function cancel(Order $order)
+    {
+        $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
+        $server->cancel($order->order_id);
+    }
 
-	public function store(OrderRequest $request)
-	{
-		$order = Order::create($request->all());
-		return redirect()->route('orders.show', $order->id)->with('message', 'Created successfully.');
-	}
+    public function confirm(Order $order)
+    {
+        $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
+        $server->confirm($order->order_id);
+    }
 
-	public function edit(Order $order)
-	{
-        $this->authorize('update', $order);
-		return view('orders.create_and_edit', compact('order'));
-	}
-
-	public function update(OrderRequest $request, Order $order)
-	{
-		$this->authorize('update', $order);
-		$order->update($request->all());
-
-		return redirect()->route('orders.show', $order->id)->with('message', 'Updated successfully.');
-	}
-
-	public function destroy(Order $order)
-	{
-		$this->authorize('destroy', $order);
-		$order->delete();
-
-		return redirect()->route('orders.index')->with('message', 'Deleted successfully.');
-	}
+    public function delivering(Order $order)
+    {
+        $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
+        $server->delivering($order->order_id);
+    }
 }

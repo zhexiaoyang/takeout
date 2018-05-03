@@ -31,5 +31,9 @@ Route::resource('categories', 'CategoriesController', ['only' => ['index', 'show
 Route::resource('goods', 'GoodsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
 Route::get('goods/deopt/{deopt}', 'GoodsController@deopt')->name('goods.deopt');
 
-Route::resource('orders', 'OrdersController', ['only' => ['index', 'show', 'create']]);
+Route::resource('orders', 'OrdersController', ['only' => ['index', 'show']]);
+Route::post('orders/confirm/{order}', 'OrdersController@confirm')->name('orders.confirm');
+Route::post('orders/cancel/{order}', 'OrdersController@cancel')->name('orders.cancel');
+Route::post('orders/delivering/{order}', 'OrdersController@delivering')->name('orders.delivering');
 Route::resource('order_details', 'OrderDetailsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
+Route::resource('mt_logs', 'MtLogsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);

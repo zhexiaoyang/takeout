@@ -27,6 +27,10 @@
         .layui-row .layui-col-md2 {width: 14%}
         .layui-btn+.layui-btn { margin-left: 0px;}
         .layui-form-pane .layui-row .layui-col-md1 {width: 8.33333333%}
+        .ui.basic.primary.button, .ui.basic.primary.buttons .button {
+            box-shadow: 0 0 0 1px #2185D0 inset!important;
+            color: #2185D0!important;
+        }
     </style>
 @stop
 
@@ -62,52 +66,77 @@
                     </div>
                 </header>
 
-                <ul _v-1fbece8c="">
-                    <li _v-1fbece8c="">
-                        <div class="content-box content-box-checkbox" _v-1fbece8c="">
-                            <div class="title" _v-1fbece8c="">
-                                <button class="ui primary basic button btnCode" _v-1fbece8c=""># 11</button>
-                                <span _v-1fbece8c="">
-                    <strong _v-1fbece8c="" style="margin-left: 10px">123123123</strong>
-                </span>
-                                <strong class="orderTimes" _v-1fbece8c="">门店：yaof</strong>
-                                <span class="orderTimes" _v-1fbece8c="">配送员：来 总订单：11</span>
-                                <span class="orderState" _v-1fbece8c="">允许超时</span>
-                                <span class="orderState" _v-1fbece8c="">第三方允许超时</span>
-                                <strong class="time redColor" style="float: right" _v-1fbece8c="">订单状态：正常</strong>
-                            </div>
-                            <div class="content" _v-1fbece8c="">
-                <span _v-1fbece8c="">
-                    <div _v-1fbece8c="">
-                        <div _v-1fbece8c="">
-                                <span class="orderName redBg" _v-1fbece8c="" style="background: #09cf0e">
-                                    <span class="redBg" _v-1fbece8c="" style="background: #09b20d">配送剩余<strong _v-1fbece8c="">12</strong></span>
-                                </span>
+                <div class="ui bottom attached tab segment active" data-tab="seven" _v-5873fc14="">
+                    <div class="content-pick-box dimmable" id="content-pick-box1" _v-1fbece8c="" _v-5873fc14="">
+                        <div class="t-condition-detail" _v-1fbece8c="">
+                            <ul _v-1fbece8c="">
+                                @if(!empty($orders))
+                                @foreach($orders as $order)
+                                <li _v-1fbece8c="">
+                                    <div class="content-box content-box-checkbox" _v-1fbece8c="">
+                                        <div class="title" _v-1fbece8c="">
+                                            <button class="ui primary basic button btnCode" _v-1fbece8c=""># 2</button>
+                                            <span _v-1fbece8c="">
+                                                <strong _v-1fbece8c="">立即送达</strong>
+                                            </span>
+                                            <span class="orderTimes" _v-1fbece8c="">（请于2018-05-03 23:36前送达）</span>
+                                            <strong class="time redColor" style="float: right" _v-1fbece8c="">已完成</strong>
+                                        </div>
+                                        <div class="content" _v-1fbece8c="">
+                                            <span _v-1fbece8c="">
+                                                <span class="orderName grayBg" _v-1fbece8c="">
+                                                    <span class="grayBg" style="line-height: 30px; font-size: 18px" _v-1fbece8c="">已完成</span>
+                                                </span>
+                                            </span>
+                                            <div class="right" _v-1fbece8c="">
+                                                <p class="comment" _v-1fbece8c="">
+                                                    <span class="info" _v-1fbece8c="">
+                                                        客户实付：
+                                                        <strong _v-1fbece8c="">¥ {{$order->total or 0}}</strong>
+                                                    </span>
+                                                </p>
+                                                <p class="comment" _v-1fbece8c="">
+                                                    <span _v-1fbece8c="">客户：</span>
+                                                    {{$order->recipient_name or ''}}
+                                                    （电话：{{$order->recipient_phone or ''}}）
+                                                </p>
+                                                <p class="comment" _v-1fbece8c="">
+                                                    <span _v-1fbece8c="">地址：</span>{{$order->recipient_address or ''}}
+                                                </p>
+                                                <p class="comment" _v-1fbece8c="">
+                                                    <span _v-1fbece8c="">订单编号：</span>
+
+                                                    <a target="_blank" _v-1fbece8c="" href="{{route('orders.show', $order->id)}}">{{$order->id}}</a>
+                                                </p>
+                                                <p class="comment" _v-1fbece8c="">
+                                                    <span _v-1fbece8c="">门店：</span>{{$order->shop->name}}</p>
+                                                <p class="fixedBtn" _v-1fbece8c="" style="display: none;">
+                                                    <button class="ui blue button replayBtns" _v-1fbece8c="">拣货完成</button>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="ft" _v-1fbece8c="">
+                                            <form action="{{ route('orders.confirm', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认该订单么？')">
+                                                {{ csrf_field() }}
+                                                <button type="submit" class="btn btn-danger btn-xs">确认订单</button>
+                                            </form>
+                                            <form action="{{ route('orders.cancel', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认取消订单么？')">
+                                                {{ csrf_field() }}
+                                                <button type="submit" class="btn btn-danger btn-xs">取消订单</button>
+                                            </form>
+                                            <form action="{{ route('orders.delivering', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认配送该订单么？')">
+                                                {{ csrf_field() }}
+                                                <button type="submit" class="btn btn-danger btn-xs">配送订单</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </li>
+                                @endforeach
+                                @endif
+                            </ul>
                         </div>
                     </div>
-                </span>
-                                <div class="right" _v-1fbece8c="">
-                                    <p class="comment" _v-1fbece8c="">
-                        <span class="info" _v-1fbece8c="">
-                            <span>金额：<strong _v-1fbece8c="">¥ 11</strong></span>
-                            <span>支付：<strong _v-1fbece8c="">11、22</strong></span>
-                            <span>来源：<strong _v-1fbece8c="">美团</strong></span>
-                        </span>
-                                    </p>
-                                    <p class="comment" _v-1fbece8c=""><span _v-1fbece8c="">时间：</span>2019-5-1</p>
-                                    <p class="comment @{{#  if( order.USER_BL ){ }} redColor @{{#  } }}" _v-1fbece8c=""><span _v-1fbece8c="">客户：</span>张三</p>
-                                    <p class="comment" _v-1fbece8c=""><span _v-1fbece8c="">地址：</span>苏州街</p>
-                                    @{{#  if( order.DHBZ ){ }}
-                                    <p class="comment" _v-1fbece8c=""><strong _v-1fbece8c="">备注：多放辣</strong></p>
-                                    @{{#  } }}
-                                </div>
-                            </div>
-                            <div class="ft" _v-1fbece8c="">
-                                <a href="@{{ order.URL_ORDER_DETAIL }}" target="_blank" class="layui-btn layui-btn-xs">订单查询</a>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                </div>
 
                 <div style="margin-left: 10px">
                     {!! $orders->appends(['keyword' => $keyword])->render() !!}
