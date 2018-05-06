@@ -24,9 +24,9 @@ $api->version('v1', [
 //    美团用户或客服部分退款流程操作URL
     $api->get('orderRebates', 'OrdersController@rebates')->name('api.order.rebates');
 //    订单结算信息回调URL
-    $api->get('orderClose', 'OrdersController@close')->name('api.order.close');
+    $api->post('orderClose', 'OrdersController@close')->name('api.order.close');
 //    隐私号降级推送URL
-    $api->get('orderPrivacy', 'OrdersController@privacy')->name('api.order.privacy');
+    $api->post('orderPrivacy', 'OrdersController@privacy')->name('api.order.privacy');
 //    催单推送URL
-    $api->get('orderReminder', 'OrdersController@reminder')->name('api.order.reminder');
+    $api->post('orderReminder', 'OrdersController@reminder')->name('api.order.reminder');
 });
