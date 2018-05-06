@@ -115,7 +115,7 @@
                         </ul>
                         <div class="t-menu-info">
                             @if($order->over_time)
-                                <p>完成时间： {{ date("Y-m-d H:i:s", $order->over_time) }}</p>
+                                <p>完成时间： {{ date("Y-m-d H:i:s", $order->complete_time) }}</p>
                             @endif
                         </div>
                     </div>
