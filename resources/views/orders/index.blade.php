@@ -9,7 +9,7 @@
         .ft[_v-1fbece8c]{border-top:1px dashed #ccc;padding:10px 25px}.btnCode[_v-1fbece8c]{padding:5px;font-size:12px}
         .redColor[_v-1fbece8c] {color: #db2828!important;}
         .t-condition-detail ul li[_v-1fbece8c]{border:1px solid #ccc;position:relative;margin-bottom:20px}
-        .t-condition-detail ul li .title[_v-1fbece8c]{color:#777;padding:16px 20px;background-color:#eee}
+        .t-condition-detail ul li .title[_v-1fbece8c]{color:#777;padding:10px 20px;background-color:#eee}
         .t-condition-detail .content[_v-1fbece8c]{margin:0 20px}
         .t-condition-detail ul li .orderName[_v-1fbece8c]{width:84px;height:84px;background-color:#ff9b9b;float:left;color:#fff;border-radius:50%;padding:4px}
         .t-condition-detail ul li .orderName span[_v-1fbece8c]{width:100%;height:100%;background-color:#fa4e4e;border-radius:50%;border:4px solid #fff;display:block;text-align:center;font-size:14px;padding:17px 6px;box-sizing: border-box}
@@ -35,8 +35,6 @@
 @stop
 
 @section('content')
-
-    @include('common.error')
 
     <div class="row" style="margin: -15px;">
         <div class="span6">
@@ -75,17 +73,28 @@
                                 <li _v-1fbece8c="">
                                     <div class="content-box content-box-checkbox" _v-1fbece8c="">
                                         <div class="title" _v-1fbece8c="">
-                                            <button class="ui primary basic button btnCode" _v-1fbece8c=""># 2</button>
                                             <span _v-1fbece8c="">
-                                                <strong _v-1fbece8c="">立即送达</strong>
+                                                @if($order->delivery_time)
+                                                    <strong _v-1fbece8c="" style="color: #db2828">送达时间：{{date("Y-m-d H:i:s", $order->delivery_time)}}</strong>
+                                                @else
+                                                    <strong _v-1fbece8c="">立即送达</strong>
+                                                @endif
                                             </span>
-                                            <span class="orderTimes" _v-1fbece8c="">（请于2018-05-03 23:36前送达）</span>
-                                            <strong class="time redColor" style="float: right" _v-1fbece8c="">已完成</strong>
+                                            <span class="orderTimes" _v-1fbece8c="">创建订单时间：{{ $order->created_at }}</span>
+                                            <strong class="time redColor" style="float: right" _v-1fbece8c="">{{ config('wm.order_status')[$order->status] }}</strong>
                                         </div>
                                         <div class="content" _v-1fbece8c="">
                                             <span _v-1fbece8c="">
                                                 <span class="orderName grayBg" _v-1fbece8c="">
-                                                    <span class="grayBg" style="line-height: 30px; font-size: 18px" _v-1fbece8c="">已完成</span>
+                                                    <span class="grayBg" style="line-height: 30px; font-size: 18px" _v-1fbece8c="">
+                                                        @if($order->status == 6)
+                                                            已取消
+                                                        @elseif($order->status > 6)
+                                                            已完成
+                                                        @else
+                                                            {{ floor((time() - strtotime($order->created_at))/60) }}
+                                                        @endif
+                                                    </span>
                                                 </span>
                                             </span>
                                             <div class="right" _v-1fbece8c="">
@@ -106,28 +115,29 @@
                                                 <p class="comment" _v-1fbece8c="">
                                                     <span _v-1fbece8c="">订单编号：</span>
 
-                                                    <a target="_blank" _v-1fbece8c="" href="{{route('orders.show', $order->id)}}">{{$order->id}}</a>
+                                                    <a target="_blank" _v-1fbece8c="" href="{{route('orders.show', $order->id)}}">{{$order->order_id}}</a>
                                                 </p>
                                                 <p class="comment" _v-1fbece8c="">
-                                                    <span _v-1fbece8c="">门店：</span>{{$order->shop->name}}</p>
-                                                <p class="fixedBtn" _v-1fbece8c="" style="display: none;">
-                                                    <button class="ui blue button replayBtns" _v-1fbece8c="">拣货完成</button>
+                                                    <span _v-1fbece8c="">门店：</span>{{$order->shop->name}}
                                                 </p>
                                             </div>
                                         </div>
                                         <div class="ft" _v-1fbece8c="">
                                             <form action="{{ route('orders.confirm', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认该订单么？')">
                                                 {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-xs">确认订单</button>
+                                                <button type="submit" class="btn btn-success btn-xs">确认订单</button>
+                                            </form>
+                                            <form action="{{ route('orders.delivering', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认配送该订单么？')">
+                                                {{ csrf_field() }}
+                                                <button type="submit" class="btn btn-info btn-xs">配送订单</button>
                                             </form>
                                             <form action="{{ route('orders.cancel', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认取消订单么？')">
                                                 {{ csrf_field() }}
                                                 <button type="submit" class="btn btn-danger btn-xs">取消订单</button>
                                             </form>
-                                            <form action="{{ route('orders.delivering', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认配送该订单么？')">
-                                                {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-xs">配送订单</button>
-                                            </form>
+                                            <a target="_blank" _v-1fbece8c="" href="{{route('orders.show', $order->id)}}">
+                                                <button class="btn btn-success btn-xs">查看订单</button>
+                                            </a>
                                         </div>
                                     </div>
                                 </li>
@@ -137,7 +147,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div style="margin-left: 10px">
                     {!! $orders->appends(['keyword' => $keyword])->render() !!}
                 </div>
@@ -185,6 +194,16 @@
                 title: "{{ Session::get('alert') }}",
                 type: "success",
                 timer: 1000,
+                showConfirmButton: false
+            });
+        </script>
+    @endif
+    @if (Session::has('errors'))
+        <script>
+            swal({
+                title: "{{ Session::get('errors') }}",
+                type: "error",
+                timer: 2000,
                 showConfirmButton: false
             });
         </script>

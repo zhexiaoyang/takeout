@@ -41,7 +41,7 @@
         <!--search & user info start-->
         <ul class="nav pull-right top-menu">
             <li class="dropdown open">
-                <input type="text" class="form-control search" placeholder="订单号...">
+                <input type="text" class="form-control search" placeholder="订单号..." style="margin-top: 0px;">
                 {{--<ul class="dropdown-menu extended inbox">--}}
                     {{--<div class="notify-arrow notify-arrow-red"></div>--}}
                     {{--<li>--}}
@@ -71,7 +71,7 @@
             @else
                 <li class="dropdown">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                        <img alt="" src="{{asset('img/avatar1_small.jpg')}}">
+                        <i class="icon-user"></i>
                         <span class="username">{{ Auth::user()->name }}</span>
                         <b class="caret"></b>
                     </a>

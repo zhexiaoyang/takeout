@@ -35,5 +35,7 @@ Route::resource('orders', 'OrdersController', ['only' => ['index', 'show']]);
 Route::post('orders/confirm/{order}', 'OrdersController@confirm')->name('orders.confirm');
 Route::post('orders/cancel/{order}', 'OrdersController@cancel')->name('orders.cancel');
 Route::post('orders/delivering/{order}', 'OrdersController@delivering')->name('orders.delivering');
+Route::get('orders/print/{order}', 'OrdersController@printOrder')->name('orders.printOrder');
+Route::post('orders/printAdd/{order}', 'OrdersController@printAdd')->name('orders.printAdd');
 Route::resource('order_details', 'OrderDetailsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
 Route::resource('mt_logs', 'MtLogsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);

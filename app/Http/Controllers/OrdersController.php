@@ -19,12 +19,12 @@ class OrdersController extends Controller
 	public function index(Request $request)
 	{
         $keyword = $request->keyword;
-        $orders = Order::select('id','order_id','shop_id','created_at','recipient_address','recipient_phone','recipient_name','total');
+        $orders = Order::allowShops()->select('id','order_id','shop_id','created_at', 'delivery_time', 'recipient_address','recipient_phone','recipient_name','total', 'status');
         if ($keyword)
         {
-            $orders = $orders->where('name','like',"%{$keyword}%")->orWhere('phone', 'like', "%{$keyword}%");
+            $orders = $orders->where('order_id','like',"%{$keyword}%")->orWhere('recipient_name', 'like', "%{$keyword}%")->orWhere('recipient_phone', 'like', "%{$keyword}%");
         }
-        $orders = $orders->paginate(10);
+        $orders = $orders->orderBy('id', 'desc')->paginate(20);
 		return view('orders.index', compact('orders','keyword'));
 	}
 
@@ -37,17 +37,46 @@ class OrdersController extends Controller
     {
         $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
         $server->cancel($order->order_id);
+        $res = $server->cancel($order->order_id);
+        if ( $res === true )
+        {
+            return redirect()->back()->with('alert', '取消成功！');
+        }else{
+            return back()->withErrors($res);
+        }
     }
 
     public function confirm(Order $order)
     {
         $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
-        $server->confirm($order->order_id);
+        $res = $server->confirm($order->order_id);
+        if ( $res === true )
+        {
+            return redirect()->back()->with('alert', '确认成功！');
+        }else{
+            return back()->withErrors($res);
+        }
     }
 
     public function delivering(Order $order)
     {
         $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
-        $server->delivering($order->order_id);
+        $res = $server->delivering($order->order_id);
+        if ( $res === true )
+        {
+            return redirect()->back()->with('alert', '配送成功！');
+        }else{
+            return back()->withErrors($res);
+        }
+    }
+
+    public function printOrder(Order $order)
+    {
+        return view('orders.print', compact('order'));
+    }
+
+    public function printAdd(Order $order)
+    {
+        $order->increment('is_print');
     }
 }

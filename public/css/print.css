@@ -1,0 +1,93 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: "微软雅黑";
+}
+
+#printTemplate{
+    background-color: #fff;
+    margin:0 auto;
+    width: 50mm;
+    overflow: hidden;
+    height: auto;
+}
+
+#printStart {
+    display: block;
+    margin: 20px auto;
+    width:40px;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 4px;
+    padding: 8px 20px;
+    color:#fff;
+    background: #67c895;
+    border-color: #67c895;
+    text-decoration: none;
+}
+
+#printStart:hover {
+    background: #3db576;
+    border-color: #3db576;
+}
+
+.print-qrcode {
+    overflow: hidden;
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+}
+
+.print-codeline {
+    margin:0 auto;
+    margin-bottom:10px;
+}
+
+.tc {
+    text-align: center;
+}
+
+.tl {
+    text-align: left;
+}
+
+.tr {
+    text-align: right;
+}
+
+.f-l {
+    font-size: 18px;
+    line-height: 28px;
+}
+
+.f-m {
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.f-s {
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.dashed {
+    height: 6px;
+    overflow: hidden;
+    background: url("../img/dashed.png") repeat-x center center;
+}
+
+.br {
+    height: 10px;
+    overflow: hidden;
+}
+
+.space {
+    display:inline-block;
+    height:1px;
+    width:4px;
+    overflow: hidden;
+}

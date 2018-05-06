@@ -16,7 +16,7 @@ class OrderService extends RpcService
         {
             return true;
         }
-        return false;
+        return isset($result['error']['msg'])?trim($result['error']['msg']):'请求确认接口错误';
     }
 
     public function cancel($order_id)
@@ -26,12 +26,12 @@ class OrderService extends RpcService
             'reason' => '客服取消',
             'reason_code' => 1204,
         ];
-        $result = $this->client->call("/order/cancel", $params, 'GET');
+        $result = json_decode($this->client->call("/order/cancel", $params, 'GET'), true);
         if ($result && $result['data'] == 'ok')
         {
             return true;
         }
-        return false;
+        return isset($result['error']['msg'])?$result['error']['msg']:'请求取消接口错误';
     }
 
     public function delivering($order_id)
@@ -44,7 +44,7 @@ class OrderService extends RpcService
         {
             return true;
         }
-        return false;
+        return isset($result['error']['msg'])?$result['error']['msg']:'请求配送接口错误';
     }
 
 }
