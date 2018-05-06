@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Jobs\CreateMtOrder;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class OrdersController extends Controller
@@ -30,8 +31,10 @@ class OrdersController extends Controller
      * 美团用户或客服取消URL
      * @return mixed
      */
-    public function cancel()
+    public function cancel(Order $order)
     {
+        $order->status = 6;
+        $order->save();
         return $this->response->array(['data' => 'ok']);
     }
 
