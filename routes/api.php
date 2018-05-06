@@ -10,7 +10,7 @@ $api->version('v1', [
 //    推送订单URL
     $api->get('orderCreate', 'OrdersController@create')->name('api.order.create');
 //    美团用户或客服取消URL
-    $api->get('orderCancel/{order_id?}', 'OrdersController@cancel')->name('api.order.cancel');
+    $api->get('orderCancel', 'OrdersController@cancel')->name('api.order.cancel');
 //    美团用户或客服退款流程操作URL
     $api->get('orderRefund', 'OrdersController@refund')->name('api.order.refund');
 //    订单配送状态回调URL
