@@ -14,13 +14,13 @@ $api->version('v1', [
 //    美团用户或客服退款流程操作URL
     $api->get('orderRefund', 'OrdersController@refund')->name('api.order.refund');
 //    订单配送状态回调URL
-    $api->get('orderStatus', 'OrdersController@status')->name('api.order.status');
+    $api->post('orderStatus', 'OrdersController@status')->name('api.order.status');
 //    已确认订单推送回调URL
-    $api->get('orderConfirm', 'OrdersController@confirm')->name('api.order.confirm');
+    $api->post('orderConfirm', 'OrdersController@confirm')->name('api.order.confirm');
 //    门店状态变更回调URL
     $api->get('shopStatus', 'ShopController@status')->name('api.order.status');
 //    已完成订单推送回调URL
-    $api->get('orderComplete', 'OrdersController@complete')->name('api.order.complete');
+    $api->post('orderComplete', 'OrdersController@complete')->name('api.order.complete');
 //    美团用户或客服部分退款流程操作URL
     $api->get('orderRebates', 'OrdersController@rebates')->name('api.order.rebates');
 //    订单结算信息回调URL
