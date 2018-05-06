@@ -18,7 +18,7 @@ $api->version('v1', [
 //    已确认订单推送回调URL
     $api->post('orderConfirm', 'OrdersController@confirm')->name('api.order.confirm');
 //    门店状态变更回调URL
-    $api->get('shopStatus', 'ShopController@status')->name('api.order.status');
+    $api->post('shopStatus', 'ShopController@status')->name('api.order.status');
 //    已完成订单推送回调URL
     $api->post('orderComplete', 'OrdersController@complete')->name('api.order.complete');
 //    美团用户或客服部分退款流程操作URL
