@@ -31,10 +31,14 @@ class OrdersController extends Controller
      * 美团用户或客服取消URL
      * @return mixed
      */
-    public function cancel(Order $order)
+    public function cancel($order_id)
     {
-        $order->status = 6;
-        $order->save();
+        $order = Order::where('order_id', $order_id)->first();
+        if (!$order)
+        {
+            $order->status = 6;
+            $order->save();
+        }
         return $this->response->array(['data' => 'ok']);
     }
 
