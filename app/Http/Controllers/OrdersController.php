@@ -40,6 +40,8 @@ class OrdersController extends Controller
         $res = $server->cancel($order->order_id);
         if ( $res === true )
         {
+            $order->status = 25;
+            $order->save();
             return redirect()->back()->with('alert', '取消成功！');
         }else{
             return back()->withErrors($res);
@@ -52,6 +54,8 @@ class OrdersController extends Controller
         $res = $server->confirm($order->order_id);
         if ( $res === true )
         {
+            $order->status = 2;
+            $order->save();
             return redirect()->back()->with('alert', '确认成功！');
         }else{
             return back()->withErrors($res);
@@ -64,6 +68,8 @@ class OrdersController extends Controller
         $res = $server->delivering($order->order_id);
         if ( $res === true )
         {
+            $order->status = 8;
+            $order->save();
             return redirect()->back()->with('alert', '配送成功！');
         }else{
             return back()->withErrors($res);

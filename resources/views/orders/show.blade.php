@@ -74,9 +74,9 @@
                         </a>
                     </div>
                     <span style="float: right; font-size: 24px; color: #666; margin-right: 20px;">
-                        @if($order->status == 6)
+                        @if($order->status == 25)
                             已取消
-                        @elseif($order->status > 6)
+                        @elseif($order->status > 30)
                             已完成
                         @else
                             已用时：{{ floor((time() - strtotime($order->created_at))/60) }}分钟

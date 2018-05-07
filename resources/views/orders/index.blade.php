@@ -87,9 +87,9 @@
                                             <span _v-1fbece8c="">
                                                 <span class="orderName grayBg" _v-1fbece8c="">
                                                     <span class="grayBg" style="line-height: 30px; font-size: 18px" _v-1fbece8c="">
-                                                        @if($order->status == 6)
+                                                        @if($order->status == 25)
                                                             已取消
-                                                        @elseif($order->status > 6)
+                                                        @elseif($order->status > 30)
                                                             已完成
                                                         @else
                                                             {{ floor((time() - strtotime($order->created_at))/60) }}
