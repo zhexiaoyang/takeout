@@ -36,6 +36,7 @@
                             </div>
                             <button type="submit" class="btn btn-info">搜索</button>
                             <a href="{{route('deopts.index')}}" class="btn btn-success">品库列表</a>
+                            <a href="#myModal" data-toggle="modal" class="btn btn-warning">导入商品</a>
                         </form>
                     </div>
                 </header>
@@ -87,6 +88,38 @@
                 <div style="margin-left: 10px">
                     {!! $goods->appends(['keyword' => $keyword])->render() !!}
                 </div>
+                <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                <h4 class="modal-title">导入商品</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form role="form" action="{{ route('goods.file') }}" accept-charset="UTF-8" enctype="multipart/form-data" target="_blank" method="post">
+                                    {{ csrf_field() }}
+                                    <div class="form-group">
+                                        <label for="name-field">门店</label>
+                                        <br>
+                                        @if(!empty($shops))
+                                            @foreach($shops as $shop)
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="shop_id" value="{{$shop->id}}"> {{$shop->name}}
+                                                </label>
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputFile">选择文件</label>
+                                        <input type="file" id="exampleInputFile3" name="goods">
+                                        <a href="" target="_blank" class="help-block">点击下载模板</a>
+                                    </div>
+                                    <button type="submit" class="btn btn-success" onclick="up_goods()">上传</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
     </div>
@@ -96,6 +129,10 @@
     <script type="text/javascript"  src="{{ asset('js/sweetalert.min.js') }}"></script>
 
     <script>
+        function up_goods() {
+            $(".close").click();
+            return false;
+        }
         function alert(obj, mes) {
             swal({
                     title: mes,

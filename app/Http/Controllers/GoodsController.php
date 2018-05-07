@@ -11,6 +11,7 @@ use App\Http\Requests\GoodRequest;
 use MeiTuanOpenApi\Api\CategoryService;
 use MeiTuanOpenApi\Api\GoodsService;
 use MeiTuanOpenApi\Config\Config;
+use Excel;
 
 class GoodsController extends Controller
 {
@@ -28,7 +29,8 @@ class GoodsController extends Controller
             $good = $good->where('name','like',"%{$keyword}%");
         }
         $goods = $good->orderBy('id', 'DESC')->paginate(10);
-        return view('goods.index', compact('goods','keyword'));
+        $shops = Shop::allowShops()->select('id', 'name')->get();
+        return view('goods.index', compact('goods','keyword', 'shops'));
 	}
 
     public function show(Good $good)
@@ -131,5 +133,22 @@ class GoodsController extends Controller
     {
         $shops = Shop::allowShops()->select('id', 'name')->get();
         return view('goods.create_and_edit', compact('deopt', 'good', 'shops'));
+    }
+
+    public function file(Request $request)
+    {
+        $file = $request->goods;
+
+        $folder_name = "uploads/goods/" . date("Ym/d", time());
+        $upload_path = public_path() . '/' . $folder_name;
+        $extension = strtolower($file->getClientOriginalExtension()) ?: 'xls';
+        $filename = time() . '_' . str_random(10) . '.' . $extension;
+        $file->move($upload_path, $filename);
+        Excel::load($upload_path.'/'.$filename, function($reader) {
+            $data = $reader->all();
+            echo '<pre>';
+            print_r($data);
+            echo '<pre>';
+        });
     }
 }
