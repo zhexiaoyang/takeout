@@ -18,7 +18,7 @@ class OrdersController extends Controller
         if (!empty($_POST))
         {
             $this->log->api = 'api/orderCreate';
-            $this->log->response = json_encode($result);
+            $this->log->response = json_encode($result, JSON_UNESCAPED_UNICODE);
             $this->log->save();
             dispatch(new CreateMtOrder($this->log));
         }
