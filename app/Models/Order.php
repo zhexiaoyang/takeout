@@ -21,6 +21,12 @@ class Order extends Model
         return $this->hasMany(OrderDetail::class);
     }
 
+
+    public function logs()
+    {
+        return $this->hasMany(OrderLog::class);
+    }
+
     public function scopeAllowShops($query)
     {
         if (Auth::user()->hasPermissionTo('manage_users'))

@@ -123,6 +123,7 @@
                                             </div>
                                         </div>
                                         <div class="ft" _v-1fbece8c="">
+                                            @if($order->status < 20)
                                             <form action="{{ route('orders.confirm', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认该订单么？')">
                                                 {{ csrf_field() }}
                                                 <button type="submit" class="btn btn-success btn-xs">确认订单</button>
@@ -135,6 +136,7 @@
                                                 {{ csrf_field() }}
                                                 <button type="submit" class="btn btn-danger btn-xs">取消订单</button>
                                             </form>
+                                            @endif
                                             <a target="_blank" _v-1fbece8c="" href="{{route('orders.show', $order->id)}}">
                                                 <button class="btn btn-success btn-xs">查看订单</button>
                                             </a>

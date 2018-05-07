@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Http\Controllers\OrdersController;
 use App\Models\MtLog;
+use App\Models\OrderLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -119,6 +120,11 @@ class CreateMtOrder implements ShouldQueue
 
                 $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
                 $server->confirm($order_id);
+                $log = new OrderLog;
+                $log->order_id = $order->id;
+                $log->message = '创建订单成功';
+                $log->operator = 'system';
+                $log->save();
             }
         }
     }

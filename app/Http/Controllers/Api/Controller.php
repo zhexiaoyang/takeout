@@ -17,9 +17,9 @@ class Controller extends BaseController
     {
         $this->log = $log;
 
-        if (!empty($_POST))
+        if (!empty($_POST) || !empty($_GET))
         {
-            $this->log->request = json_encode($_POST,JSON_UNESCAPED_UNICODE);
+            $this->log->request = json_encode(empty($_POST)?$_GET:$_POST,JSON_UNESCAPED_UNICODE);
             $this->log->type = 2;
         }
     }

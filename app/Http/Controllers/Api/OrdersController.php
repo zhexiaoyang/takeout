@@ -31,17 +31,29 @@ class OrdersController extends Controller
      */
     public function cancel(Request $request)
     {
-        $order_id = $request->get('order_id');
-        if ($order_id)
+        $result = ['data' => 'ok'];
+        if (!empty($_GET))
         {
-            $order = Order::where('order_id', $order_id)->first();
-            if ($order)
+            $this->log->api = 'api/orderCreate';
+            $this->log->response = json_encode($result, JSON_UNESCAPED_UNICODE);
+            $this->log->save();
+            $order_id = $request->get('order_id');
+            if ($order_id)
             {
-                $order->status = 6;
-                $order->save();
+                $order = Order::where('order_id', $order_id)->first();
+                if ($order)
+                {
+                    $order->status = 25;
+                    $order->save();
+                    $log = new OrderLog();
+                    $log->order_id = $order_id;
+                    $log->message = '取消订单成功';
+                    $log->operator = 'mt api';
+                    $log->save();
+                }
             }
         }
-        return $this->response->array(['data' => 'ok']);
+        return $this->response->array($result);
     }
 
     /**

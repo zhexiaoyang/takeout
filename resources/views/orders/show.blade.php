@@ -142,12 +142,13 @@
                                 <li class="w100 mt20">
                                     <dl class="o-business w100">
                                         <dt class="pl15 mb10">跟踪信息：</dt>
-                                        <dd><i></i><span class="behavDesc b-orderdd">下单成功，订单号:810505125000241</span></dd>
-                                        <dd><span class="behavDesc b-orderdd color-grey f12">操作人：JD_115u2f5bdef06</span></dd>
-                                        <dd><span class="behavDesc b-orderd-d color-grey f12">2018-05-02 14:05:24 </span></dd>
-                                        <dd><i></i><span class="behavDesc b-orderdd">等待用户支付，超过30分钟未支付将自动取消订单</span></dd>
-                                        <dd><span class="behavDesc b-orderdd color-grey f12">操作人：JD_115u2f5bdef06</span></dd>
-                                        <dd><span class="behavDesc b-orderd-d color-grey f12">2018-05-02 14:05:24 </span></dd>
+                                        @if(!empty($order->logs))
+                                            @foreach($order->logs as $log)
+                                               <dd><i></i><span class="behavDesc b-orderdd">{{ $log->message }}</span></dd>
+                                               <dd><span class="behavDesc b-orderdd color-grey f12">操作人：{{ $log->operator }}</span></dd>
+                                               <dd><span class="behavDesc b-orderd-d color-grey f12">{{ $order->created_at }} </span></dd>
+                                            @endforeach
+                                        @endif
                                     </dl>
                                 </li>
                             </ul>
@@ -211,55 +212,22 @@
                             <div class="od-cont od-cont-small od-cont-line">
                                 <ul>
                                     <li>
-                        <span class="extra_msg_box">
-                            <span class="extra_msg_width_tip">商品金额</span>
-                            <span class="extra_tips_right">￥64.00
-                            </span>
-                         </span>
+                                        <span class="extra_msg_box">
+                                            <span class="extra_msg_width_tip">商品金额</span>
+                                            <span class="extra_tips_right">￥{{ $order->original_price - $order->shipping_fee }}
+                                            </span>
+                                         </span>
                                     </li>
                                     <li>
-                        <span class="extra_msg_box">
-                            <span class="extra_msg_width_tip">运费</span>
-                            <span class="extra_tips_right">￥5.00</span>
-                        </span>
+                                        <span class="extra_msg_box">
+                                            <span class="extra_msg_width_tip">运费</span>
+                                            <span class="extra_tips_right">￥{{ $order->shipping_fee }}</span>
+                                        </span>
                                     </li>
                                     <li>
-                        <span class="extra_msg_box">
-                            <span class="extra_msg_width_tip">包装费</span>
-                            <span class="extra_tips_right">￥0.50</span>
-                        </span>
-                                    </li>
-                                    <li>
-                        <span class="extra_msg_box">
-                            <span class="extra_msg_width_tip">餐盒费</span>
-                            <span class="extra_tips_right">￥0.00</span>
-                        </span>
-                                    </li>
-                                    <li>
-                                        <p class="tip_p-last">
-                                            <span class="extra_msg_width_tip">商品优惠</span>
-                                            <span class="extra_tips_right">-￥0.00</span>
-                                        </p>
-                                        <div class="show_tips_extra" style="display: none">
-                                            <p style="text-align: right; font-size: 11px;margin-bottom: 0">
-                                                (商家承担：￥0.00)
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <p class="tip_p-last">
-                                            <span class="extra_msg_width_tip">运费优惠</span>
-                                            <span class="extra_tips_right">-￥0.00</span>
-                                        </p>
-                                        <div class="show_tips_extra" style="display: none">
-                                            <p style="text-align: right; font-size: 11px;margin-bottom: 0px">(商家承担：￥0.00)</p>
-                                        </div>
-                                    </li>
-                                    <li></li>
-                                    <li>
-                        <span class="line">客户实付金额：&nbsp;&nbsp;&nbsp;&nbsp;
-                            <span style="color: #cc0000; font-size: 24px">￥{{ $order->total }}</span>
-                        </span>
+                                        <span class="line">客户实付金额：&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <span style="color: #cc0000; font-size: 24px">￥{{ $order->total }}</span>
+                                        </span>
                                     </li>
                                 </ul>
                             </div>
