@@ -8,7 +8,7 @@ $api->version('v1', [
     'namespace' => 'App\Http\Controllers\Api'
 ], function($api) {
 //    推送订单URL
-    $api->get('orderCreate', 'OrdersController@create')->name('api.order.create');
+    $api->post('orderCreate', 'OrdersController@create')->name('api.order.create');
 //    美团用户或客服取消URL
     $api->get('orderCancel', 'OrdersController@cancel')->name('api.order.cancel');
 //    美团用户或客服退款流程操作URL
