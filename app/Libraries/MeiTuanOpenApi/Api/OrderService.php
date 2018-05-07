@@ -39,7 +39,7 @@ class OrderService extends RpcService
         $params = [
             "order_id" => $order_id,
         ];
-        $result = json_decode($this->client->call("/order/confirm", $params, 'GET'), true);
+        $result = json_decode($this->client->call("/order/delivering", $params, 'GET'), true);
         if ($result && $result['data'] == 'ok')
         {
             return true;

@@ -14,17 +14,15 @@ class OrdersController extends Controller
      */
     public function create()
     {
+        $result = ['data' => 'ok'];
         if (!empty($_POST))
         {
-            $result = ['data' => 'ok'];
             $this->log->api = 'api/orderCreate';
             $this->log->response = json_encode($result);
             $this->log->save();
             dispatch(new CreateMtOrder($this->log));
-            return $this->response->array($result);
-        }else{
-            return $this->response->array(['data' => 'ok']);
         }
+        return $this->response->array($result);
     }
 
     /**
