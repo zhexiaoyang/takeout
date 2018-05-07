@@ -46,7 +46,7 @@ class CreateMtOrder implements ShouldQueue
             $insert = [
                 'order_id' => $data['order_id'],
                 'order_id_view' => $data['wm_order_id_view'],
-                'shop_id' => $data['app_poi_code'],
+                'shop_id' => intval($data['app_poi_code']),
                 'recipient_address' => $data['recipient_address'],
                 'recipient_phone' => $data['recipient_phone'],
                 'recipient_name' => $data['recipient_name'],
