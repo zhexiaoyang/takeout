@@ -64,4 +64,28 @@ class GoodsService extends RpcService
         return $this->client->call("/medicine/delete", $params);
     }
 
+    public function syncStock($good, $stock)
+    {
+        $res = $this->upStock($good, $stock);
+        $data = json_decode($res);
+        if ($data && $data['data'] == 'ok')
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public function upStock($good, $stock)
+    {
+        $data = [
+            "app_medicine_code" => $good->deopt->id,
+            "app_poi_code" => $good->shop_id,
+            "stock" => $stock
+        ];
+        $params = [
+            "medicine_data" => json_encode([$data])
+        ];
+        return $this->client->call("/medicine/stock", $params);
+    }
+
 }

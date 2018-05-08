@@ -35,7 +35,7 @@
                 </p> <label>单位</label>
                 <p>
                     {{ $deopt->unit }}
-                </p> <label>价格</label>
+                </p> <label>建议零售价</label>
                 <p>
                     {{ $deopt->price }}
                 </p> <label>规格</label>

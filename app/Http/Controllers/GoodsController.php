@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Deopt;
 use App\Models\Good;
 use App\Models\Shop;
+use function foo\func;
 use Illuminate\Http\Request;
 use App\Http\Requests\GoodRequest;
 use MeiTuanOpenApi\Api\CategoryService;
@@ -138,17 +139,96 @@ class GoodsController extends Controller
     public function file(Request $request)
     {
         $file = $request->goods;
+        $shop_id = $request->shop_id;
+        $result = [];
 
         $folder_name = "uploads/goods/" . date("Ym/d", time());
         $upload_path = public_path() . '/' . $folder_name;
         $extension = strtolower($file->getClientOriginalExtension()) ?: 'xls';
         $filename = time() . '_' . str_random(10) . '.' . $extension;
         $file->move($upload_path, $filename);
-        Excel::load($upload_path.'/'.$filename, function($reader) {
-            $data = $reader->all();
-            echo '<pre>';
-            print_r($data);
-            echo '<pre>';
+        Excel::load($upload_path.'/'.$filename, function($reader)use($shop_id, $result) {
+            $reader->each(function($item)use($shop_id, $result) {
+                $data = $item->toArray();
+                $tmp = array_values($data);
+                array_push($tmp,$this->upFileGoods($shop_id, $data));
+//                $result[] = $tmp;
+                echo implode('--',$tmp)."<br>";
+            });
         });
+//        Excel::create('上传结果',function($excel) use ($result){
+//            $excel->sheet('score', function($sheet) use ($result){
+//                $sheet->rows($result);
+//            });
+//        })->export('xls');
+    }
+
+    public function upFileGoods($shop_id, $data)
+    {
+        if (!$data['upc'])
+        {
+            return '条码不存在';
+        }
+        if (!$data['price'])
+        {
+            return '价格不存在';
+        }
+        if (!$data['stock'])
+        {
+            return '库存不存在';
+        }
+        $deopt = Deopt::where(['upc' => $data['upc']])->first();
+        if (!$deopt)
+        {
+            return '品库中暂无此药品';
+        }
+        $goods = Good::where(['shop_id' => $shop_id, 'deopt_id' => $deopt->id])->first();
+        if ($goods)
+        {
+            return '药品已存在';
+//            $goods_server = New GoodsService(New Config(env('MT_APPID'),env('MT_SECRET')));
+//            if ($goods_server->syncStock($goods,($goods->stock + $data['stock'])) )
+//            {
+//                return '成功';
+//            }else{
+//                return '药品已存在，同步库存失败';
+//            }
+        }else{
+            $category = Category::where(['name' => $deopt->category, 'shop_id' => $shop_id])->first();
+            if (!$category)
+            {
+                $category = Category::create(['name' => $deopt->category, 'shop_id' => $shop_id, 'sort' => 100]);
+                $server = New CategoryService(New Config(env('MT_APPID'),env('MT_SECRET')));
+                $category_create_status = $server->create($category);
+                if (!$category_create_status)
+                {
+                    $category->delete();
+                    return '该药品分类创建失败';
+                }
+            }
+            if ($category->meituan_id)
+            {
+                $goods_data = [
+                    'deopt_id' => $deopt->id,
+                    'third_id' => $data['id'],
+                    'price' => $data['price'],
+                    'shop_id' => $shop_id,
+                    'category_id' => $category->id,
+                    'sort' => 1000,
+                    'stock' => $data['stock'],
+                    'online' => 1,
+                ];
+                $good = Good::create($goods_data);
+                $server = New GoodsService(New Config(env('MT_APPID'),env('MT_SECRET')));
+                $good_create_status = $server->create($good);
+                if (!$good_create_status)
+                {
+                    $good->delete();
+                    return '该药品创建失败';
+                }
+            }
+        }
+        return '成功';
+
     }
 }
