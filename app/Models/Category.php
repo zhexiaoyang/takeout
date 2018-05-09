@@ -10,7 +10,10 @@ class Category extends Model
 
     public function shop()
     {
-        return $this->belongsTo(Shop::class);
+        return $this->belongsTo(Shop::class)->withDefault([
+            'name' => '暂无药店',
+	    'id'   => 0,
+        ]);
     }
 
     public function scopeAllowShops($query)

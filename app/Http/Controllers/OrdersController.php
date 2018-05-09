@@ -36,7 +36,7 @@ class OrdersController extends Controller
     public function cancel(Order $order)
     {
         $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
-        $server->cancel($order->order_id);
+        // $server->cancel($order->order_id);
         $res = $server->cancel($order->order_id);
         if ( $res === true )
         {
