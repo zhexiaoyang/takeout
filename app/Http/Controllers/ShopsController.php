@@ -29,7 +29,7 @@ class ShopsController extends Controller
         {
             $shops = $shops->where('name','like',"%{$keyword}%");
         }
-        $shops = $shops->paginate(10);
+        $shops = $shops->orderBy('id','DESC')->paginate(10);
         return view('shops.index', compact('shops','keyword'));
 	}
 
@@ -120,5 +120,57 @@ class ShopsController extends Controller
 		$shop->delete();
 
 		return redirect()->route('shops.index')->with('alert', '成功删除门店');
+	}
+
+    public function sync()
+    {
+        $result = [];
+        $shop_list = ["4725294","4725295","4725296","4725297","4725298","4725299","4725300","4725301","4725302","4725303","4725304","4725305","4725306","4725307","4725308","4725309","4725310","4725311","4725312","4725313","4725314","4725315","4725317","4727154","4727394","4727395","4727396","4727397","4727399","4727400","4727401","4727402","4727403","4727404","4728054","4728055"];
+        if (empty($shop_list))
+        {
+            abort(404);
+        }
+        $shop_server = New ShopService(New Config(env('MT_APPID'),env('MT_SECRET')));
+        $res = $shop_server->shop_info(implode(',', $shop_list));
+        $data = json_decode($res, true);
+        $shops = $data['data'];
+        if (!empty($shops))
+        {
+            foreach ($shops as $shop) {
+                $info = [
+//                    'id' => $shop['app_poi_code'],
+                    'meituan_id' => $shop['app_poi_code'],
+                    'name' => $shop['name'],
+                    'address' => $shop['address'],
+                    'latitude' => $shop['latitude']/100000,
+                    'longitude' => $shop['longitude']/100000,
+                    'pic_url' => $shop['pic_url'],
+                    'pic_url_large' => $shop['pic_url_large'],
+                    'phone' => $shop['phone'],
+                    'standby_tel' => $shop['standby_tel'],
+                    'shipping_fee' => $shop['shipping_fee'],
+                    'shipping_time' => $shop['shipping_time'],
+                    'promotion_info' => $shop['promotion_info']==null?'':$shop['promotion_info'],
+                    'open_level' => $shop['open_level'],
+                    'is_online' => $shop['is_online'],
+                    'invoice_support' => $shop['invoice_support'],
+                    'invoice_min_price' => $shop['invoice_min_price'],
+                    'invoice_description' => $shop['invoice_description'],
+                    'third_tag_name' => $shop['third_tag_name'],
+                    'pre_book' => $shop['pre_book'],
+                    'time_select' => $shop['time_select'],
+                    'app_brand_code' => $shop['app_brand_code']==null?'':$shop['app_brand_code'],
+                    'mt_type_id' => $shop['mt_type_id']==null?0:$shop['app_brand_code'],
+                ];
+//                dd($info);
+                if ($info['meituan_id'] && Shop::create($info))
+                {
+                    $result[] = $shop['app_poi_code'].':创建成功';
+                }else{
+                    $result[] = $shop['app_poi_code'].':创建失败';
+                }
+            }
+        }
+        dd($result);
 	}
 }

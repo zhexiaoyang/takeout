@@ -6,7 +6,9 @@ use App\Http\Requests\UserRequest;
 use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
+use Auth;
 
 class UsersController extends Controller
 {
@@ -88,5 +90,40 @@ class UsersController extends Controller
         $user->save();
 
         return redirect()->route('users.index')->with('alert', '成功修改用户密码！');
+    }
+
+    public function getReset(User $user)
+    {
+        return view('users.get_reset', compact('user'));
+    }
+
+    public function postReset(Request $request)
+    {
+        $oldpassword = $request->input('oldpassword');
+        $password = $request->input('password');
+        $data = $request->all();
+        $rules = [
+            'oldpassword'=>'required|between:6,20',
+            'password'=>'required|between:6,20|confirmed',
+        ];
+        $messages = [
+            'required' => '密码不能为空',
+            'between' => '密码必须是6~20位之间',
+            'confirmed' => '新密码和确认密码不匹配'
+        ];
+        $validator = Validator::make($data, $rules, $messages);
+        $user = Auth::user();
+        $validator->after(function($validator) use ($oldpassword, $user) {
+            if (!\Hash::check($oldpassword, $user->password)) {
+                $validator->errors()->add('oldpassword', '原密码错误');
+            }
+        });
+        if ($validator->fails()) {
+            return back()->withErrors($validator);  //返回一次性错误
+        }
+        $user->password = bcrypt($password);
+        $user->save();
+        Auth::logout();  //更改完这次密码后，退出这个用户
+        return redirect('/login');
     }
 }

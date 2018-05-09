@@ -77,8 +77,7 @@
                     </a>
                     <ul class="dropdown-menu extended logout">
                         <div class="log-arrow-up"></div>
-                        <li><a href="#">修改密码</a></li>
-                        <li><a href="#">个人中心</a></li>
+                        <li><a href="{{ route('user.getReset',Auth::user()->id) }}">修改密码</a></li>
                         <li>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 退出登录

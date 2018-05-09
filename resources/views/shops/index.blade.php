@@ -36,7 +36,7 @@
                             </div>
                             <button type="submit" class="btn btn-info">搜索</button>
                             @if(Auth::user()->hasPermissionTo('shop_add'))
-                                <a href="{{route('shops.create')}}" class="btn btn-success">添加门店</a>
+{{--                                <a href="{{route('shops.create')}}" class="btn btn-success">添加门店</a>--}}
                             @endif
                         </form>
                     </div>
