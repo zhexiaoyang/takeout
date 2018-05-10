@@ -30,13 +30,27 @@
                     商品列表
                     <div class="panel-body">
                         <form class="form-inline" role="form" action="{{route('goods.index')}}" method="get">
-                            <div class="form-group">
-                                <label class="sr-only" for="keyword">关键字</label>
-                                <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">
+                            <div class="col-lg-10">
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <label class="sr-only" for="keyword">关键字</label>
+                                        <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <select class="form-control" name="shop_id">
+                                            <option value="" @if(!$shop_id) selected @endif>全部药店</option>
+                                            @foreach($shops as $shop)
+                                                <option value="{{ $shop->id }}" @if($shop_id == $shop->id) selected @endif>{{ $shop->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <button type="submit" class="btn btn-info">搜索</button>
+                                        <a href="{{route('deopts.index')}}" class="btn btn-success">品库列表</a>
+                                        <a href="#myModal" data-toggle="modal" class="btn btn-warning">导入商品</a>
+                                    </div>
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-info">搜索</button>
-                            <a href="{{route('deopts.index')}}" class="btn btn-success">品库列表</a>
-                            <a href="#myModal" data-toggle="modal" class="btn btn-warning">导入商品</a>
                         </form>
                     </div>
                 </header>
@@ -112,7 +126,8 @@
                                     <div class="form-group">
                                         <label for="exampleInputFile">选择文件</label>
                                         <input type="file" id="exampleInputFile3" name="goods">
-                                        <a href="" target="_blank" class="help-block">点击下载模板</a>
+                                        <a href="{{ route('download.excel') }}" target="_blank">点击下载模板</a>
+                                        <span>模板字段说明：upc(药品条形码，不能为空)，price(药品价格)，stock(药品库存)，id(商家药品ID，可为空)</span>
                                     </div>
                                     <button type="submit" class="btn btn-success" onclick="up_goods()">上传</button>
                                 </form>

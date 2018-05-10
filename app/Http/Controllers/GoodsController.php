@@ -24,14 +24,19 @@ class GoodsController extends Controller
 	public function index(Request $request)
 	{
         $keyword = $request->keyword;
+        $shop_id = $request->shop_id;
         $good = Good::allowShops()->select('id','ele_id','baidu_id','meituan_id','shop_id','deopt_id', 'category_id', 'sort', 'stock');
         if ($keyword)
         {
             $good = $good->where('name','like',"%{$keyword}%");
         }
+        if ($shop_id)
+        {
+            $good = $good->where('shop_id',$shop_id);
+        }
         $goods = $good->orderBy('id', 'DESC')->paginate(10);
         $shops = Shop::allowShops()->select('id', 'name')->get();
-        return view('goods.index', compact('goods','keyword', 'shops'));
+        return view('goods.index', compact('goods','keyword', 'shops','shop_id'));
 	}
 
     public function show(Good $good)

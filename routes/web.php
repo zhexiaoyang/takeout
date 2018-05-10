@@ -45,5 +45,8 @@ Route::group(['middleware' => ['auth']], function ($router) {
     Route::post('orders/printAdd/{order}', 'OrdersController@printAdd')->name('orders.printAdd');
     Route::resource('order_details', 'OrderDetailsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
     Route::resource('mt_logs', 'MtLogsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
+    Route::get('download/excel', function() {
+        return response()->download(storage_path('app/template.xls'), '上传商品模板.xls');
+    })->name('download.excel');
 
 });
