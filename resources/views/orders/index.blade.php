@@ -55,11 +55,28 @@
                     订单列表
                     <div class="panel-body">
                         <form class="form-inline" role="form" action="{{route('orders.index')}}" method="get">
-                            <div class="form-group">
-                                <label class="sr-only" for="keyword">关键字</label>
-                                <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">
+                            <div class="col-lg-10">
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <label class="sr-only" for="keyword">关键字</label>
+                                        <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <select class="form-control" name="status">
+                                            <option value="" @if(!$status) selected @endif>全部</option>
+                                            <option value="3" @if($status == 3) selected @endif>待打印</option>
+                                            <option value="8" @if($status == 8) selected @endif>配送中</option>
+                                            <option value="25" @if($status == 25) selected @endif>已取消</option>
+                                            <option value="33" @if($status == 33) selected @endif>已完成</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <button type="submit" class="btn btn-info">搜索</button>
+                                        <a href="{{route('deopts.index')}}" class="btn btn-success">品库列表</a>
+                                        <a href="#myModal" data-toggle="modal" class="btn btn-warning">导入商品</a>
+                                    </div>
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-info">搜索</button>
                         </form>
                     </div>
                 </header>
@@ -137,6 +154,9 @@
                                                 <button type="submit" class="btn btn-danger btn-xs">取消订单</button>
                                             </form>
                                             @endif
+                                            <a target="_blank" _v-1fbece8c="" href="{{route('orders.printOrder', $order->id)}}">
+                                                <button class="btn btn-success btn-xs">打印小票</button>
+                                            </a>
                                             <a target="_blank" _v-1fbece8c="" href="{{route('orders.show', $order->id)}}">
                                                 <button class="btn btn-success btn-xs">查看订单</button>
                                             </a>

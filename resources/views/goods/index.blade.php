@@ -62,10 +62,7 @@
                         <th>通用名/商品名称</th>
                         <th>分类</th>
                         <th>规格</th>
-                        <th>排序</th>
-                        <th>百度ID</th>
-                        <th>美团ID</th>
-                        <th>饿了么ID</th>
+                        <th>库存</th>
                         <th>编辑</th>
                     </tr>
                     </thead>
@@ -81,10 +78,7 @@
                             </td>
                             <td>{{$good->category->name}}</td>
                             <td>{{$good->deopt->spec}}</td>
-                            <td>{{$good->sort}}</td>
-                            <td>{{$good->baidu_id}}</td>
-                            <td>{{$good->meituan_id}}</td>
-                            <td>{{$good->ele_id}}</td>
+                            <td>{{$good->stock}}</td>
                             <td>
                                 <a href="{{ route('goods.edit', $good->id) }}" class="btn btn-primary btn-xs">编辑</a>
                                 @if(Auth::user()->hasPermissionTo('good_delete'))

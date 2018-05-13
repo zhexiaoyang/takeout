@@ -28,7 +28,7 @@ class UsersController extends Controller
         {
             $users = $users->where('name','like',"%{$keyword}%")->orWhere('phone', 'like', "%{$keyword}%");
         }
-        $users = $users->paginate(10);
+        $users = $users->orderBy('id','desc')->paginate(10);
         return view('users.index', compact('users', 'keyword'));
     }
 
@@ -89,7 +89,7 @@ class UsersController extends Controller
 
         $user->save();
 
-        return redirect()->route('users.index')->with('alert', '成功修改用户密码！');
+        return redirect()->route('users.index')->with('alert', '重置成功,新密码为手机号后6位！');
     }
 
     public function getReset(User $user)

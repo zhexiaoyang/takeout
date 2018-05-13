@@ -18,14 +18,24 @@ class OrdersController extends Controller
 
 	public function index(Request $request)
 	{
+        $status = $request->status;
         $keyword = $request->keyword;
         $orders = Order::allowShops()->select('id','order_id','shop_id','created_at', 'delivery_time', 'recipient_address','recipient_phone','recipient_name','total', 'status');
         if ($keyword)
         {
             $orders = $orders->where('order_id','like',"%{$keyword}%")->orWhere('recipient_name', 'like', "%{$keyword}%")->orWhere('recipient_phone', 'like', "%{$keyword}%");
         }
+        if ($status)
+        {
+            if ($status == 3)
+            {
+                $orders->where(['is_print'=>0]);
+            }else{
+                $orders->where(['status'=>$status]);
+            }
+        }
         $orders = $orders->orderBy('id', 'desc')->paginate(20);
-		return view('orders.index', compact('orders','keyword'));
+		return view('orders.index', compact('orders','keyword', 'status'));
 	}
 
     public function show(Order $order)

@@ -18,7 +18,7 @@ class DeoptsController extends Controller
     {
 //        $this->authorize('before', Deopt::class);
         $keyword = $request->keyword;
-        $deopts = Deopt::select('id','name','spec','is_otc','upc','category','common_name');
+        $deopts = Deopt::select('id','name','spec','is_otc','upc','category','common_name','company');
         if ($keyword)
         {
             $deopts = $deopts->where('name','like',"%{$keyword}%")->orWhere('common_name', 'like', "%{$keyword}%");

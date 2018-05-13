@@ -92,7 +92,10 @@ class CreateMtOrder implements ShouldQueue
                             'created_at' => date("Y-m-d H:i:s"),
                             'updated_at' => date("Y-m-d H:i:s"),
                         ];
-                        \DB::table('order_details')->insert($goods);
+                        if (\DB::table('order_details')->insert($goods))
+                        {
+                            \DB::table('goods')->where(['shop_id' => $data['app_poi_code'], 'deopt_id' => $v['app_food_code']])->decrement('stock', $v['quantity']);
+                        }
                     }
 
                 }

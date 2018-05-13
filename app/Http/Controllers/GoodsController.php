@@ -190,14 +190,14 @@ class GoodsController extends Controller
         $goods = Good::where(['shop_id' => $shop_id, 'deopt_id' => $deopt->id])->first();
         if ($goods)
         {
-            return '药品已存在';
-//            $goods_server = New GoodsService(New Config(env('MT_APPID'),env('MT_SECRET')));
-//            if ($goods_server->syncStock($goods,($goods->stock + $data['stock'])) )
-//            {
-//                return '成功';
-//            }else{
-//                return '药品已存在，同步库存失败';
-//            }
+//            return '药品已存在';
+            $goods_server = New GoodsService(New Config(env('MT_APPID'),env('MT_SECRET')));
+            if ($goods_server->syncStock($goods,($goods->stock + $data['stock'])) )
+            {
+                return '药品已存在，同步成功';
+            }else{
+                return '药品已存在，同步库存失败';
+            }
         }else{
             $category = Category::where(['name' => $deopt->category, 'shop_id' => $shop_id])->first();
             if (!$category)

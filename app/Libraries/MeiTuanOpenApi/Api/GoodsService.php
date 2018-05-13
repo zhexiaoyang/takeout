@@ -67,7 +67,7 @@ class GoodsService extends RpcService
     public function syncStock($good, $stock)
     {
         $res = $this->upStock($good, $stock);
-        $data = json_decode($res);
+        $data = json_decode($res, true);
         if ($data && $data['data'] == 'ok')
         {
             return true;
@@ -83,6 +83,7 @@ class GoodsService extends RpcService
             "stock" => $stock
         ];
         $params = [
+            "app_poi_code" => $good->shop_id,
             "medicine_data" => json_encode([$data])
         ];
         return $this->client->call("/medicine/stock", $params);

@@ -42,19 +42,20 @@
                 <table class="table table-striped table-advance table-hover">
                     <thead>
                     <tr>
-                        {{--<th>ID</th>--}}
+                        <th>ID</th>
                         <th>通用名/商品名称</th>
                         <th>分类</th>
                         <th>规格</th>
                         <th>UPC</th>
                         <th>是否OTC</th>
+                        <th>厂家</th>
                         <th>编辑</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach ($deopts as $deopt)
                         <tr>
-                            {{--<td>{{$deopt->id}}</td>--}}
+                            <td>{{$deopt->id}}</td>
                             <td>
                                 {{$deopt->common_name}}
                                 <br>
@@ -70,6 +71,7 @@
                                     <p class="btn btn-error btn-xs">否</p>
                                 @endif
                             </td>
+                            <td>{{$deopt->company}}</td>
                             <td>
                                 <a href="{{ route('deopts.show', $deopt->id) }}" class="btn btn-primary btn-xs">查看</a>
                                 <a href="{{ route('goods.deopt', $deopt->id) }}" class="btn btn-primary btn-xs">上传商品</a>

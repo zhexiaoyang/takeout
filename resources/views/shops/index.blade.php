@@ -47,8 +47,6 @@
                         <th>ID</th>
                         <th>名称</th>
                         <th>地址</th>
-                        <th>饿了么</th>
-                        <th>百度</th>
                         <th>美团</th>
                         <th>编辑</th>
                     </tr>
@@ -59,9 +57,7 @@
                                 <td>{{$shop->id}}</td>
                                 <td>{{$shop->name}}</td>
                                 <td>{{$shop->address}}</td>
-                                <td>{{$shop->ele_id}}</td>
-                                <td>{{$shop->baidu_id}}</td>
-                                <td>{{$shop->ele_id}}</td>
+                                <td>{{$shop->meituan_id}}</td>
                                 <td>
                                     <a href="{{ route('shops.show', $shop->id) }}" class="btn btn-primary btn-xs">查看</a>
                                     @if(Auth::user()->hasPermissionTo('shop_edit'))
