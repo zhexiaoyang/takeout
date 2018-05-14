@@ -72,8 +72,6 @@
                                     </div>
                                     <div class="col-lg-4">
                                         <button type="submit" class="btn btn-info">搜索</button>
-                                        <a href="{{route('deopts.index')}}" class="btn btn-success">品库列表</a>
-                                        <a href="#myModal" data-toggle="modal" class="btn btn-warning">导入商品</a>
                                     </div>
                                 </div>
                             </div>

@@ -14,7 +14,7 @@ class Good extends Model
     }
     public function shop()
     {
-        return $this->belongsTo(Shop::class)->withDefault([
+        return $this->belongsTo(Shop::class, 'shop_id', 'meituan_id')->withDefault([
             'name' => '暂无药店',
 	    'id'   => 0,
     	]);
