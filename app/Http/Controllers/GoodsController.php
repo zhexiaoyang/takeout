@@ -35,7 +35,7 @@ class GoodsController extends Controller
             $good = $good->where('shop_id',$shop_id);
         }
         $goods = $good->orderBy('id', 'DESC')->paginate(10);
-        $shops = Shop::allowShops()->select('id', 'name')->get();
+        $shops = Shop::allowShops()->select('id', 'name', 'meituan_id')->get();
         return view('goods.index', compact('goods','keyword', 'shops','shop_id'));
 	}
 
@@ -155,7 +155,7 @@ class GoodsController extends Controller
         Excel::load($upload_path.'/'.$filename, function($reader)use($shop_id, $result) {
             $reader->each(function($item)use($shop_id, $result) {
                 $data = $item->toArray();
-                $tmp = array_values($data);
+		$tmp = $data;
                 array_push($tmp,$this->upFileGoods($shop_id, $data));
 //                $result[] = $tmp;
                 echo implode('--',$tmp)."<br>";
@@ -194,6 +194,8 @@ class GoodsController extends Controller
             $goods_server = New GoodsService(New Config(env('MT_APPID'),env('MT_SECRET')));
             if ($goods_server->syncStock($goods,($goods->stock + $data['stock'])) )
             {
+		$goods->stock = ($goods->stock + $data['stock']);
+		$goods->save();
                 return '药品已存在，同步成功';
             }else{
                 return '药品已存在，同步库存失败';

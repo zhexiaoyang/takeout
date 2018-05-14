@@ -40,7 +40,7 @@
                                         <select class="form-control" name="shop_id">
                                             <option value="" @if(!$shop_id) selected @endif>全部药店</option>
                                             @foreach($shops as $shop)
-                                                <option value="{{ $shop->id }}" @if($shop_id == $shop->id) selected @endif>{{ $shop->name }}</option>
+                                                <option value="{{ $shop->meituan_id }}" @if($shop_id == $shop->id) selected @endif>{{ $shop->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -112,7 +112,7 @@
                                         @if(!empty($shops))
                                             @foreach($shops as $shop)
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="shop_id" value="{{$shop->id}}"> {{$shop->name}}
+                                                    <input type="radio" name="shop_id" value="{{$shop->meituan_id}}"> {{$shop->name}}
                                                 </label>
                                             @endforeach
                                         @endif

@@ -45,19 +45,20 @@
     <script src="{{ asset('js/common-scripts.js') }}"></script>
     @yield('scripts')
     <script>
-        window.onload = function(){
-            var waitPrintMusic = document.getElementById("waitPrintMusic");
-            waitPrintMusic.pause();
-            openMusic();
-        }
-        function openMusic() {
-            var opMusic = document.getElementById('waitPrintMusic');
-            opMusic.autoplay = "autopaly";
-            if(opMusic.ended){
-                opMusic.loop = "loop";
-            }
-            opMusic.play();
-            opMusic.removeAttribute("loop");
+        window.onload=function () {
+//            var waitPrintMusic = document.getElementById("waitPrintMusic");
+//            waitPrintMusic.play();
+
+            var opMusic = document.getElementById("waitPrintMusic");
+		opMusic.pause();
+//            opMusic.autoplay = "autopaly";
+//            if(opMusic.ended){
+//                opMusic.loop = "loop";
+//            }
+//            opMusic.play();
+//            opMusic.removeAttribute("loop");
+		opMusic.currentTime = 0;
+		opMusic.play();
         }
     </script>
 </body>

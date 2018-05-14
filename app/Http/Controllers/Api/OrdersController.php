@@ -45,11 +45,11 @@ class OrdersController extends Controller
                 {
                     $order->status = 25;
                     $order->save();
-                    $log = new OrderLog();
-                    $log->order_id = $order_id;
-                    $log->message = '取消订单成功';
-                    $log->operator = 'mt api';
-                    $log->save();
+//                    $log = new OrderLog();
+//                    $log->order_id = $order_id;
+//                    $log->message = '取消订单成功';
+//                    $log->operator = 'mt api';
+//                    $log->save();
                 }
             }
         }
@@ -69,9 +69,45 @@ class OrdersController extends Controller
      * 订单配送状态回调URL
      * @return mixed
      */
-    public function status()
+    public function status(Request $request)
     {
-        return $this->response->array(['data' => 'ok']);
+        $result = ['data' => 'ok'];
+        if (!empty($_POST))
+        {
+            $this->log->api = 'api/orderStatus';
+            $this->log->response = json_encode($result, JSON_UNESCAPED_UNICODE);
+            $this->log->save();
+            $order_id = $request->get('order_id');
+            $status = $request->get('logistics_status');
+            if ($status && $order_id)
+            {
+                $order = Order::where('order_id', $order_id)->first();
+                if ($order)
+                {
+                    if ($status == 20)
+                    {
+                        $order->status = 8;
+                        $order->save();
+//                    $log = new OrderLog();
+//                    $log->order_id = $order_id;
+//                    $log->message = '订单配送中';
+//                    $log->operator = 'mt api';
+//                    $log->save();
+                    }
+                    if ($status == 40)
+                    {
+                        $order->status = 33;
+                        $order->save();
+//                    $log = new OrderLog();
+//                    $log->order_id = $order_id;
+//                    $log->message = '订单配送完成';
+//                    $log->operator = 'mt api';
+//                    $log->save();
+                    }
+                }
+            }
+        }
+        return $this->response->array($result);
     }
 
     /**
@@ -87,9 +123,31 @@ class OrdersController extends Controller
      * 已完成订单推送回调URL
      * @return mixed
      */
-    public function complete()
+    public function complete(Request $request)
     {
-        return $this->response->array(['data' => 'ok']);
+        $result = ['data' => 'ok'];
+        if (!empty($_GET))
+        {
+            $this->log->api = 'api/orderComplete';
+            $this->log->response = json_encode($result, JSON_UNESCAPED_UNICODE);
+            $this->log->save();
+            $order_id = $request->get('order_id');
+            if ($order_id)
+            {
+                $order = Order::where('order_id', $order_id)->first();
+                if ($order)
+                {
+                    $order->status = 33;
+                    $order->save();
+//                    $log = new OrderLog();
+//                    $log->order_id = $order_id;
+//                    $log->message = '订单完成';
+//                    $log->operator = 'mt api';
+//                    $log->save();
+                }
+            }
+        }
+        return $this->response->array($result);
     }
 
     /**
