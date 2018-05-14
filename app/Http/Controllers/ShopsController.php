@@ -125,7 +125,7 @@ class ShopsController extends Controller
     public function sync()
     {
         $result = [];
-        $shop_list = ["4725294","4725295","4725296","4725297","4725298","4725299","4725300","4725301","4725302","4725303","4725304","4725305","4725306","4725307","4725308","4725309","4725310","4725311","4725312","4725313","4725314","4725315","4725317","4727154","4727394","4727395","4727396","4727397","4727399","4727400","4727401","4727402","4727403","4727404","4728054","4728055"];
+        $shop_list = [];
         if (empty($shop_list))
         {
             abort(404);
@@ -172,5 +172,28 @@ class ShopsController extends Controller
             }
         }
         dd($result);
+	}
+
+    public function goods(Shop $shop)
+    {
+        $goods_server = New GoodsService(New Config(env('MT_APPID'),env('MT_SECRET')));
+        $res = $goods_server->lists($shop);
+        $data = json_decode($res, true);
+        if (!empty($data['data']))
+        {
+            foreach ($data['data'] as $goods) {
+                $goods_server->destroy2($shop->meituan_id, $goods['app_medicine_code']);
+            }
+        }
+
+        $category_server = New CategoryService(New Config(env('MT_APPID'),env('MT_SECRET')));
+        $res = $category_server->lists($shop);
+        $data = json_decode($res, true);
+        if (!empty($data['data']))
+        {
+            foreach ($data['data'] as $goods) {
+                $category_server->destroy2($shop->meituan_id, $goods['category_code']);
+            }
+        }
 	}
 }

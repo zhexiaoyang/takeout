@@ -112,7 +112,7 @@
                                         @if(!empty($shops))
                                             @foreach($shops as $shop)
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="shop_id" value="{{$shop->meituan_id}}"> {{$shop->name}}
+                                                    <input type="radio" name="shop_id" value="{{$shop->id}}"> {{$shop->name}}
                                                 </label>
                                             @endforeach
                                         @endif

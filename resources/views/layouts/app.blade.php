@@ -48,7 +48,7 @@
         window.onload = function(){
             var waitPrintMusic = document.getElementById("waitPrintMusic");
             waitPrintMusic.pause();
-            openMusic();
+//            openMusic();
         }
         function openMusic() {
             var opMusic = document.getElementById('waitPrintMusic');

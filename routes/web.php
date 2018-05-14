@@ -30,8 +30,11 @@ Route::group(['middleware' => ['auth']], function ($router) {
     Route::post('resets', 'UsersController@postReset')->name('user.postReset');
 
     Route::resource('deopts', 'DeoptsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
-    Route::get('shops/sync', 'ShopsController@sync')->name('shops.sync');
+
     Route::resource('shops', 'ShopsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
+    Route::get('shops/sync', 'ShopsController@sync')->name('shops.sync');
+    Route::get('shops/goods/{shop}', 'ShopsController@goods')->name('shops.goods');
+
     Route::resource('categories', 'CategoriesController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
     Route::resource('goods', 'GoodsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
     Route::post('goods/file', 'GoodsController@file')->name('goods.file');

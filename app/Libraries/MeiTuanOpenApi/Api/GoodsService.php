@@ -2,6 +2,8 @@
 
 namespace MeiTuanOpenApi\Api;
 
+use App\Models\Shop;
+
 
 /**
  * 店铺服务
@@ -11,8 +13,9 @@ class GoodsService extends RpcService
 
     public function create($good)
     {
+        $shop = Shop::where(['id' => $good->shop_id])->first();
         $params = [
-            "app_poi_code" => $good->shop_id,
+            "app_poi_code" => $shop->meituan_id,
             'app_medicine_code' => $good->deopt->id,
             'upc' => $good->deopt->upc,
             'medicine_no' => $good->deopt->approval,
@@ -24,7 +27,6 @@ class GoodsService extends RpcService
             'is_sold_out' => $good->online,
             'sequence' => $good->sort,
         ];
-
         $result = json_decode($this->client->call("/medicine/save", $params), true);
 
         if ($result && $result['data'] == 'ok')
@@ -39,8 +41,9 @@ class GoodsService extends RpcService
 
     public function update($good)
     {
+        $shop = Shop::where(['id' => $good->shop_id])->first();
         $params = [
-            "app_poi_code" => $good->shop_id,
+            "app_poi_code" => $shop->meituan_id,
             'app_medicine_code' => $good->deopt->id,
             'upc' => $good->deopt->upc,
             'medicine_no' => $good->deopt->approval,
@@ -57,9 +60,19 @@ class GoodsService extends RpcService
 
     public function destroy($good)
     {
+        $shop = Shop::where(['id' => $good->shop_id])->first();
         $params = [
-            "app_poi_code" => $good->shop_id,
+            "app_poi_code" => $shop->meituan_id,
             'app_medicine_code' => $good->deopt->id,
+        ];
+        return $this->client->call("/medicine/delete", $params);
+    }
+
+    public function destroy2($app_poi_code, $app_medicine_code)
+    {
+        $params = [
+            "app_poi_code" => $app_poi_code,
+            'app_medicine_code' => $app_medicine_code,
         ];
         return $this->client->call("/medicine/delete", $params);
     }
@@ -77,9 +90,10 @@ class GoodsService extends RpcService
 
     public function upStock($good, $stock)
     {
+        $shop = Shop::where(['id' => $good->shop_id])->first();
         $data = [
             "app_medicine_code" => $good->deopt->id,
-            "app_poi_code" => $good->shop_id,
+            "app_poi_code" => $shop->meituan_id,
             "stock" => $stock
         ];
         $params = [
@@ -87,6 +101,14 @@ class GoodsService extends RpcService
             "medicine_data" => json_encode([$data])
         ];
         return $this->client->call("/medicine/stock", $params);
+    }
+
+    public function lists(Shop $shop)
+    {
+        $params = [
+            "app_poi_code" => $shop->meituan_id,
+        ];
+        return $this->client->call("/medicine/list", $params, 'GET');
     }
 
 }

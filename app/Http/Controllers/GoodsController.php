@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\CreateGoods;
 use App\Models\Category;
 use App\Models\Deopt;
 use App\Models\Good;
@@ -145,6 +146,7 @@ class GoodsController extends Controller
     {
         $file = $request->goods;
         $shop_id = $request->shop_id;
+        $shop = Shop::where(['id' => $shop_id])->first();
         $result = [];
 
         $folder_name = "uploads/goods/" . date("Ym/d", time());
@@ -152,12 +154,13 @@ class GoodsController extends Controller
         $extension = strtolower($file->getClientOriginalExtension()) ?: 'xls';
         $filename = time() . '_' . str_random(10) . '.' . $extension;
         $file->move($upload_path, $filename);
-        Excel::load($upload_path.'/'.$filename, function($reader)use($shop_id, $result) {
-            $reader->each(function($item)use($shop_id, $result) {
+        Excel::load($upload_path.'/'.$filename, function($reader)use($shop, $result) {
+            $reader->each(function($item)use($shop, $result) {
                 $data = $item->toArray();
-		$tmp = $data;
-                array_push($tmp,$this->upFileGoods($shop_id, $data));
-//                $result[] = $tmp;
+//                dispatch(new CreateGoods($shop, $data));
+		        $tmp = $data;
+                array_push($tmp,$this->upFileGoods($shop, $data));
+                $result[] = $tmp;
                 echo implode('--',$tmp)."<br>";
             });
         });
@@ -168,7 +171,7 @@ class GoodsController extends Controller
 //        })->export('xls');
     }
 
-    public function upFileGoods($shop_id, $data)
+    public function upFileGoods(Shop $shop, $data)
     {
         if (!$data['upc'])
         {
@@ -187,24 +190,24 @@ class GoodsController extends Controller
         {
             return '品库中暂无此药品';
         }
-        $goods = Good::where(['shop_id' => $shop_id, 'deopt_id' => $deopt->id])->first();
-        if ($goods)
+        $goods = Good::where(['shop_id' => $shop->id, 'deopt_id' => $deopt->id])->first();
+        if ($goods && $goods->meituan_id)
         {
 //            return '药品已存在';
             $goods_server = New GoodsService(New Config(env('MT_APPID'),env('MT_SECRET')));
             if ($goods_server->syncStock($goods,($goods->stock + $data['stock'])) )
             {
-		$goods->stock = ($goods->stock + $data['stock']);
-		$goods->save();
+                $goods->stock = ($goods->stock + $data['stock']);
+                $goods->save();
                 return '药品已存在，同步成功';
             }else{
                 return '药品已存在，同步库存失败';
             }
         }else{
-            $category = Category::where(['name' => $deopt->category, 'shop_id' => $shop_id])->first();
-            if (!$category)
+            $category = Category::where(['name' => $deopt->category, 'shop_id' => $shop->id])->first();
+            if (!$category || !$category->meituan_id)
             {
-                $category = Category::create(['name' => $deopt->category, 'shop_id' => $shop_id, 'sort' => 100]);
+                $category = Category::create(['name' => $deopt->category, 'shop_id' => $shop->id, 'sort' => 100]);
                 $server = New CategoryService(New Config(env('MT_APPID'),env('MT_SECRET')));
                 $category_create_status = $server->create($category);
                 if (!$category_create_status)
@@ -219,8 +222,8 @@ class GoodsController extends Controller
                     'deopt_id' => $deopt->id,
                     'third_id' => $data['id'],
                     'price' => $data['price'],
-                    'shop_id' => $shop_id,
-                    'category_id' => $category->id,
+                    'shop_id' => $shop->id,
+                    'category_id' => $category->meituan_id,
                     'sort' => 1000,
                     'stock' => $data['stock'],
                     'online' => 1,
@@ -236,6 +239,5 @@ class GoodsController extends Controller
             }
         }
         return '成功';
-
     }
 }

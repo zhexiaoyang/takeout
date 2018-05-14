@@ -61,7 +61,10 @@
                                 <td>
                                     <a href="{{ route('shops.show', $shop->id) }}" class="btn btn-primary btn-xs">查看</a>
                                     @if(Auth::user()->hasPermissionTo('shop_edit'))
-                                    <a href="{{ route('shops.edit', $shop->id) }}" class="btn btn-primary btn-xs">编辑</a>
+                                        <a href="{{ route('shops.edit', $shop->id) }}" class="btn btn-primary btn-xs">编辑</a>
+                                    @endif
+                                    @if(1)
+                                        <a href="{{ route('shops.goods', $shop->id) }}" class="btn btn-primary btn-xs">清空</a>
                                     @endif
                                 </td>
                             </tr>
