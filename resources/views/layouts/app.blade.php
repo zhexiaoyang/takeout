@@ -48,7 +48,9 @@
         window.onload = function(){
             var waitPrintMusic = document.getElementById("waitPrintMusic");
             waitPrintMusic.pause();
-//            openMusic();
+            @if(count($print_orders) > 0)
+            openMusic();
+            @endif
         }
         function openMusic() {
             var opMusic = document.getElementById('waitPrintMusic');
@@ -59,6 +61,7 @@
             opMusic.play();
             opMusic.removeAttribute("loop");
         }
+
     </script>
 </body>
 </html>
