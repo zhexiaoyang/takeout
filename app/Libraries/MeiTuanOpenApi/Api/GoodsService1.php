@@ -97,7 +97,7 @@ class GoodsService extends RpcService
             "stock" => $stock
         ];
         $params = [
-            "app_poi_code" => $shop->meituan_id,
+            "app_poi_code" => $good->shop_id,
             "medicine_data" => json_encode([$data])
         ];
         return $this->client->call("/medicine/stock", $params);

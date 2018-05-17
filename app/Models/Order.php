@@ -10,7 +10,7 @@ class Order extends Model
 
     public function shop()
     {
-        return $this->belongsTo(Shop::class)->withDefault([
+        return $this->belongsTo(Shop::class, 'shop_id', 'meituan_id')->withDefault([
             'id' => 0,
             'name' => '暂无药店'
         ]);
