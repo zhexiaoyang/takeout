@@ -38,16 +38,16 @@ class CreateMtOrder implements ShouldQueue
     {
         $data = json_decode($this->log->request, true);
         $order_id = $data['order_id'];
-        $goods_data = json_decode($data['detail'], true);
-//        $extra_data = json_decode($data['extras'], true);
-
+        $goods_data = json_decode(urldecode($data['detail']), true);
+        $extra_data = json_decode(urldecode($data['extras']), true);
+        $shop = \DB::table('shops')->select('id')->where('meituan_id', $data['app_poi_code'])->first();
         $order = \DB::table('orders')->where('order_id',$order_id)->first();
         if (!$order)
         {
             $insert = [
                 'order_id' => $data['order_id'],
                 'order_id_view' => $data['wm_order_id_view'],
-                'shop_id' => $data['app_poi_code'],
+                'shop_id' => $shop->id,
                 'recipient_address' => urldecode($data['recipient_address']),
                 'recipient_phone' => $data['recipient_phone'],
                 'recipient_name' => urldecode($data['recipient_name']),
@@ -94,31 +94,31 @@ class CreateMtOrder implements ShouldQueue
                         ];
                         if (\DB::table('order_details')->insert($goods))
                         {
-                            \DB::table('goods')->where(['shop_id' => $data['app_poi_code'], 'deopt_id' => $v['app_food_code']])->decrement('stock', $v['quantity']);
+                            \DB::table('goods')->where(['shop_id' => $shop->id, 'deopt_id' => $v['app_food_code']])->decrement('stock', $v['quantity']);
                         }
                     }
 
                 }
-//                if ($order && !empty($extra_data))
-//                {
-//                    foreach ($extra_data as $v)
-//                    {
-//                        if (isset($v['remark']))
-//                        {
-//                            $extra = [
-//                                'order_id' => $order->id,
-//                                'third_order_id' => $order_id,
-//                                'name' => $v['remark'],
-//                                'total' => isset($v['reduce_fee'])?$v['reduce_fee']:0,
-//                                'pt_price' => isset($v['mt_charge'])?$v['mt_charge']:0,
-//                                'price' => isset($v['poi_charge'])?$v['poi_charge']:0,
-//                                'created_at' => date("Y-m-d H:i:s"),
-//                                'updated_at' => date("Y-m-d H:i:s"),
-//                            ];
-//                            \DB::table('order_extras')->insert($extra);
-//                        }
-//                    }
-//                }
+                if ($order && !empty($extra_data))
+                {
+                    foreach ($extra_data as $v)
+                    {
+                        if (isset($v['remark']))
+                        {
+                            $extra = [
+                                'order_id' => $order->id,
+                                'third_order_id' => $order_id,
+                                'name' => $v['remark'],
+                                'total' => isset($v['reduce_fee'])?$v['reduce_fee']:0,
+                                'pt_price' => isset($v['mt_charge'])?$v['mt_charge']:0,
+                                'price' => isset($v['poi_charge'])?$v['poi_charge']:0,
+                                'created_at' => date("Y-m-d H:i:s"),
+                                'updated_at' => date("Y-m-d H:i:s"),
+                            ];
+                            \DB::table('order_extras')->insert($extra);
+                        }
+                    }
+                }
                 // 确认订单
 
                 $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));

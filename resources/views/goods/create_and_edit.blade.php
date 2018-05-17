@@ -59,9 +59,9 @@
                         <div class="form-group">
                             <label for="name-field">同步到平台</label>
                             <div class="checkboxes">
-                                <input name="sync[]" id="checkbox-01" value="1" type="checkbox" @if($good->meituan_id) checked @endif/>美团
-                                <input name="sync[]" id="checkbox-02" value="2" type="checkbox" />百度
-                                <input name="sync[]" id="checkbox-03" value="3" type="checkbox" />饿了么
+                                <input name="sync[]" id="checkbox-01" value="1" type="checkbox" checked />美团
+                                {{--<input name="sync[]" id="checkbox-02" value="2" type="checkbox" />百度--}}
+                                {{--<input name="sync[]" id="checkbox-03" value="3" type="checkbox" />饿了么--}}
                             </div>
                         </div>
                         <div class="form-group">
@@ -114,10 +114,10 @@
                             <label for="invoice_min_price-field">上下架</label>
                             <div class="radios">
                                 <label class="label_radio" for="radios-05" style="display: inline;margin-right: 20px;">
-                                    <input name="online" id="radios-05" value="1" type="radios" @if(old('online', $good->online ) == 1 || !isset($good->online)) checked @endif />上架
+                                    <input name="online" id="radios-05" value="1" type="radio" @if(old('online', $good->online ) == 1 || !isset($good->online)) checked @endif />上架
                                 </label>
                                 <label class="label_radio" for="radios-06" style="display: inline;margin-right: 20px;">
-                                    <input name="online" id="radios-06" value="0" type="radios" @if(old('online', $good->online ) === 0) checked @endif />下架
+                                    <input name="online" id="radios-06" value="0" type="radio" @if(old('online', $good->online ) === 0) checked @endif />下架
                                 </label>
                             </div>
                         </div>
