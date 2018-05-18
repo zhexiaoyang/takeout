@@ -190,7 +190,7 @@
                                                 <span>
                                                     商品单价：
                                                     <script type="text/javascript">
-                                                    </script>￥{{ $goods->price/100 }}
+                                                    </script>￥{{ $goods->price }}
                                                 </span>
                                             </li>
                                         </td>
