@@ -24,7 +24,7 @@ class GoodsService extends RpcService
             'stock' => $good->stock,
             'category_code' => $good->category->id,
             'category_name' => $good->category->name,
-            'is_sold_out' => $good->online,
+            'is_sold_out' => 0,
             'sequence' => $good->sort,
         ];
         $result = json_decode($this->client->call("/medicine/save", $params), true);
@@ -52,7 +52,7 @@ class GoodsService extends RpcService
             'stock' => $good->stock,
             'category_code' => $good->category->id,
             'category_name' => $good->category->name,
-            'is_sold_out' => $good->online,
+            'is_sold_out' => $good->online?0:1,
             'sequence' => $good->sort,
         ];
         return $this->client->call("/medicine/update", $params);
@@ -109,6 +109,20 @@ class GoodsService extends RpcService
             "app_poi_code" => $shop->meituan_id,
         ];
         return $this->client->call("/medicine/list", $params, 'GET');
+    }
+
+
+    public function online($good)
+    {
+        $shop = Shop::where(['id' => $good->shop_id])->first();
+        $params = [
+            "app_poi_code" => $shop->meituan_id,
+            'app_medicine_code' => $good->deopt->id,
+            'category_code' => $good->category->id,
+            'category_name' => $good->category->name,
+            'is_sold_out' => 0,
+        ];
+        return $this->client->call("/medicine/update", $params);
     }
 
 }

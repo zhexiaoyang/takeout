@@ -196,4 +196,17 @@ class ShopsController extends Controller
             }
         }
 	}
+
+	public function goodsOnline(Shop $shop)
+    {
+        $goods = Good::where(['shop_id' => $shop->id])->get();
+        if (!empty($goods))
+        {
+            foreach ($goods as $good) {
+                $goods_service = New GoodsService(New Config(env('MT_APPID'),env('MT_SECRET')));
+                $goods_service->online($good);
+            }
+        }
+        dd("同步成功");
+    }
 }
