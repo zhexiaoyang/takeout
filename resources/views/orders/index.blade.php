@@ -228,5 +228,10 @@
             });
         </script>
     @endif
+    <script>
+            setTimeout(function () {
+                history.go(0)
+            },30000)
+    </script>
 
 @stop
