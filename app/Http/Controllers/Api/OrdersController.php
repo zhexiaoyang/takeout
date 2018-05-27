@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Jobs\CreateMtOrder;
 use App\Models\Order;
+use App\Models\OrderLog;
 use Illuminate\Http\Request;
 
 class OrdersController extends Controller
@@ -34,7 +35,7 @@ class OrdersController extends Controller
         $result = ['data' => 'ok'];
         if (!empty($_GET))
         {
-            $this->log->api = 'api/orderCreate';
+            $this->log->api = 'api/orderCancel';
             $this->log->response = json_encode($result, JSON_UNESCAPED_UNICODE);
             $this->log->save();
             $order_id = $request->get('order_id');
@@ -45,11 +46,11 @@ class OrdersController extends Controller
                 {
                     $order->status = 25;
                     $order->save();
-//                    $log = new OrderLog();
-//                    $log->order_id = $order_id;
-//                    $log->message = '取消订单成功';
-//                    $log->operator = 'mt api';
-//                    $log->save();
+                    $log = new OrderLog();
+                    $log->order_id = $order_id;
+                    $log->message = '取消订单成功';
+                    $log->operator = 'mt api cancel';
+                    $log->save();
                 }
             }
         }
@@ -88,21 +89,21 @@ class OrdersController extends Controller
                     {
                         $order->status = 8;
                         $order->save();
-//                    $log = new OrderLog();
-//                    $log->order_id = $order_id;
-//                    $log->message = '订单配送中';
-//                    $log->operator = 'mt api';
-//                    $log->save();
+                    $log = new OrderLog();
+                    $log->order_id = $order_id;
+                    $log->message = '订单配送中';
+                    $log->operator = 'mt api status';
+                    $log->save();
                     }
                     if ($status == 40)
                     {
                         $order->status = 33;
                         $order->save();
-//                    $log = new OrderLog();
-//                    $log->order_id = $order_id;
-//                    $log->message = '订单配送完成';
-//                    $log->operator = 'mt api';
-//                    $log->save();
+                    $log = new OrderLog();
+                    $log->order_id = $order_id;
+                    $log->message = '订单配送完成';
+                    $log->operator = 'mt api status';
+                    $log->save();
                     }
                 }
             }
@@ -139,11 +140,11 @@ class OrdersController extends Controller
                 {
                     $order->status = 33;
                     $order->save();
-//                    $log = new OrderLog();
-//                    $log->order_id = $order_id;
-//                    $log->message = '订单完成';
-//                    $log->operator = 'mt api';
-//                    $log->save();
+                    $log = new OrderLog();
+                    $log->order_id = $order_id;
+                    $log->message = '订单完成';
+                    $log->operator = 'mt api complete';
+                    $log->save();
                 }
             }
         }

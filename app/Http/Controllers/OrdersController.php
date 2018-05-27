@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderLog;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
 use MeiTuanOpenApi\Api\OrderService;
 use MeiTuanOpenApi\Config\Config;
+use Auth;
 
 class OrdersController extends Controller
 {
@@ -93,6 +95,11 @@ class OrdersController extends Controller
 
     public function printAdd(Order $order)
     {
+        $log = new OrderLog;
+        $log->order_id = $order->order_id;
+        $log->message = '打印订单成功';
+        $log->operator = Auth()->user()->name;
+        $log->save();
         $order->increment('is_print');
     }
 }

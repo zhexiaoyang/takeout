@@ -4,6 +4,7 @@ namespace MeiTuanOpenApi\Api;
 
 
 use App\Models\OrderLog;
+use Auth;
 
 class OrderService extends RpcService
 {
@@ -36,11 +37,11 @@ class OrderService extends RpcService
         $result = json_decode($this->client->call("/order/cancel", $params, 'GET'), true);
         if ($result && $result['data'] == 'ok')
         {
-//            $log = new OrderLog();
-//            $log->order_id = $order_id;
-//            $log->message = '取消订单成功';
-//            $log->operator = 'system';
-//            $log->save();
+            $log = new OrderLog();
+            $log->order_id = $order_id;
+            $log->message = '取消订单成功';
+            $log->operator = Auth()->user()->name;
+            $log->save();
             return true;
         }
         return isset($result['error']['msg'])?$result['error']['msg']:'请求取消接口错误';

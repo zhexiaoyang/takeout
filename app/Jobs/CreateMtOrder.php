@@ -125,7 +125,7 @@ class CreateMtOrder implements ShouldQueue
                 $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
                 $server->confirm($order_id);
                 $log = new OrderLog;
-                $log->order_id = $order->id;
+                $log->order_id = $order->order_id;
                 $log->message = '创建订单成功';
                 $log->operator = 'system';
                 $log->save();

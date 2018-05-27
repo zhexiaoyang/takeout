@@ -24,7 +24,7 @@ class Order extends Model
 
     public function logs()
     {
-        return $this->hasMany(OrderLog::class);
+        return $this->hasMany(OrderLog::class,'order_id', 'order_id');
     }
 
     public function scopeAllowShops($query)
