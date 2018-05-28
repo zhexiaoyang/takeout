@@ -53,4 +53,8 @@ Route::group(['middleware' => ['auth']], function ($router) {
         return response()->download(storage_path('app/template.xls'), '上传商品模板.xls');
     })->name('download.excel');
 
+    Route::get('finance/hit', 'FinanceController@hit')->name('finance.hit');
+    Route::get('finance/sales', 'FinanceController@sales')->name('finance.sales');
+
+
 });
