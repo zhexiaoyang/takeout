@@ -146,7 +146,7 @@
                                             @foreach($order->logs as $log)
                                                <dd><i></i><span class="behavDesc b-orderdd">{{ $log->message }}</span></dd>
                                                <dd><span class="behavDesc b-orderdd color-grey f12">操作人：{{ $log->operator }}</span></dd>
-                                               <dd><span class="behavDesc b-orderd-d color-grey f12">{{ $order->created_at }} </span></dd>
+                                               <dd><span class="behavDesc b-orderd-d color-grey f12">{{ $log->created_at }} </span></dd>
                                             @endforeach
                                         @endif
                                     </dl>

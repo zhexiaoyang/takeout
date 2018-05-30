@@ -68,16 +68,24 @@
                     </thead>
                     <tbody>
                     @if(!empty($list))
-                    @foreach ($list as $good)
+                    @foreach ($list as $sale)
                         <tr>
-                            <td>{{$good->deopt->id}}</td>
+                            <td>{{$sale->goods->id}}</td>
+                            <td>{{$sale->goods->id}}</td>
+                            <td>{{$sale->goods->name}}</td>
+                            <td>{{$sale->goods->spec}}</td>
+                            <td>{{$sale->goods->upc}}</td>
+                            <td>{{$sale->third_order_id}}</td>
+                            <td>{{$sale->quantity}}</td>
+                            <td>{{$sale->price}}</td>
+                            <td>{{$sale->created_at}}</td>
                         </tr>
                     @endforeach
                     @endif
                     </tbody>
                 </table>
                 <div style="margin-left: 10px">
-{{--                    {!! $list->appends(['keyword' => $keyword])->render() !!}--}}
+                    {!! $list->appends(['keyword' => $keyword])->render() !!}
                 </div>
             </section>
         </div>
