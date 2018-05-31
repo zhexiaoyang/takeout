@@ -224,6 +224,28 @@
                                             <span class="extra_tips_right">￥{{ $order->shipping_fee }}</span>
                                         </span>
                                     </li>
+                                    @if($arr = json_decode(trim(urldecode($order->poi_receive_detail),'"'), true))
+                                        @if(!empty($arr['actOrderChargeByMt']))
+                                            @foreach($arr['actOrderChargeByMt'] as $mt)
+                                                <li>
+                                                    <span class="extra_msg_box">
+                                                        <span class="extra_msg_width_tip">{{ $mt['comment'] }}（美团承担）</span>
+                                                        <span class="extra_tips_right">￥-{{ $mt['moneyCent']/100 }}</span>
+                                                    </span>
+                                                </li>
+                                            @endforeach
+                                        @endif
+                                        @if(!empty($arr['actOrderChargeByPoi']))
+                                            @foreach($arr['actOrderChargeByPoi'] as $mt)
+                                                <li>
+                                                    <span class="extra_msg_box">
+                                                        <span class="extra_msg_width_tip">{{ $mt['comment'] }}（商家承担）</span>
+                                                        <span class="extra_tips_right">￥-{{ $mt['moneyCent']/100 }}</span>
+                                                    </span>
+                                                </li>
+                                            @endforeach
+                                        @endif
+                                    @endif
                                     <li>
                                         <span class="line">客户实付金额：&nbsp;&nbsp;&nbsp;&nbsp;
                                             <span style="color: #cc0000; font-size: 24px">￥{{ $order->total }}</span>

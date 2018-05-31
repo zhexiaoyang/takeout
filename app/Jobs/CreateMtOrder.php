@@ -69,6 +69,7 @@ class CreateMtOrder implements ShouldQueue
                 'status' => $data['status'],
                 'ctime' => $data['ctime'],
                 'utime' => $data['utime'],
+                'poi_receive_detail' => $data['poi_receive_detail'],
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s"),
             ];
