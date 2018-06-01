@@ -40,10 +40,10 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-lg-2">
-                                        <label class="sr-only" for="keyword">关键字</label>
-                                        <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">
-                                    </div>
+                                    {{--<div class="col-lg-2">--}}
+                                        {{--<label class="sr-only" for="keyword">关键字</label>--}}
+                                        {{--<input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">--}}
+                                    {{--</div>--}}
                                     <div class="col-lg-4">
                                         <button type="submit" class="btn btn-info">搜索</button>
                                     </div>

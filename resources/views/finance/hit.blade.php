@@ -29,7 +29,7 @@
                 <header class="panel-heading">
                     打款统计
                     <div class="panel-body">
-                        <form class="form-inline" role="form" action="{{route('goods.index')}}" method="get">
+                        <form class="form-inline" role="form" action="{{route('finance.hit')}}" method="get">
                             <div class="col-lg-10">
                                 <div class="row">
                                     <div class="col-lg-3">
@@ -62,7 +62,6 @@
                         <th>账单结束时间</th>
                         <th>销售金额</th>
                         <th>药店收益</th>
-                        <th>违规罚款</th>
                         <th>应返金额</th>
                         <th>状态</th>
                         <th>操作</th>
@@ -70,9 +69,36 @@
                     </thead>
                     <tbody>
                     @if(!empty($list))
-                    @foreach ($list as $good)
+                    @foreach ($list as $v)
                         <tr>
-                            <td>{{$good->deopt->id}}</td>
+                            <td>{{$v->remit_id}}</td>
+                            <td>{{$v->shop_name}}</td>
+                            <td>{{$v->coefficient}}</td>
+                            <td>{{$v->start_time}}</td>
+                            <td>{{$v->end_time}}</td>
+                            <td>{{$v->sale_amount}}</td>
+                            <td>{{$v->earnings}}</td>
+                            <td>{{$v->return}}</td>
+                            <td>
+                                @if($v->status)
+                                    <span class="btn btn-primary btn-xs">已打款</span>
+                                @else
+                                    @if(Auth::user()->hasRole('Superman'))
+                                        <form action="{{ route('bill.status', $v->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确定打款么？')">
+                                            {{ csrf_field() }}
+                                            <button type="submit" class="btn btn-danger btn-xs">未打款</button>
+                                        </form>
+                                    @endif
+                                @endif
+                            </td>
+                            <td>
+                                @if(Auth::user()->hasRole('Superman'))
+                                    <form action="{{ route('bill.reset', $v->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确定重新生成账单么？')">
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="btn btn-info btn-xs">重新生成</button>
+                                    </form>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                     @endif

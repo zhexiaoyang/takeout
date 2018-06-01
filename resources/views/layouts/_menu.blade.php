@@ -34,18 +34,18 @@
                     <li><a class="" href="{{route('shops.index')}}">门店列表</a></li>
                 </ul>
             </li>
-            <li class="sub-menu">
-                <a href="javascript:;" class="">
-                    <i class="icon-user"></i>
-                    <span>财务管理</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub">
-                    <li><a class="" href="{{route('finance.hit')}}">打款统计</a></li>
-                    <li><a class="" href="{{route('finance.sales')}}">销售药品统计</a></li>
-                </ul>
-            </li>
             @if(Auth::user()->hasPermissionTo('manage_users'))
+                <li class="sub-menu">
+                    <a href="javascript:;" class="">
+                        <i class="icon-user"></i>
+                        <span>财务管理</span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub">
+                        <li><a class="" href="{{route('finance.hit')}}">打款统计</a></li>
+                        <li><a class="" href="{{route('finance.sales')}}">销售药品统计</a></li>
+                    </ul>
+                </li>
                 <li class="sub-menu">
                     <a href="javascript:;" class="">
                         <i class="icon-user"></i>
