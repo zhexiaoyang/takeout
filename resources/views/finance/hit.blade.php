@@ -105,7 +105,7 @@
                     </tbody>
                 </table>
                 <div style="margin-left: 10px">
-{{--                    {!! $list->appends(['keyword' => $keyword])->render() !!}--}}
+                    {!! $list->appends(['keyword' => $keyword])->render() !!}
                 </div>
             </section>
         </div>
