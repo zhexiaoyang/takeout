@@ -73,7 +73,7 @@
                         <tr>
                             <td>{{$v->remit_id}}</td>
                             <td>{{$v->shop_name}}</td>
-                            <td>{{$v->coefficient}}</td>
+                            <td>{{$v->coefficient}}%</td>
                             <td>{{$v->start_time}}</td>
                             <td>{{$v->end_time}}</td>
                             <td>{{$v->sale_amount}}</td>
