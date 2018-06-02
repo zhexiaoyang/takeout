@@ -6,6 +6,8 @@ use App\Jobs\CreateMtOrder;
 use App\Models\Order;
 use App\Models\OrderLog;
 use Illuminate\Http\Request;
+use MeiTuanOpenApi\Api\OrderService;
+use MeiTuanOpenApi\Config\Config;
 
 class OrdersController extends Controller
 {
@@ -61,9 +63,33 @@ class OrdersController extends Controller
      * 美团用户或客服退款流程操作URL
      * @return mixed
      */
-    public function refund()
+    public function refund(Request $request)
     {
-        return $this->response->array(['data' => 'ok']);
+        $result = ['data' => 'ok'];
+        if (!empty($_GET))
+        {
+            $this->log->api = 'api/order/refund';
+            $this->log->response = json_encode($result, JSON_UNESCAPED_UNICODE);
+            $this->log->save();
+            $order_id = $request->get('order_id');
+            $notify_type = $request->get('notify_type');
+            if ($order_id && $notify_type == 'apply')
+            {
+                $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
+                $res = $server->reject($order_id);
+                $log = new OrderLog();
+                $log->order_id = $order_id;
+                $log->operator = 'mt api refund';
+                if ( $res === true )
+                {
+                    $log->message = '拒绝退款申请成功';
+                }else{
+                    $log->message = isset($server->mt_res['error']['msg'])?'拒绝退款申请失败('.$server->mt_res['error']['msg'].')':'拒绝退款申请失败';
+                }
+                $log->save();
+            }
+        }
+        return $this->response->array($result);
     }
 
     /**
@@ -155,9 +181,33 @@ class OrdersController extends Controller
      * 美团用户或客服部分退款流程操作URL
      * @return mixed
      */
-    public function rebates()
+    public function rebates(Request $request)
     {
-        return $this->response->array(['data' => 'ok']);
+        $result = ['data' => 'ok'];
+        if (!empty($_GET))
+        {
+            $this->log->api = 'api/order/rebates';
+            $this->log->response = json_encode($result, JSON_UNESCAPED_UNICODE);
+            $this->log->save();
+            $order_id = $request->get('order_id');
+            $notify_type = $request->get('notify_type');
+            if ($order_id && $notify_type == 'apply')
+            {
+                $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
+                $res = $server->reject($order_id);
+                $log = new OrderLog();
+                $log->order_id = $order_id;
+                $log->operator = 'mt api rebates';
+                if ( $res === true )
+                {
+                    $log->message = '拒绝部分退款申请成功';
+                }else{
+                    $log->message = isset($server->mt_res['error']['msg'])?'拒绝部分退款申请失败('.$server->mt_res['error']['msg'].')':'拒绝部分退款申请失败';
+                }
+                $log->save();
+            }
+        }
+        return $this->response->array($result);
     }
 
     /**
