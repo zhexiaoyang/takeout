@@ -29,7 +29,10 @@ class GoodsController extends Controller
         $good = Good::allowShops()->select('id','ele_id','baidu_id','meituan_id','shop_id','deopt_id', 'category_id', 'sort', 'stock');
         if ($keyword)
         {
-            $good = $good->where('name','like',"%{$keyword}%");
+//            $good = $good->where('name','like',"%{$keyword}%");
+            $good = $good->whereHas('deopt', function($query) use ($keyword){
+                $query->where('name', 'like', "%$keyword%")->orWhere('id', 'like', "%$keyword%");
+            });
         }
         if ($shop_id)
         {
