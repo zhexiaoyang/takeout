@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Remits;
 use App\Models\Shop;
+use App\Models\ShopDetail;
 use function GuzzleHttp\Psr7\str;
 use Illuminate\Http\Request;
 
@@ -113,10 +114,10 @@ class BillController extends Controller
 
     public function getCoefficient($shop_id)
     {
-        if (0)
+        $shop_detail = ShopDetail::where(['shop_id' => $shop_id])->first();
+        if ($shop_detail && $shop_detail->coefficient)
         {
-            $coefficient = 0;
-            return $coefficient;
+            return  $shop_detail->coefficient;
         }
         return $this->coefficient;
     }
