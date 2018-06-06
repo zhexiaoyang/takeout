@@ -59,5 +59,8 @@ Route::group(['middleware' => ['auth']], function ($router) {
     Route::post('bill/reset/{remits}', 'BillController@reset')->name('bill.reset');
     Route::post('bill/status/{remits}', 'BillController@status')->name('bill.status');
 
+    Route::resource('shop_details', 'ShopDetailsController', ['only' => ['index', 'create', 'store', 'update', 'edit', 'destroy']]);
+    Route::get('ShopDetail/show/{shop_id}', 'ShopDetailsController@show')->name('shop_details.show');
+    Route::get('ShopDetail/create/{shop_id}', 'ShopDetailsController@create')->name('shop_details.create');
 
 });

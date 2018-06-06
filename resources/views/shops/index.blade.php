@@ -48,6 +48,7 @@
                         <th>名称</th>
                         <th>地址</th>
                         <th>美团</th>
+                        <th>系数</th>
                         <th>编辑</th>
                     </tr>
                     </thead>
@@ -58,10 +59,15 @@
                                 <td>{{$shop->name}}</td>
                                 <td>{{$shop->address}}</td>
                                 <td>{{$shop->meituan_id}}</td>
+                                <td>{{$shop->detail->coefficient or 15}}</td>
                                 <td>
                                     <a href="{{ route('shops.show', $shop->id) }}" class="btn btn-primary btn-xs">查看</a>
                                     @if(Auth::user()->hasPermissionTo('shop_edit'))
                                         <a href="{{ route('shops.edit', $shop->id) }}" class="btn btn-primary btn-xs">编辑</a>
+                                    @endif
+
+                                    @if(Auth::user()->hasPermissionTo('manage_users'))
+                                        <a href="{{ route('shop_details.show', $shop->id) }}" class="btn btn-primary btn-xs">财务信息</a>
                                     @endif
                                     @if(0)
                                         <a href="{{ route('shops.goods', $shop->id) }}" class="btn btn-primary btn-xs">清空</a>

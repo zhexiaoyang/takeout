@@ -40,7 +40,7 @@
                     {{ $shop->longitude }}
                 </p> <label>Logo图片</label>
                 <p>
-                    <img src="{{ $shop->pic_url }}" alt="">
+                    <img src="{{ $shop->pic_url }}" alt="" style="width: 200px">
                 </p> <label>客服电话</label>
                 <p>
                     {{ $shop->phone }}

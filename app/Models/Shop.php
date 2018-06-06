@@ -13,6 +13,13 @@ class Shop extends Model
         return $this->belongsToMany(User::class);
     }
 
+    public function detail()
+    {
+        return $this->hasOne(ShopDetail::class)->withDefault([
+            'coefficient' => 15,
+        ]);
+    }
+
     public function scopeAllowShops($query)
     {
         if (Auth::user()->hasPermissionTo('manage_users'))
