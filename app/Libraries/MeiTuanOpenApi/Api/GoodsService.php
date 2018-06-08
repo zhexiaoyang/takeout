@@ -88,6 +88,29 @@ class GoodsService extends RpcService
         return false;
     }
 
+    public function syncPriceStock($good, $stock, $price)
+    {
+        $res = $this->updatePriceStock($good, $stock, $price);
+        $data = json_decode($res, true);
+        if ($data && $data['data'] == 'ok')
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public function updatePriceStock($good, $stock, $price)
+    {
+        $shop = Shop::where(['id' => $good->shop_id])->first();
+        $params = [
+            "app_poi_code" => $shop->meituan_id,
+            'app_medicine_code' => $good->deopt->id,
+            'stock' => $stock,
+            'price' => $price
+        ];
+        return $this->client->call("/medicine/update", $params);
+    }
+
     public function upStock($good, $stock)
     {
         $shop = Shop::where(['id' => $good->shop_id])->first();

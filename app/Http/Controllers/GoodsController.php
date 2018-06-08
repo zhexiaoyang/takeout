@@ -198,9 +198,10 @@ class GoodsController extends Controller
         {
 //            return '药品已存在';
             $goods_server = New GoodsService(New Config(env('MT_APPID'),env('MT_SECRET')));
-            if ($goods_server->syncStock($goods,($goods->stock + $data['stock'])) )
+            if ($goods_server->syncPriceStock($goods, $data['stock'], $data['price']) )
             {
-                $goods->stock = ($goods->stock + $data['stock']);
+                $goods->stock = $data['stock'];
+                $goods->price = $data['price'];
                 $goods->save();
                 return '药品已存在，同步成功';
             }else{

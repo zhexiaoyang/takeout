@@ -69,9 +69,10 @@ class CreateGoods implements ShouldQueue
         {
 //            return '药品已存在';
             $goods_server = New GoodsService(New Config(env('MT_APPID'),env('MT_SECRET')));
-            if ($goods_server->syncStock($goods,($goods->stock + $this->data['stock'])) )
+            if ($goods_server->syncPriceStock($goods, $this->data['stock'], $this->data['price']) )
             {
-                $goods->stock = ($goods->stock + $this->data['stock']);
+                $goods->stock = $this->data['stock'];
+                $goods->price = $this->data['price'];
                 $goods->save();
                 $this->data['result'] = '药品已存在，同步成功';
                 Redis::rpush('goods'.$this->shop->id, json_encode($this->data));
