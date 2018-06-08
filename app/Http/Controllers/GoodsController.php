@@ -186,7 +186,7 @@ class GoodsController extends Controller
         }
         if (!$data['stock'])
         {
-            return '库存不存在';
+            $data['stock'] = 0;
         }
         $deopt = Deopt::where(['upc' => $data['upc']])->first();
         if (!$deopt)
