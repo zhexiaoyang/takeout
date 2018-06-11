@@ -89,20 +89,20 @@ class BillController extends Controller
                 }
             }
 //            echo $bill_id.'   门店ID：'.$shop['id'].'   门店订单数：'.count($orders).'    总金额：'.$sale_amount.'   '.$shop['name']."\n";
-            $arr['remit_id'] = $bill_id;
-            $arr['shop_id'] = $shop['id'];
-            $arr['shop_name'] = $shop['name'];
-            $arr['coefficient'] = $coefficient;
-            $arr['sale_amount'] = $sale_amount;
-            $arr['earnings'] = $earnings;
-            $arr['fine'] = 0;
-            $arr['return'] = $sale_amount * (1 - $coefficient/100);
-            $arr['status'] = $sale_amount?0:1;
-            $arr['start_time'] = $this->start_time;
-            $arr['end_time'] = date("Y-m-d", strtotime($this->end_time) - 3600*24);
-            $arr['created_at'] = date("Y-m-d H:i:s");
-            $arr['updated_at'] = date("Y-m-d H:i:s");
-            $data[] = $arr;
+            $_arr['remit_id'] = $bill_id;
+            $_arr['shop_id'] = $shop['id'];
+            $_arr['shop_name'] = $shop['name'];
+            $_arr['coefficient'] = $coefficient;
+            $_arr['sale_amount'] = $sale_amount;
+            $_arr['earnings'] = $earnings;
+            $_arr['fine'] = 0;
+            $_arr['return'] = $sale_amount * (1 - $coefficient/100);
+            $_arr['status'] = $sale_amount?0:1;
+            $_arr['start_time'] = $this->start_time;
+            $_arr['end_time'] = date("Y-m-d", strtotime($this->end_time) - 3600*24);
+            $_arr['created_at'] = date("Y-m-d H:i:s");
+            $_arr['updated_at'] = date("Y-m-d H:i:s");
+            $data[] = $_arr;
         }
         Remits::insert($data);
     }
