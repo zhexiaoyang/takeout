@@ -102,6 +102,8 @@
                                             {{ csrf_field() }}
                                             <button type="submit" class="btn btn-danger btn-xs">未打款</button>
                                         </form>
+                                        @else
+                                        <button type="submit" class="btn btn-danger btn-xs">未打款</button>
                                     @endif
                                 @endif
                             </td>
@@ -119,7 +121,7 @@
                     </tbody>
                 </table>
                 <div style="margin-left: 10px">
-                    {!! $list->appends(['keyword' => $keyword])->render() !!}
+                    {!! $list->appends(['keyword' => $keyword,'status' => $status,'shop_id' => $shop_id,'stime' => $stime,'etime' => $etime])->render() !!}
                 </div>
             </section>
         </div>

@@ -34,7 +34,6 @@
                     <li><a class="" href="{{route('shops.index')}}">门店列表</a></li>
                 </ul>
             </li>
-            @if(Auth::user()->hasPermissionTo('manage_users'))
                 <li class="sub-menu">
                     <a href="javascript:;" class="">
                         <i class="icon-user"></i>
@@ -42,10 +41,13 @@
                         <span class="arrow"></span>
                     </a>
                     <ul class="sub">
+                        @if(Auth::user()->hasPermissionTo('finance_view'))
                         <li><a class="" href="{{route('finance.hit')}}">打款统计</a></li>
+                        @endif
                         <li><a class="" href="{{route('finance.sales')}}">销售药品统计</a></li>
                     </ul>
                 </li>
+            @if(Auth::user()->hasPermissionTo('manage_users'))
                 <li class="sub-menu">
                     <a href="javascript:;" class="">
                         <i class="icon-user"></i>
