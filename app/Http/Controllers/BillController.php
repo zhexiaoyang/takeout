@@ -47,7 +47,7 @@ class BillController extends Controller
                 if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
                 {
                     foreach ($arr['actOrderChargeByMt'] as $mt) {
-                        $sale_amount += $mt['moneyCent']/100;
+                        $earnings += $mt['moneyCent']/100;
                     }
                 }
             }
@@ -56,7 +56,7 @@ class BillController extends Controller
         $remits->sale_amount = $sale_amount;
         $remits->earnings = $earnings;
         $remits->fine = 0;
-        $remits->return = $sale_amount * (1 - $coefficient/100);
+        $remits->return = $earnings * (1 - $coefficient/100);
         $remits->status = $sale_amount?0:1;
         $remits->save();
         return redirect()->route('finance.hit')->with('alert', '重置成功');
@@ -83,7 +83,7 @@ class BillController extends Controller
                     if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
                     {
                         foreach ($arr['actOrderChargeByMt'] as $mt) {
-                            $sale_amount += $mt['moneyCent']/100;
+                            $earnings += $mt['moneyCent']/100;
                         }
                     }
                 }
