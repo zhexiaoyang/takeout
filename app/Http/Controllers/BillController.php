@@ -96,7 +96,7 @@ class BillController extends Controller
             $_arr['sale_amount'] = $sale_amount;
             $_arr['earnings'] = $earnings;
             $_arr['fine'] = 0;
-            $_arr['return'] = $sale_amount * (1 - $coefficient/100);
+            $_arr['return'] = $earnings * (1 - $coefficient/100);
             $_arr['status'] = $sale_amount?0:1;
             $_arr['start_time'] = $this->start_time;
             $_arr['end_time'] = date("Y-m-d", strtotime($this->end_time) - 3600*24);
