@@ -60,6 +60,45 @@ class OrdersController extends Controller
         }
     }
 
+    public function arrived(Order $order)
+    {
+        $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
+        // $server->cancel($order->order_id);
+        $res = $server->viewstatus($order->order_id);
+        if (!$res)
+        {
+            $order->status = 25;
+            $order->save();
+            return back()->withErrors('订单已取消');
+        }
+
+        $res = $server->arrived($order->order_id);
+
+        if ( $res === true )
+        {
+            $order->status = 33;
+            $order->save();
+            return redirect()->back()->with('alert', '操作成功！');
+        }else{
+            return back()->withErrors($res);
+        }
+    }
+
+    public function viewstatus(Order $order)
+    {
+        $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
+        // $server->cancel($order->order_id);
+        $res = $server->viewstatus($order->order_id);
+        if ( $res === true )
+        {
+            $order->status = 33;
+            $order->save();
+            return redirect()->back()->with('alert', '操作成功！');
+        }else{
+            return back()->withErrors($res);
+        }
+    }
+
     public function confirm(Order $order)
     {
         $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
