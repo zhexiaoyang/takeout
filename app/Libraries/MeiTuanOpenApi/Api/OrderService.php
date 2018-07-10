@@ -48,6 +48,50 @@ class OrderService extends RpcService
         return isset($result['error']['msg'])?$result['error']['msg']:'请求取消接口错误';
     }
 
+    public function arrived($order_id)
+    {
+        $params = [
+            "order_id" => $order_id,
+        ];
+        $result = json_decode($this->client->call("/order/arrived", $params, 'GET'), true);
+        if ($result && $result['data'] == 'ok')
+        {
+            $log = new OrderLog();
+            $log->order_id = $order_id;
+            $log->message = '订单配送完成';
+            $log->operator = Auth()->user()->name;
+            $log->save();
+            return true;
+        }
+        return isset($result['error']['msg'])?$result['error']['msg']:'请求取消接口错误';
+    }
+
+    public function viewstatus($order_id)
+    {
+        $params = [
+            "order_id" => $order_id,
+        ];
+        $result = json_decode($this->client->call("/order/viewstatus", $params, 'GET'), true);
+        if (isset($result['data']['status']))
+        {
+            $log = new OrderLog();
+            $log->order_id = $order_id;
+            if ( isset($result['data']['status']) != 9 )
+            {
+                $log->message = '获取订单状态（'.isset($result['data']['status'])?$result['data']['status']:0;
+                $log->operator = Auth()->user()->name;
+                $log->save();
+                return true;
+            }else{
+                $log->message = '订单已取消';
+                $log->operator = Auth()->user()->name;
+                $log->save();
+                return false;
+            }
+        }
+        return isset($result['error']['msg'])?$result['error']['msg']:'请求取消接口错误';
+    }
+
     public function delivering($order_id)
     {
         $params = [
