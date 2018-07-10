@@ -18,7 +18,7 @@ class UserRequest extends FormRequest
         return [
             'name' => 'required|between:3,25|regex:/^[A-Za-z0-9\-\_]+$/|unique:users,name,' . $id,
             'phone' => 'required|regex:/^1[34578][0-9]{9}$/|unique:users,phone,' . $id,
-            'email' => 'email|unique:users,email,' . $id,
+//            'email' => 'email|unique:users,email,' . $id,
         ];
     }
 
@@ -32,8 +32,8 @@ class UserRequest extends FormRequest
             'phone.required' => '电话不能为空。',
             'phone.regex' => '电话格式不正确。',
             'phone.unique' => '电话已被占用，请重新填写',
-            'email.email' => '邮箱格式不正确。',
-            'email.unique' => '邮箱已被占用，请重新填写',
+//            'email.email' => '邮箱格式不正确。',
+//            'email.unique' => '邮箱已被占用，请重新填写',
         ];
     }
 }
