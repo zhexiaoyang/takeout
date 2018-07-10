@@ -72,7 +72,7 @@
                     </tbody>
                 </table>
                 <div style="margin-left: 10px">
-                    {!! $orders->appends(['keyword' => $keyword])->render() !!}
+                    {!! $orders->appends(['keyword' => $keyword,'stime' => $stime,'etime' => $etime])->render() !!}
                 </div>
             </section>
         </div>

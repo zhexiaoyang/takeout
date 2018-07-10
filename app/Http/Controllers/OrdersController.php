@@ -66,7 +66,8 @@ class OrdersController extends Controller
         }
         if ($etime)
         {
-            $orders = $orders->where('created_at', '<=', "{$etime}");
+            $end_time = date("Y-m-d H:i:s", strtotime($etime.' +1 day'));
+            $orders = $orders->where('created_at', '<', "{$end_time}");
         }
         $orders = $orders->orderBy('id', 'desc')->paginate(20);
         return view('orders.index', compact('orders','keyword', 'status', 'stime', 'etime'));
