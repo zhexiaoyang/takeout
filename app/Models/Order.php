@@ -35,4 +35,46 @@ class Order extends Model
         }
         return $query->whereIn('shop_id', User::find(Auth::id())->shopIds());
     }
+
+    public function earnings($order_id)
+    {
+        $earnings = 0;
+        $order = $this->find($order_id)->toArray();
+        $earnings += ($order['total'] - $order['shipping_fee']);
+        $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
+        if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
+        {
+            foreach ($arr['actOrderChargeByMt'] as $mt) {
+                $earnings += $mt['moneyCent']/100;
+            }
+        }
+        return $earnings;
+    }
+
+    public function refunds($order_id)
+    {
+        $earnings = 0;
+        $coefficient = 15;
+        $order = $this->find($order_id)->toArray();
+        $shop_id = isset($order['shop_id'])?$order['shop_id']:0;
+        if (!$shop_id)
+        {
+            return 0;
+        }
+        $earnings += ($order['total'] - $order['shipping_fee']);
+        $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
+        if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
+        {
+            foreach ($arr['actOrderChargeByMt'] as $mt) {
+                $earnings += $mt['moneyCent']/100;
+            }
+        }
+
+        $shop_detail = ShopDetail::where(['shop_id' => $shop_id])->first();
+        if ($shop_detail && $shop_detail->coefficient)
+        {
+            $coefficient = $shop_detail->coefficient;
+        }
+        return $earnings * (1 - $coefficient/100);
+    }
 }

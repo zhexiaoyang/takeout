@@ -5,37 +5,11 @@
 @section('styles')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-reset.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
-    <style type="text/css">
-        .ft[_v-1fbece8c]{border-top:1px dashed #ccc;padding:10px 25px}.btnCode[_v-1fbece8c]{padding:5px;font-size:12px}
-        .redColor[_v-1fbece8c] {color: #db2828!important;}
-        .t-condition-detail ul li[_v-1fbece8c]{border:1px solid #ccc;position:relative;margin-bottom:20px}
-        .t-condition-detail ul li .title[_v-1fbece8c]{color:#777;padding:10px 20px;background-color:#eee}
-        .t-condition-detail .content[_v-1fbece8c]{margin:0 20px}
-        .t-condition-detail ul li .orderName[_v-1fbece8c]{width:84px;height:84px;background-color:#ff9b9b;float:left;color:#fff;border-radius:50%;padding:4px}
-        .t-condition-detail ul li .orderName span[_v-1fbece8c]{width:100%;height:100%;background-color:#fa4e4e;border-radius:50%;border:4px solid #fff;display:block;text-align:center;font-size:14px;padding:17px 6px;box-sizing: border-box}
-        .t-condition-detail ul li .orderName strong[_v-1fbece8c]{font-size:22px}
-        .right[_v-1fbece8c]{margin:10px 0 0 136px;position:relative}
-        .orderState[_v-1fbece8c]{margin-left:26px;padding:2px 5px;border:1px solid #db2828;color:#db2828;border-radius:16px;font-size:12px}
-        .info[_v-1fbece8c] span{margin-left:26px}
-        .orderTimes[_v-1fbece8c]{margin-left:26px}
-        .replay-msg p[_v-1fbece8c]{text-align:right}
-        .right .comment[_v-1fbece8c]{margin-bottom:12px}
-        .right .comment .info[_v-1fbece8c]{float:right;width:auto}
-        .right .comment .info strong[_v-1fbece8c]{color:#666}
-        .right .comment span[_v-1fbece8c]{width:80px;display:inline-block;color:#999}
-        .ui.basic.primary.button, .ui.basic.primary.buttons .button {box-shadow: 0 0 0 1px #2185D0 inset;color: #2185D0;border: none;}
-        .layui-row .layui-col-md2 {width: 14%}
-        .layui-btn+.layui-btn { margin-left: 0px;}
-        .layui-form-pane .layui-row .layui-col-md1 {width: 8.33333333%}
-        .ui.basic.primary.button, .ui.basic.primary.buttons .button {
-            box-shadow: 0 0 0 1px #2185D0 inset!important;
-            color: #2185D0!important;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}">
 @stop
 
 @section('content')
-
+    @include('common.error')
     <div class="row" style="margin: -15px;">
         <div class="span6">
             <ul class="breadcrumb">
@@ -55,124 +29,48 @@
                     订单列表
                     <div class="panel-body">
                         <form class="form-inline" role="form" action="{{route('orders.index')}}" method="get">
-                            <div class="col-lg-10">
-                                <div class="row">
-                                    <div class="col-lg-2">
-                                        <label class="sr-only" for="keyword">关键字</label>
-                                        <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <select class="form-control" name="status">
-                                            <option value="" @if(!$status) selected @endif>全部</option>
-                                            <option value="3" @if($status == 3) selected @endif>待打印</option>
-                                            <option value="8" @if($status == 8) selected @endif>配送中</option>
-                                            <option value="25" @if($status == 25) selected @endif>已取消</option>
-                                            <option value="33" @if($status == 33) selected @endif>已完成</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <button type="submit" class="btn btn-info">搜索</button>
-                                    </div>
-                                </div>
+                            <div class="col-lg-2">
+                                <label class="sr-only" for="keyword">关键字</label>
+                                <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">
                             </div>
+                            <div class="col-lg-2">
+                                <input value="{{$stime or ''}}" type="text" class="form-control" id="stime" name="stime" placeholder="起始时间..." autocomplete="off">
+                            </div>
+                            <div class="col-lg-2">
+                                <input value="{{$etime or ''}}" type="text" class="form-control" id="etime" name="etime" placeholder="结束时间..." autocomplete="off">
+                            </div>
+                            <button type="submit" class="btn btn-info">搜索</button>
                         </form>
                     </div>
                 </header>
-
-                <div class="ui bottom attached tab segment active" data-tab="seven" _v-5873fc14="">
-                    <div class="content-pick-box dimmable" id="content-pick-box1" _v-1fbece8c="" _v-5873fc14="">
-                        <div class="t-condition-detail" _v-1fbece8c="">
-                            <ul _v-1fbece8c="">
-                                @if(!empty($orders))
-                                @foreach($orders as $order)
-                                <li _v-1fbece8c="">
-                                    <div class="content-box content-box-checkbox" _v-1fbece8c="">
-                                        <div class="title" _v-1fbece8c="">
-                                            <span _v-1fbece8c="">
-                                                @if($order->delivery_time)
-                                                    <strong _v-1fbece8c="" style="color: #db2828">送达时间：{{date("Y-m-d H:i:s", $order->delivery_time)}}</strong>
-                                                @else
-                                                    <strong _v-1fbece8c="">立即送达</strong>
-                                                @endif
-                                            </span>
-                                            <span class="orderTimes" _v-1fbece8c="">创建订单时间：{{ $order->created_at }}</span>
-                                            <strong class="time redColor" style="float: right" _v-1fbece8c="">{{ config('wm.order_status')[$order->status] }}</strong>
-                                        </div>
-                                        <div class="content" _v-1fbece8c="">
-                                            <span _v-1fbece8c="">
-                                                <span class="orderName grayBg" _v-1fbece8c="">
-                                                    <span class="grayBg" style="line-height: 30px; font-size: 18px" _v-1fbece8c="">
-                                                        @if($order->status == 25)
-                                                            已取消
-                                                        @elseif($order->status > 30)
-                                                            已完成
-                                                        @else
-                                                            {{ floor((time() - strtotime($order->created_at))/60) }}
-                                                        @endif
-                                                    </span>
-                                                </span>
-                                            </span>
-                                            <div class="right" _v-1fbece8c="">
-                                                <p class="comment" _v-1fbece8c="">
-                                                    <span class="info" _v-1fbece8c="">
-                                                        客户实付：
-                                                        <strong _v-1fbece8c="">¥ {{$order->total or 0}}</strong>
-                                                    </span>
-                                                </p>
-                                                <p class="comment" _v-1fbece8c="">
-                                                    <span _v-1fbece8c="">客户：</span>
-                                                    {{$order->recipient_name or ''}}
-                                                    （电话：{{$order->recipient_phone or ''}}）
-                                                </p>
-                                                <p class="comment" _v-1fbece8c="">
-                                                    <span _v-1fbece8c="">地址：</span>{{$order->recipient_address or ''}}
-                                                </p>
-                                                <p class="comment" _v-1fbece8c="">
-                                                    <span _v-1fbece8c="">订单编号：</span>
-
-                                                    <a target="_blank" _v-1fbece8c="" href="{{route('orders.show', $order->id)}}">{{$order->order_id}}</a>
-                                                </p>
-                                                <p class="comment" _v-1fbece8c="">
-                                                    <span _v-1fbece8c="">门店：</span>{{$order->shop->name}}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="ft" _v-1fbece8c="">
-                                            @if($order->status < 20)
-                                            <form action="{{ route('orders.confirm', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认该订单么？')">
-                                                {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-success btn-xs">确认订单</button>
-                                            </form>
-                                            <form action="{{ route('orders.delivering', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认配送该订单么？')">
-                                                {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-info btn-xs">配送订单</button>
-                                            </form>
-                                            <form action="{{ route('orders.cancel', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认取消订单么？')">
-                                                {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-xs">取消订单</button>
-                                            </form>
-                                                @if($order->shop->dc == 1)
-                                                <form action="{{ route('orders.arrived', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认完成订单么？')">
-                                                    {{ csrf_field() }}
-                                                    <button type="submit" class="btn btn-success btn-xs">完成订单</button>
-                                                </form>
-                                                @endif
-                                            @endif
-                                            <a target="_blank" _v-1fbece8c="" href="{{route('orders.printOrder', $order->id)}}">
-                                                <button class="btn btn-success btn-xs">打印小票</button>
-                                            </a>
-                                            <a target="_blank" _v-1fbece8c="" href="{{route('orders.show', $order->id)}}">
-                                                <button class="btn btn-success btn-xs">查看订单</button>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                                @endforeach
-                                @endif
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <table class="table table-striped table-advance table-hover">
+                    <thead>
+                    <tr>
+                        <th>订单号</th>
+                        <th>门店</th>
+                        <th>支付金额</th>
+                        <th>药店收益</th>
+                        <th>应返金额</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach ($orders as $order)
+                        <tr>
+                            <td>
+                                <a target="_blank" href="{{route('orders.show', $order->id)}}">{{$order->order_id}}</a>
+                            </td>
+                            <td>{{$order->shop->name}}</td>
+                            <td>{{$order->total}}</td>
+                            <td>{{$order->earnings($order->id)}}</td>
+                            <td>{{$order->refunds($order->id)}}</td>
+                            <td>{{ config('wm.order_status')[$order->status] }}</td>
+                            <td>{{$order->created_at}}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
                 <div style="margin-left: 10px">
                     {!! $orders->appends(['keyword' => $keyword])->render() !!}
                 </div>
@@ -184,6 +82,8 @@
 @section('scripts')
 
     <script type="text/javascript"  src="{{ asset('js/sweetalert.min.js') }}"></script>
+    <script type="text/javascript"  src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script type="text/javascript"  src="{{ asset('js/bootstrap-datetimepicker.zh-CN.js') }}"></script>
 
     <script>
         function alert(obj, mes) {
@@ -235,9 +135,26 @@
         </script>
     @endif
     <script>
-            setTimeout(function () {
-                history.go(0)
-            },30000)
+        $(function () {
+            $('#stime').datetimepicker({
+                language:"zh-CN",
+                format:'yyyy-mm-dd',
+                autoclose: true,
+                minView: 2
+            }).on('changeDate',function(e){
+                var startTime = e.date;
+                $('#etime').datetimepicker('setStartDate',startTime);
+            });
+            $('#etime').datetimepicker({
+                language:"zh-CN",
+                format:'yyyy-mm-dd',
+                autoclose: true,
+                minView: 2
+            }).on('changeDate',function(e){
+                var endTime = e.date;
+                $('#stime').datetimepicker('setEndDate',endTime);
+            });
+        })
     </script>
 
 @stop

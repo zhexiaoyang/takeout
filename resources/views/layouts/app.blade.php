@@ -37,31 +37,11 @@
         @include('layouts._footer')
 
     </section>
-    <audio id="waitPrintMusic" src="{{ asset('img/waitPrintMusic.mp3') }}"></audio>
 
     <!-- Scripts -->
     <script src="{{ asset('js/jquery-1.8.3.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/common-scripts.js') }}"></script>
     @yield('scripts')
-    <script>
-        window.onload = function(){
-            var waitPrintMusic = document.getElementById("waitPrintMusic");
-            waitPrintMusic.pause();
-            @if(count($print_orders) > 0)
-            openMusic();
-            @endif
-        }
-        function openMusic() {
-            var opMusic = document.getElementById('waitPrintMusic');
-            opMusic.autoplay = "autopaly";
-            if(opMusic.ended){
-                opMusic.loop = "loop";
-            }
-            opMusic.play();
-            opMusic.removeAttribute("loop");
-        }
-
-    </script>
 </body>
 </html>

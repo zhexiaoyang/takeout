@@ -22,7 +22,7 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 Route::group(['middleware' => ['auth']], function ($router) {
 
 //    Route::get('/', 'IndexController@index')->name('index.index');
-    Route::get('/', 'OrdersController@index')->name('index.index');
+    Route::get('/', 'OrdersController@monitor')->name('index.index');
 
     Route::resource('users', 'UsersController', ['only' => ['index','create', 'update', 'edit', 'store', 'destroy']]);
     Route::post('users/{user}', 'UsersController@reset')->name('users.reset');
