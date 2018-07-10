@@ -63,10 +63,10 @@
                                     <label for="exampleInputEmail1">手机号</label>
                                     <input class="form-control" type="text" name="phone" value="{{ old('phone', $user->phone ) }}" placeholder="请填写手机号" required/>
                                 </div>
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">邮箱</label>
-                                    <input class="form-control" type="text" name="email" value="{{ old('email', $user->email ) }}" placeholder="请填写邮箱" required/>
-                                </div>
+                                {{--<div class="form-group">--}}
+                                    {{--<label for="exampleInputEmail1">邮箱</label>--}}
+                                    {{--<input class="form-control" type="text" name="email" value="{{ old('email', $user->email ) }}" placeholder="请填写邮箱" required/>--}}
+                                {{--</div>--}}
                                 <button type="submit" class="btn btn-info">保存</button>
                             </div>
                             <div class="col-lg-6">
