@@ -21,6 +21,7 @@
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub">
+                    <li><a class="" href="{{route('index.index')}}">订单监控</a></li>
                     <li><a class="" href="{{route('orders.index')}}">订单列表</a></li>
                 </ul>
             </li>

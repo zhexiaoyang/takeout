@@ -18,8 +18,8 @@ class OrdersController extends Controller
         $this->middleware('auth');
     }
 
-	public function index(Request $request)
-	{
+    public function monitor(Request $request)
+    {
         $status = $request->status;
         $keyword = $request->keyword;
         $orders = Order::allowShops()->select('id','order_id','shop_id','created_at', 'delivery_time', 'recipient_address','recipient_phone','recipient_name','total', 'status');
@@ -36,9 +36,41 @@ class OrdersController extends Controller
                 $orders->where(['status'=>$status]);
             }
         }
+        $orders = $orders->where('status', '<', 20)->orderBy('id', 'desc')->paginate(50);
+        return view('orders.monitor', compact('orders','keyword', 'status'));
+    }
+
+    public function index(Request $request)
+    {
+        $status = $request->status;
+        $keyword = $request->keyword;
+        $stime = $request->stime;
+        $etime = $request->etime;
+        $orders = Order::allowShops()->select('id','order_id','shop_id','created_at', 'delivery_time', 'recipient_address','recipient_phone','recipient_name','total', 'status');
+        if ($keyword)
+        {
+            $orders = $orders->where('order_id','like',"%{$keyword}%")->orWhere('recipient_name', 'like', "%{$keyword}%")->orWhere('recipient_phone', 'like', "%{$keyword}%");
+        }
+        if ($status)
+        {
+            if ($status == 3)
+            {
+                $orders->where(['is_print'=>0]);
+            }else{
+                $orders->where(['status'=>$status]);
+            }
+        }
+        if ($stime)
+        {
+            $orders = $orders-> where('created_at', '>=', "{$stime}");
+        }
+        if ($etime)
+        {
+            $orders = $orders->where('created_at', '<=', "{$etime}");
+        }
         $orders = $orders->orderBy('id', 'desc')->paginate(20);
-		return view('orders.index', compact('orders','keyword', 'status'));
-	}
+        return view('orders.index', compact('orders','keyword', 'status', 'stime', 'etime'));
+    }
 
     public function show(Order $order)
     {
