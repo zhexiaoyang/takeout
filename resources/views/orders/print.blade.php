@@ -47,6 +47,7 @@
         <p class="br"></p>
         <div class="print-item f-s tl">客户:{{ $order->recipient_name }}</div>
         <div class="print-item f-s tl">电话:{{ $order->recipient_phone }}</div>
+        <div class="print-item f-s tl">地址:{{ $order->recipient_address }}</div>
         <p class="br"></p>
         <div class="dashed"></div>
         <p class="br"></p>

@@ -69,6 +69,11 @@ class UsersController extends Controller
         $user->fill($request->all());
         $user->password = $request->password;
         $user->save();
+        $shops = isset($request->shop_ids)?$request->shop_ids:[];
+        $user->shops()->detach();
+        $user->shops()->attach($shops);
+        $roles = isset($request->role)?[$request->role]:[];
+        $user->syncRoles([$roles]);
         return redirect()->route('users.index')->with('message', '创建成功');
     }
 
