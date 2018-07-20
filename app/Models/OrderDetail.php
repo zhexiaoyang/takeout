@@ -14,7 +14,7 @@ class OrderDetail extends Model
         {
             return $query;
         }
-        return $query->whereIn('id', User::find(Auth::id())->shopIds());
+        return $query->whereIn('shop_id', User::find(Auth::id())->shopIds());
     }
 
     public function goods()
