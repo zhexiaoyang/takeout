@@ -76,7 +76,7 @@ class OrderService extends RpcService
         {
             $log = new OrderLog();
             $log->order_id = $order_id;
-            if ( isset($result['data']['status']) != 9 )
+            if ( isset($result['data']['status']) && $result['data']['status'] != 9 )
             {
                 $log->message = '获取订单状态（'.isset($result['data']['status'])?$result['data']['status']:0;
                 $log->operator = Auth()->user()->name;
