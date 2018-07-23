@@ -86,7 +86,7 @@
                     @foreach ($list as $v)
                         <tr>
                             <td>
-                                <input type="checkbox" class="hit" name="hid" value="{{ $v->id }}" shop_id="{{ $v->shop_id }}" returns="{{$v->return}}">
+                                <input type="checkbox" class="hit" name="hid" value="{{ $v->id }}" shop_id="{{ $v->shop_id }}" returns="{{$v->return}}" number="{{$v->shop->detail->account_number}}">
                             </td>
                             <td>{{$v->remit_id}}</td>
                             <td>{{$v->shop_name}}</td>
@@ -172,13 +172,15 @@
 
         function bills() {
             var shop_id = '';
+            var number = '';
             var break_each = 0;
             $("input:checkbox:checked").each(function () {
-                if (shop_id == '')
+                if (number == '')
                 {
                     shop_id = $(this).attr('shop_id');
+                    number = $(this).attr('number');
                 }
-                if (shop_id != $(this).attr('shop_id'))
+                if (number != $(this).attr('number'))
                 {
                     break_each = 1;
                     return false;
@@ -187,7 +189,7 @@
             if (break_each == 1)
             {
                 swal({
-                    title: "所选记录不是同一药店",
+                    title: "打款账号不是同一人，请核对",
                     type: "error",
                     timer: 2000,
                     showConfirmButton: false
