@@ -25,7 +25,18 @@ class BillController extends Controller
     {
         $remits->status = 1;
         $remits->save();
-        return redirect()->route('finance.hit')->with('alert', '打款成功');
+        return redirect()->back()->with('alert', '打款成功');
+    }
+
+    public function updates(Request $request)
+    {
+        $result['code'] = 1000;
+        $bids = $request->bids;
+        if (!empty($bids) && Remits::whereIn('id', $bids)->update(['status' => 1]))
+        {
+            $result['code'] = 0;
+        }
+        return response()->json($result);
     }
 
     public function reset(Remits $remits)
@@ -39,10 +50,17 @@ class BillController extends Controller
         $earnings = 0;
         if (!empty($orders))
         {
+            $shop = Shop::where(['id' => $shop_id])->first();
+            $dc = $shop->dc;
             foreach ($orders as $order)
             {
                 $sale_amount += $order['total'];
-                $earnings += ($order['total'] - $order['shipping_fee']);
+                if ($dc)
+                {
+                    $earnings += $order['total'];
+                }else{
+                    $earnings += ($order['total'] - $order['shipping_fee']);
+                }
                 $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
                 if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
                 {
@@ -59,18 +77,19 @@ class BillController extends Controller
         $remits->return = $earnings * (1 - $coefficient/100);
         $remits->status = $sale_amount?0:1;
         $remits->save();
-        return redirect()->route('finance.hit')->with('alert', '重置成功');
+        return redirect()->back()->with('alert', '重置成功');
     }
 
     public function makeBill($bill_id = '')
     {
         $this->setTime($bill_id);
-        $shops = Shop::select('id','name')->where('id','>=', 100)->get()->toArray();
+        $shops = Shop::select('id', 'name', 'dc')->where('id','>=', 100)->get()->toArray();
         $data = [];
         foreach ($shops as $shop) {
             $coefficient = $this->getCoefficient($shop['id']);
             $bill_id = date("Ymd",strtotime($this->start_time)).date("d",strtotime($this->end_time) - 3600*24).sprintf("%04d",$shop['id']);
             $orders = $this->getOrders($shop['id']);
+            $dc = $shop['dc'];
             $sale_amount = 0;
             $earnings = 0;
             if (!empty($orders))
@@ -78,7 +97,12 @@ class BillController extends Controller
                 foreach ($orders as $order)
                 {
                     $sale_amount += $order['total'];
-                    $earnings += ($order['total'] - $order['shipping_fee']);
+                    if ($dc)
+                    {
+                        $earnings += $order['total'];
+                    }else{
+                        $earnings += ($order['total'] - $order['shipping_fee']);
+                    }
                     $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
                     if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
                     {

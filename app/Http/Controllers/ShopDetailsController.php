@@ -63,4 +63,10 @@ class ShopDetailsController extends Controller
 
 		return redirect()->route('shop_details.index')->with('message', 'Deleted successfully.');
 	}
+
+    public function info($shop_id)
+    {
+        $detail = ShopDetail::select('opening_bank','username','account_number')->where(['shop_id' => $shop_id])->first()->toArray();
+        return response()->json($detail);
+	}
 }
