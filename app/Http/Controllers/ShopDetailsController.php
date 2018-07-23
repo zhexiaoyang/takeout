@@ -66,7 +66,13 @@ class ShopDetailsController extends Controller
 
     public function info($shop_id)
     {
-        $detail = ShopDetail::select('opening_bank','username','account_number')->where(['shop_id' => $shop_id])->first()->toArray();
-        return response()->json($detail);
+        $result['code'] = 1;
+        $detail = ShopDetail::select('opening_bank','username','account_number')->where(['shop_id' => $shop_id])->first();
+        if (!empty($detail))
+        {
+            $result = $detail->toArray();
+            $result['code'] = 0;
+        }
+        return response()->json($result);
 	}
 }
