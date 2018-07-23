@@ -49,8 +49,10 @@
                         <th>订单号</th>
                         <th>门店</th>
                         <th>支付金额</th>
+                        @if(Auth::user()->hasAnyRole(\Spatie\Permission\Models\Role::all()))
                         <th>药店收益</th>
                         <th>应返金额</th>
+                        @endif
                         <th>状态</th>
                         <th>创建时间</th>
                     </tr>
@@ -63,8 +65,10 @@
                             </td>
                             <td>{{$order->shop->name}}</td>
                             <td>{{$order->total}}</td>
+                            @if(Auth::user()->hasAnyRole(\Spatie\Permission\Models\Role::all()))
                             <td>{{$order->earnings($order->id)}}</td>
-                            <td>{{$order->refunds($order->id)}}</td>
+                            <td>{{$order->refunds($order->id)}}</td>                        @endif
+
                             <td>{{ config('wm.order_status')[$order->status] }}</td>
                             <td>{{$order->created_at}}</td>
                         </tr>
