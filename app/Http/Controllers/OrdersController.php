@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderLog;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
@@ -46,6 +47,7 @@ class OrdersController extends Controller
         $keyword = $request->keyword;
         $stime = $request->stime;
         $etime = $request->etime;
+        $shop_id = isset($request->shop_id)?$request->shop_id:0;
         $orders = Order::allowShops()->select('id','order_id','shop_id','created_at', 'delivery_time', 'recipient_address','recipient_phone','recipient_name','total', 'status');
         if ($keyword)
         {
@@ -60,6 +62,10 @@ class OrdersController extends Controller
                 $orders->where(['status'=>$status]);
             }
         }
+        if ($shop_id)
+        {
+            $orders = $orders-> where('shop_id', '=', "{$shop_id}");
+        }
         if ($stime)
         {
             $orders = $orders-> where('created_at', '>=', "{$stime}");
@@ -70,7 +76,8 @@ class OrdersController extends Controller
             $orders = $orders->where('created_at', '<', "{$end_time}");
         }
         $orders = $orders->orderBy('id', 'desc')->paginate(20);
-        return view('orders.index', compact('orders','keyword', 'status', 'stime', 'etime'));
+        $shops = Shop::allowShops()->select('id', 'name', 'meituan_id')->get();
+        return view('orders.index', compact('orders','keyword', 'status', 'stime', 'etime', 'shops', 'shop_id'));
     }
 
     public function show(Order $order)

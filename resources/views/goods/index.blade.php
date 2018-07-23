@@ -5,6 +5,7 @@
 @section('styles')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-reset.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/select2/4.0.6-rc.1/css/select2.css">
 @stop
 
 @section('content')
@@ -37,7 +38,7 @@
                                         <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">
                                     </div>
                                     <div class="col-lg-3">
-                                        <select class="form-control" name="shop_id">
+                                        <select class="form-control pharmacy" name="shop_id">
                                             <option value="" @if(!$shop_id) selected @endif>全部药店</option>
                                             @foreach($shops as $shop)
                                                 <option value="{{ $shop->id }}" @if($shop_id == $shop->id) selected @endif>{{ $shop->name }}</option>
@@ -136,8 +137,12 @@
 @section('scripts')
 
     <script type="text/javascript"  src="{{ asset('js/sweetalert.min.js') }}"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/select2/4.0.5/js/select2.min.js"></script>
 
     <script>
+        $(function () {
+            $('.pharmacy').select2();
+        })
         function up_goods() {
             $(".close").click();
             return false;

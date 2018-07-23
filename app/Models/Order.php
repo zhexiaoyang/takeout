@@ -40,7 +40,18 @@ class Order extends Model
     {
         $earnings = 0;
         $order = $this->find($order_id)->toArray();
-        $earnings += ($order['total'] - $order['shipping_fee']);
+        $shop_id = isset($order['shop_id'])?$order['shop_id']:0;
+        if (!$shop_id)
+        {
+            return 0;
+        }
+        $shop = Shop::where(['id' => $shop_id])->first();
+        if ($shop->dc)
+        {
+            $earnings += $order['total'];
+        }else{
+            $earnings += ($order['total'] - $order['shipping_fee']);
+        }
         $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
         if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
         {
@@ -61,7 +72,13 @@ class Order extends Model
         {
             return 0;
         }
-        $earnings += ($order['total'] - $order['shipping_fee']);
+        $shop = Shop::where(['id' => $shop_id])->first();
+        if ($shop->dc)
+        {
+            $earnings += $order['total'];
+        }else{
+            $earnings += ($order['total'] - $order['shipping_fee']);
+        }
         $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
         if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
         {

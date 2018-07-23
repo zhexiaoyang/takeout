@@ -13,18 +13,18 @@ class FinanceController extends Controller
     {
         $keyword = $request->keyword;
         $shop_id = $request->shop_id;
-        $status = $request->status;
+        $status = isset($request->status)?$request->status:'0';
         $stime = $request->stime;
         $etime = $request->etime;
         $shops = Shop::allowShops()->select('id', 'name', 'meituan_id')->get();
-        $list = Remits::select('id','remit_id','shop_name','coefficient','start_time','end_time','sale_amount','earnings','return','status');
+        $list = Remits::select('id','remit_id','shop_name','shop_id','coefficient','start_time','end_time','sale_amount','earnings','return','status');
         $shop_ids = array_pluck($shops->toArray(),'id');
 
         if ($shop_id)
         {
             $list = $list->where('shop_id', $shop_id);
         }
-        if ($status !== null)
+        if ($status != (-1))
         {
             $list = $list->where('status', $status);
         }
@@ -44,7 +44,7 @@ class FinanceController extends Controller
                 $query->where('start_time', '<=', "{$etime}")->orWhere('end_time', '<=', "{$etime}");
             });
         }
-        $list = $list->whereIn('shop_id', $shop_ids)->paginate(15);
+        $list = $list->whereIn('shop_id', $shop_ids)->orderBy('id', 'desc')->paginate(15);
 
         return view('finance.hit', compact('keyword','status','shop_id','etime','stime','shops','list'));
     }
