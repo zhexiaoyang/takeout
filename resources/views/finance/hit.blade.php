@@ -34,6 +34,7 @@
                 </header>
                 <div class="row">
                     <form class="form-inline" role="form" action="{{route('finance.hit')}}" method="get">
+                        <div class="inbox-body">
                             <div class="col-lg-2">
                                 <label class="sr-only" for="keyword">打款单号</label>
                                 <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="打款单号...">
@@ -46,6 +47,8 @@
                                     @endforeach
                                 </select>
                             </div>
+                        </div>
+                        <div class="inbox-body">
                             <div class="col-lg-2">
                                 <select class="form-control" name="status">
                                     <option value="-1" @if($status == (-1)) selected @endif>打款状态</option>
@@ -59,17 +62,25 @@
                             <div class="col-lg-2">
                                 <input value="{{$etime or ''}}" type="text" class="form-control" id="etime" name="etime" placeholder="结束时间..." autocomplete="off">
                             </div>
-                            <div class="col-lg-2">
+                        </div>
+                        <div class="inbox-body">
+                            <div class="col-lg-1">
                                 <button type="submit" class="btn btn-info">搜索</button>
-                                <span type="submit" class="btn btn-info" onclick="bills()">批量打款</span>
                             </div>
+                            <div class="col-lg-1">
+                                <button type="submit" class="btn btn-warning">清空</button>
+                            </div>
+                            <div class="col-lg-2">
+                                <span type="submit" class="btn btn-success" onclick="bills()">批量打款</span>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <table class="table table-striped table-advance table-hover">
                     <thead>
                     <tr>
                         <th>选择</th>
-                        <th>打款单号</th>
+                        <th>打款姓名/帐号</th>
                         <th>药店名称</th>
                         <th>提点</th>
                         <th>账单开始时间</th>
@@ -88,8 +99,8 @@
                             <td>
                                 <input type="checkbox" class="hit" name="hid" value="{{ $v->id }}" shop_id="{{ $v->shop_id }}" returns="{{$v->return}}" number="{{$v->shop->detail->account_number}}">
                             </td>
-                            <td>{{$v->remit_id}}</td>
-                            <td>{{$v->shop_name}}</td>
+                            <td>{{$v->shop->detail->username}}<br>{{$v->shop->detail->account_number}}</td>
+                            <td title="{{$v->id}}">{{$v->shop_name}}</td>
                             <td>{{$v->coefficient}}%</td>
                             <td>{{$v->start_time}}</td>
                             <td>{{$v->end_time}}</td>
