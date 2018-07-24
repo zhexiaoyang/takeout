@@ -30,7 +30,12 @@ class FinanceController extends Controller
         }
         if ($keyword)
         {
-            $list = $list->where('remit_id', $keyword);
+//            $list = $list->where('remit_id', $keyword);
+            $list = $list->whereHas('shop', function($query) use ($keyword){
+                $query->whereHas('detail', function($query) use ($keyword){
+                    $query->where('account_number', 'like', "%$keyword%")->orWhere('username', 'like', "%$keyword%");
+                });
+            });
         }
         if ($stime)
         {
