@@ -66,7 +66,7 @@
                 	<input class="form-control" type="text" name="opening_bank" id="opening_bank-field" value="{{ old('opening_bank', $shop_detail->opening_bank ) }}" />
                 </div> 
                 <div class="form-group">
-                	<label for="username-field">开户行</label>
+                	<label for="username-field">开户名</label>
                 	<input class="form-control" type="text" name="username" id="username-field" value="{{ old('username', $shop_detail->username ) }}" />
                 </div> 
                 <div class="form-group">
