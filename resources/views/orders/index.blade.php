@@ -85,7 +85,7 @@
                     </tbody>
                 </table>
                 <div style="margin-left: 10px">
-                    {!! $orders->appends(['keyword' => $keyword,'stime' => $stime,'etime' => $etime])->render() !!}
+                    {!! $orders->appends(['keyword' => $keyword,'stime' => $stime,'etime' => $etime,'shop_id' => $shop_id])->render() !!}
                 </div>
             </section>
         </div>
