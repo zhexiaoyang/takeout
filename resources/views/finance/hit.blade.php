@@ -73,16 +73,18 @@
                             <div class="col-lg-2">
                                 <span type="submit" class="btn btn-success" onclick="bills()">批量打款</span>
                             </div>
+                            @if(Auth::user()->hasAnyRole('Superman'))
                             <div class="col-lg-1">
                                 <a href="{{ route('finance.hitexport',['keyword' => $keyword,'status' => $status,'shop_id' => $shop_id,'stime' => $stime,'etime' => $etime]) }}" class="btn btn-info" onclick="if(confirm('确认导出当前查询数据么？')==false)return false;">导出</a>
                             </div>
+                            @endif
                         </div>
                     </form>
                 </div>
                 <table class="table table-striped table-advance table-hover">
                     <thead>
                     <tr>
-                        <th>选择</th>
+                        <th><input type="checkbox" class="all_select"></th>
                         <th>打款姓名/帐号</th>
                         <th>药店名称</th>
                         <th>提点</th>
@@ -304,6 +306,7 @@
                 var startTime = e.date;
                 $('#etime').datetimepicker('setStartDate',startTime);
             });
+
             $('#etime').datetimepicker({
                 language:"zh-CN",
                 format:'yyyy-mm-dd',
@@ -313,7 +316,16 @@
                 var endTime = e.date;
                 $('#stime').datetimepicker('setEndDate',endTime);
             });
+
             $('.pharmacy').select2();
+
+            var all = $(".all_select");
+            var inputs = $(".hit");
+            all.change(function () {
+                for(var i=0;i<inputs.length;i++){
+                    inputs[i].checked=this.checked
+                }
+            })
         })
     </script>
 @stop
