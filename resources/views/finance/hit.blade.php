@@ -190,7 +190,7 @@
             var shop_id = '';
             var number = '';
             var break_each = 0;
-            $("input:checkbox:checked").each(function () {
+            $(".hit:checkbox:checked").each(function () {
                 if (number == '')
                 {
                     shop_id = $(this).attr('shop_id');
@@ -229,7 +229,7 @@
                         return;
                     }else{
                         var total = 0;
-                        $("input:checkbox:checked").each(function(){
+                        $(".hit:checkbox:checked").each(function(){
                             total += parseFloat($(this).attr('returns'));
                         });
                         total = total.toFixed(2);
@@ -247,7 +247,7 @@
                         function(){
                             var bids = new Array();
                             var i=0;
-                            $("input:checkbox:checked").each(function(){
+                            $(".hit:checkbox:checked").each(function(){
                                 // console.log($(this).val());
                                 bids[i++] = $(this).val();
                             });
