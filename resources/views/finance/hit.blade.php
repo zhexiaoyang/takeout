@@ -37,7 +37,7 @@
                         <div class="inbox-body">
                             <div class="col-lg-2">
                                 <label class="sr-only" for="keyword">打款单号</label>
-                                <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="打款单号...">
+                                <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">
                             </div>
                             <div class="col-lg-2">
                                 <select class="form-control pharmacy" name="shop_id">
@@ -67,11 +67,14 @@
                             <div class="col-lg-1">
                                 <button type="submit" class="btn btn-info">搜索</button>
                             </div>
-                            <div class="col-lg-1">
-                                <button type="submit" class="btn btn-warning">清空</button>
-                            </div>
+                            {{--<div class="col-lg-1">--}}
+                                {{--<button type="submit" class="btn btn-warning">清空</button>--}}
+                            {{--</div>--}}
                             <div class="col-lg-2">
                                 <span type="submit" class="btn btn-success" onclick="bills()">批量打款</span>
+                            </div>
+                            <div class="col-lg-1">
+                                <a href="{{ route('finance.hitexport',['keyword' => $keyword,'status' => $status,'shop_id' => $shop_id,'stime' => $stime,'etime' => $etime]) }}" class="btn btn-info" onclick="if(confirm('确认导出当前查询数据么？')==false)return false;">导出</a>
                             </div>
                         </div>
                     </form>

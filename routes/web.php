@@ -55,6 +55,7 @@ Route::group(['middleware' => ['auth']], function ($router) {
     })->name('download.excel');
 
     Route::get('finance/hit', 'FinanceController@hit')->name('finance.hit');
+    Route::get('finance/hitexport', 'FinanceController@hitExport')->name('finance.hitexport');
     Route::get('finance/sales', 'FinanceController@sales')->name('finance.sales');
 
     Route::post('bill/reset/{remits}', 'BillController@reset')->name('bill.reset');
