@@ -50,7 +50,7 @@ class FinanceController extends Controller
                 $query->where('start_time', '<=', "{$etime}")->orWhere('end_time', '<=', "{$etime}");
             });
         }
-        $list = $list->whereIn('shop_id', $shop_ids)->orderBy('id', 'desc')->paginate(15);
+        $list = $list->whereIn('shop_id', $shop_ids)->orderBy('id', 'desc')->paginate(30);
 
         return view('finance.hit', compact('keyword','status','shop_id','etime','stime','shops','list'));
     }
