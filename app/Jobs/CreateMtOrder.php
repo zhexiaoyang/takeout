@@ -85,7 +85,7 @@ class CreateMtOrder implements ShouldQueue
                             'order_id' => $order->id,
                             'shop_id' => $shop->id,
                             'third_order_id' => $order_id,
-                            'goods_id' => $v['app_food_code'],
+                            'goods_id' => (int)$v['app_food_code'],
                             'good_name' => $v['food_name'],
                             'quantity' => $v['quantity'],
                             'price' => $v['price'],
