@@ -170,7 +170,7 @@
                                     @foreach($order->goods as $goods)
                                     <tr class="o-block1">
                                         <td class="o-p-td" rowspan="1" style="width: 10%; text-align: right; position: relative;">
-                                            <img class="img" src="{{ explode(',', $goods->goods->picture)[0] }}" width="90" height="90">
+                                            <img class="img" src="{{ explode(',', $goods->goods->picture)[0] }}" width="90" height="90" alt="{{ $goods->goods->upc }}">
                                         </td>
                                         <td class="o-p-td" rowspan="1" style="width: 35%;height: 100px">
                                             <div>

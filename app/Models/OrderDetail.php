@@ -21,8 +21,8 @@ class OrderDetail extends Model
     {
         return $this->belongsTo(Deopt::class,'goods_id')->withDefault([
             'id' => 0,
-            'name' => '药品不存在',
-            'upc' => '药品不存在'
+            'name' => '没有找到该药品',
+            'upc' => '没有找到该药品'
         ]);
     }
 }
