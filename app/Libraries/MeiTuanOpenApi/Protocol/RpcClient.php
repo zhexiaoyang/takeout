@@ -64,7 +64,7 @@ class RpcClient
 
     private function post($url,$params,$type='POST'){
         $log_id = $this->create_uuid();
-        Log::alert($log_id."|request: " . json_encode($params));
+        Log::alert($log_id."|request: " . json_encode($params, JSON_UNESCAPED_UNICODE));
         $ch = curl_init();
         $this_header = array(
             "Content-type: text/html; charset=utf-8"
