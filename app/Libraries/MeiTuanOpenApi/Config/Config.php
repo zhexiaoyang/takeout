@@ -6,7 +6,7 @@ class Config
 {
     private $app_id;
     private $app_secret;
-    private $request_url = "http://waimaiopen.meituan.com";
+    private $request_url = "https://waimaiopen.meituan.com";
 
     public function __construct($app_id, $app_secret)
     {

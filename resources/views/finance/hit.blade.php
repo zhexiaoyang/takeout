@@ -73,7 +73,7 @@
                             <div class="col-lg-2">
                                 <span type="submit" class="btn btn-success" onclick="bills()">批量打款</span>
                             </div>
-                            @if(Auth::user()->hasAnyRole('Superman'))
+                            @if(Auth::user()->hasAnyRole(\Spatie\Permission\Models\Role::all()))
                             <div class="col-lg-1">
                                 <a href="{{ route('finance.hitexport',['keyword' => $keyword,'status' => $status,'shop_id' => $shop_id,'stime' => $stime,'etime' => $etime]) }}" class="btn btn-info" onclick="if(confirm('确认导出当前查询数据么？')==false)return false;">导出</a>
                             </div>
