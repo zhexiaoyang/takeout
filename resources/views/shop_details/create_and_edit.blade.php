@@ -94,7 +94,10 @@
                 <div class="form-group">
                 	<label for="number-field">纳税识别号</label>
                 	<input class="form-control" type="text" name="number" id="number-field" value="{{ old('number', $shop_detail->number ) }}" />
-                </div> 
+                </div>
+                <div class="form-group">
+                    <label for="number-field">配送方式：{{ $shop->dc?'自配送':'美团配送' }}</label>
+                </div>
                 <div class="form-group">
                     <label for="coefficient-field">打款系数（整数，如：15）</label>
                     <input class="form-control" type="text" name="coefficient" id="coefficient-field" value="{{ old('coefficient', $shop_detail->coefficient ) }}" />
