@@ -21,7 +21,7 @@ class DeoptsController extends Controller
         $deopts = Deopt::select('id','name','spec','is_otc','upc','category','common_name','company');
         if ($keyword)
         {
-            $deopts = $deopts->where('name','like',"%{$keyword}%")->orWhere('common_name', 'like', "%{$keyword}%");
+            $deopts = $deopts->where('name','like',"%{$keyword}%")->orWhere('common_name', 'like', "%{$keyword}%")->orWhere('upc', 'like', "%{$keyword}%");
         }
         $deopts = $deopts->paginate(10);
 		return view('deopts.index', compact('deopts','keyword'));
