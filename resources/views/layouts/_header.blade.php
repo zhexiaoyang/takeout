@@ -14,18 +14,41 @@
                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
 
                     <i class="icon-bell-alt"></i>
-                    <span class="badge bg-warning">@if(!empty($print_orders)) {{ count($print_orders) }} @else 0 @endif</span>
+                    <span class="badge bg-warning">{{ count($apply_cancels) + count($print_orders) + count($refunds)}}</span>
                 </a>
                 <ul class="dropdown-menu extended notification">
-                    <div class="notify-arrow notify-arrow-yellow"></div>
-                    <li>
-                        <p class="yellow"><span id="ddy_num">@if(!empty($print_orders)) {{ count($print_orders) }} @else 0 @endif</span>单待打印</p>
-                    </li>
-                    @foreach($print_orders as $print_order)
-                    <li>
-                        <a href="{{route('orders.show', $print_order['id'])}}" target="_blank">{{ $print_order['order_id'] }}</a>
-                    </li>
-                    @endforeach
+                    @if(!empty($apply_cancels))
+                        <li>
+                            <p class="yellow"><span id="ddy_num">@if(!empty($apply_cancels)) {{ count($apply_cancels) }} @else 0 @endif</span> 单申请取消</p>
+                        </li>
+                        @foreach($apply_cancels as $apply_cancel)
+                        <li>
+                            <a href="{{route('orders.show', $apply_cancel['id'])}}" target="_blank">{{ $apply_cancel['order_id'] }}</a>
+                        </li>
+                        @endforeach
+                    @endif
+
+                    @if(!empty($refunds))
+                        <li>
+                            <p class="yellow"><span id="ddy_num">@if(!empty($refunds)) {{ count($refunds) }} @else 0 @endif</span> 单申请退款</p>
+                        </li>
+                        @foreach($refunds as $refund)
+                        <li>
+                            <a href="{{route('orders.show', $refund['id'])}}" target="_blank">{{ $refund['order_id'] }}</a>
+                        </li>
+                        @endforeach
+                    @endif
+
+                    @if(!empty($print_orders))
+                        <li>
+                            <p class="yellow"><span id="ddy_num">@if(!empty($print_orders)) {{ count($print_orders) }} @else 0 @endif</span> 单待打印</p>
+                        </li>
+                        @foreach($print_orders as $print_order)
+                        <li>
+                            <a href="{{route('orders.show', $print_order['id'])}}" target="_blank">{{ $print_order['order_id'] }}</a>
+                        </li>
+                        @endforeach
+                    @endif
                     <li>
                         <a href="#">请尽快处理</a>
                     </li>

@@ -4,6 +4,7 @@
 
 @section('styles')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/order.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/base.v2.0.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/block.v2.0.css') }}">
     <style type="text/css">
@@ -120,6 +121,55 @@
                         </div>
                     </div>
                 </div>
+
+                @if( ($order->apply_cancel || $order->apply_refund) && ((1800 - time() + strtotime($order->cancel_at)) > 0 || (1800 - time() + strtotime($order->apply_refund)) > 0))
+                <div class="o-block mt10" style="margin-bottom: 0; border: 0; border-top:1px solid #e1e0e0 ">
+                    <div class="o-cont">
+                        <ul style="margin-top: 22px;">
+                            @if( $order->apply_cancel)
+                                <li style="width: 100%;" class="jbinfo">
+                                <span style="font-size: 18px" class="tags">
+                                    <span class="orderTimes" _v-1fbece8c="">申请取消订单：</span>
+                                    @if ((1800 - time() + strtotime($order->cancel_at)) > 60)
+                                        <span class="orderTimes" _v-1fbece8c="">还有 {{ intval((1800 - time() + strtotime($order->cancel_at))/60) }} 分钟自动同意</span>
+                                    @else
+                                        <span class="orderTimes" _v-1fbece8c="">还有 {{ (1800 - time() + strtotime($order->cancel_at)) }} 秒自动同意</span>
+                                    @endif
+                                    <form action="{{ route('orders.reject', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认拒绝退款么？')">
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="btn btn-danger btn-xs">拒绝申请</button>
+                                    </form>
+                                    <form action="{{ route('orders.agree', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认同意退款么？')">
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="btn btn-success btn-xs">同意申请</button>
+                                    </form>
+                                </span>
+                                </li>
+                            @endif
+                            @if( $order->apply_refund)
+                                <li style="width: 100%;" class="jbinfo">
+                                <span style="font-size: 18px" class="tags">
+                                    <span class="orderTimes" _v-1fbece8c="">申请退款订单({{ $order->refund_money }}元)：</span>
+                                    @if ((1800 - time() + strtotime($order->refund_at)) > 60)
+                                        <span class="orderTimes" _v-1fbece8c="">还有 {{ intval((1800 - time() + strtotime($order->refund_at))/60) }} 分钟自动同意</span>
+                                    @else
+                                        <span class="orderTimes" _v-1fbece8c="">还有 {{ (1800 - time() + strtotime($order->refund_at)) }} 秒自动同意</span>
+                                    @endif
+                                    <form action="{{ route('orders.reject', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认拒绝退款么？')">
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="btn btn-danger btn-xs">拒绝申请</button>
+                                    </form>
+                                    <form action="{{ route('orders.agree', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认同意退款么？')">
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="btn btn-success btn-xs">同意申请</button>
+                                    </form>
+                                </span>
+                                </li>
+                            @endif
+                        </ul>
+                    </div>
+                </div>
+                @endif
             </div>
             <div id="footer">&nbsp;&nbsp;&nbsp;&nbsp;</div>
             <div class="mc-wrap">
@@ -263,3 +313,60 @@
     </div>
 
 @endsection
+
+
+@section('scripts')
+
+    <script type="text/javascript"  src="{{ asset('js/sweetalert.min.js') }}"></script>
+
+    <script>
+        function alert(obj, mes) {
+            swal({
+                    title: mes,
+                    text: "",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "确定！",
+                    cancelButtonText: "取消！",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function(isConfirm){
+                    if (isConfirm) {
+                        obj.submit();
+                    } else {
+                        swal("操作被取消!", "","error");
+                        swal({
+                            title: "操作被取消！",
+                            type: "error",
+                            timer: 1000,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            return false;
+        }
+    </script>
+    @if (Session::has('alert'))
+        <script>
+            swal({
+                title: "{{ Session::get('alert') }}",
+                type: "success",
+                timer: 1000,
+                showConfirmButton: false
+            });
+        </script>
+    @endif
+    @if (Session::has('errors'))
+        <script>
+            swal({
+                title: "{{ Session::get('errors') }}",
+                type: "error",
+                timer: 2000,
+                showConfirmButton: false
+            });
+        </script>
+    @endif
+
+@stop

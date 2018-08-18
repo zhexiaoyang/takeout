@@ -44,6 +44,8 @@ Route::group(['middleware' => ['auth']], function ($router) {
     Route::resource('orders', 'OrdersController', ['only' => ['index', 'show']]);
     Route::post('orders/confirm/{order}', 'OrdersController@confirm')->name('orders.confirm');
     Route::post('orders/cancel/{order}', 'OrdersController@cancel')->name('orders.cancel');
+    Route::post('orders/agree/{order}', 'OrdersController@agree')->name('orders.agree');
+    Route::post('orders/reject/{order}', 'OrdersController@reject')->name('orders.reject');
     Route::post('orders/arrived/{order}', 'OrdersController@arrived')->name('orders.arrived');
     Route::post('orders/delivering/{order}', 'OrdersController@delivering')->name('orders.delivering');
     Route::get('orders/print/{order}', 'OrdersController@printOrder')->name('orders.printOrder');
