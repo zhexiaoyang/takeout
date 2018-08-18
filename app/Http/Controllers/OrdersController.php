@@ -23,7 +23,7 @@ class OrdersController extends Controller
     {
         $status = $request->status;
         $keyword = $request->keyword;
-        $orders = Order::allowShops()->select('id','order_id','shop_id','created_at', 'delivery_time', 'recipient_address','recipient_phone','recipient_name','total', 'status');
+        $orders = Order::allowShops()->select('id','order_id','shop_id','created_at', 'delivery_time', 'recipient_address','recipient_phone','recipient_name','total', 'status', 'apply_cancel', 'apply_refund', 'refund_money');
         if ($keyword)
         {
             $orders = $orders->where('order_id','like',"%{$keyword}%")->orWhere('recipient_name', 'like', "%{$keyword}%")->orWhere('recipient_phone', 'like', "%{$keyword}%");
@@ -97,6 +97,36 @@ class OrdersController extends Controller
             return redirect()->back()->with('alert', '取消成功！');
         }else{
             return back()->withErrors($res);
+        }
+    }
+
+    public function reject(Order $order)
+    {
+        $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
+        $res = $server->reject($order->order_id);
+        if ( $res === true )
+        {
+            $order->status = 25;
+            $order->save();
+            return redirect()->back()->with('alert', '拒绝退款成功！');
+        }else{
+            $error = isset($res['error']['msg'])?$res['error']['msg']:'操作失败';
+            return back()->withErrors($error);
+        }
+    }
+
+    public function agree(Order $order)
+    {
+        $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
+        $res = $server->agree($order->order_id);
+        if ( $res === true )
+        {
+            $order->status = 25;
+            $order->save();
+            return redirect()->back()->with('alert', '同意退款成功！');
+        }else{
+            $error = isset($res['error']['msg'])?$res['error']['msg']:'操作失败';
+            return back()->withErrors($error);
         }
     }
 

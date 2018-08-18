@@ -139,23 +139,23 @@
                                         </div>
                                         <div class="ft" _v-1fbece8c="">
                                             @if($order->status < 20)
-                                            <form action="{{ route('orders.confirm', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认该订单么？')">
-                                                {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-success btn-xs">确认订单</button>
-                                            </form>
-                                            <form action="{{ route('orders.delivering', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认配送该订单么？')">
-                                                {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-info btn-xs">配送订单</button>
-                                            </form>
-                                            <form action="{{ route('orders.cancel', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认取消订单么？')">
-                                                {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-xs">取消订单</button>
-                                            </form>
-                                                @if($order->shop->dc == 1)
-                                                <form action="{{ route('orders.arrived', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认完成订单么？')">
+                                                <form action="{{ route('orders.confirm', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认该订单么？')">
                                                     {{ csrf_field() }}
-                                                    <button type="submit" class="btn btn-success btn-xs">完成订单</button>
+                                                    <button type="submit" class="btn btn-success btn-xs">确认订单</button>
                                                 </form>
+                                                <form action="{{ route('orders.delivering', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认配送该订单么？')">
+                                                    {{ csrf_field() }}
+                                                    <button type="submit" class="btn btn-info btn-xs">配送订单</button>
+                                                </form>
+                                                <form action="{{ route('orders.cancel', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认取消订单么？')">
+                                                    {{ csrf_field() }}
+                                                    <button type="submit" class="btn btn-danger btn-xs">取消订单</button>
+                                                </form>
+                                                @if($order->shop->dc == 1)
+                                                    <form action="{{ route('orders.arrived', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认完成订单么？')">
+                                                        {{ csrf_field() }}
+                                                        <button type="submit" class="btn btn-success btn-xs">完成订单</button>
+                                                    </form>
                                                 @endif
                                             @endif
                                             <a target="_blank" _v-1fbece8c="" href="{{route('orders.printOrder', $order->id)}}">
@@ -164,6 +164,22 @@
                                             <a target="_blank" _v-1fbece8c="" href="{{route('orders.show', $order->id)}}">
                                                 <button class="btn btn-success btn-xs">查看订单</button>
                                             </a>
+                                            @if( $order->apply_cancel)
+                                                <span _v-1fbece8c="" style="margin-left: 20px">
+                                                    <strong _v-1fbece8c="" style="color: #db2828">申请取消</strong>
+                                                </span>
+                                                <a target="_blank" _v-1fbece8c="" href="{{route('orders.show', $order->id)}}">
+                                                    <button class="btn btn-danger btn-xs" style="margin-left: 10px">处理问题</button>
+                                                </a>
+                                            @endif
+                                            @if( $order->apply_refund)
+                                                <span _v-1fbece8c="" style="margin-left: 20px">
+                                                    <strong _v-1fbece8c="" style="color: #db2828">申请退款:{{ $order->refund_money }}元</strong>
+                                                </span>
+                                                    <a target="_blank" _v-1fbece8c="" href="{{route('orders.show', $order->id)}}">
+                                                        <button class="btn btn-danger btn-xs" style="margin-left: 10px">处理问题</button>
+                                                    </a>
+                                            @endif
                                         </div>
                                     </div>
                                 </li>
@@ -179,7 +195,8 @@
             </section>
         </div>
     </div>
-    <audio id="waitPrintMusic" src="{{ asset('img/waitPrintMusic.mp3') }}"></audio>
+    {{--<audio id="waitPrintMusic" src="{{ asset('img/waitPrintMusic.mp3') }}"></audio>--}}
+    <div id="audioBox" style="display: none"></div>
 @endsection
 
 @section('scripts')
@@ -237,18 +254,37 @@
     @endif
 
     <script>
+        var music = new Array();
         @if(count($print_orders) > 0)
-//        history.go(0);
+            music[0] = "{{ asset('img/waitPrintMusic.mp3') }}";
+        @endif
+
+        @if(count($apply_cancels) > 0)
+            music[1] = "{{ asset('img/qxsqMusic.mp3') }}";
+        @endif
+
+        @if(count($refunds) > 0)
+            music[2] = "{{ asset('img/shdMusic.mp3') }}";
+        @endif
+        {{--var arr = ["{{ asset('img/waitPrintMusic.mp3') }}","{{ asset('img/shdMusic.mp3') }}","{{ asset('img/qxsqMusic.mp3') }}"];--}}
+        var myAudio = new Audio();
         setTimeout(function(){
             openMusic();
         },3000);
-        @endif
 
         function openMusic() {
-            var opMusic = document.getElementById('waitPrintMusic');
-            opMusic.autoplay = "autopaly";
-            opMusic.play();
-            opMusic.removeAttribute("loop");
+            myAudio.preload = true;
+            myAudio.controls = true;
+            myAudio.src = music.pop();
+            myAudio.addEventListener('ended', playEndedHandler, false);
+            myAudio.play();
+            document.getElementById("audioBox").appendChild(myAudio);
+            myAudio.loop = false;
+        }
+        function playEndedHandler(){
+            myAudio.src = music.pop();
+            myAudio.play();
+            !music.length && myAudio.removeEventListener('ended',playEndedHandler,false);
         }
     </script>
 

@@ -73,20 +73,48 @@ class OrdersController extends Controller
             $this->log->save();
             $order_id = $request->get('order_id');
             $notify_type = $request->get('notify_type');
-            if ($order_id && $notify_type == 'apply')
+            $reason = $request->get('reason');
+            if ($order_id)
             {
-                $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
-                $res = $server->reject($order_id);
-                $log = new OrderLog();
-                $log->order_id = $order_id;
-                $log->operator = 'mt api refund';
-                if ( $res === true )
+                $order = Order::where('order_id', $order_id)->first();
+                if ($order && $notify_type == 'apply')
                 {
-                    $log->message = '拒绝退款申请成功';
-                }else{
-                    $log->message = isset($server->mt_res['error']['msg'])?'拒绝退款申请失败('.$server->mt_res['error']['msg'].')':'拒绝退款申请失败';
+                    $order->apply_refund = 1;
+                    $order->refund_money = $order->total;
+                    $order->refund_at = date("Y-m-d");
+                    $order->save();
+                    $log = new OrderLog();
+                    $log->order_id = $order_id;
+                    $log->message = '客户申请退款。金额：'.$order->total.'原因：'.$reason;
+                    $log->operator = 'mt api refund';
+                    $log->save();
                 }
-                $log->save();
+                if ($order_id && $notify_type == 'cancelRefund')
+                {
+                    $order->apply_refund = 0;
+                    $order->refund_money = 0;
+                    $order->refund_at = null;
+                    $order->save();
+                    $log = new OrderLog();
+                    $log->order_id = $order_id;
+                    $log->message = '客户取消退款申请';
+                    $log->operator = 'mt api refund';
+                    $log->save();
+                }
+                if ($order_id && $notify_type == 'agree')
+                {
+                    $order->apply_refund = 0;
+                    $order->refund_money = $order->total;
+                    $order->refund_at = date("Y-m-d");
+                    $order->save();
+                }
+                if ($order_id && $notify_type == 'reject')
+                {
+                    $order->apply_refund = 0;
+                    $order->refund_money = 0;
+                    $order->refund_at = null;
+                    $order->save();
+                }
             }
         }
         return $this->response->array($result);
@@ -191,20 +219,48 @@ class OrdersController extends Controller
             $this->log->save();
             $order_id = $request->get('order_id');
             $notify_type = $request->get('notify_type');
-            if ($order_id && $notify_type == 'apply')
+            $reason = $request->get('reason');
+            $money = $request->get('money', 0);
+            $order = Order::where('order_id', $order_id)->first();
+            if ($order_id)
             {
-                $server = New OrderService(New Config(env('MT_APPID'),env('MT_SECRET')));
-                $res = $server->reject($order_id);
-                $log = new OrderLog();
-                $log->order_id = $order_id;
-                $log->operator = 'mt api rebates';
-                if ( $res === true )
+                if ($order && $notify_type == 'apply')
                 {
-                    $log->message = '拒绝部分退款申请成功';
-                }else{
-                    $log->message = isset($server->mt_res['error']['msg'])?'拒绝部分退款申请失败('.$server->mt_res['error']['msg'].')':'拒绝部分退款申请失败';
+                    $order->apply_refund = 1;
+                    $order->refund_money = $money;
+                    $order->refund_at = date("Y-m-d");
+                    $order->save();
+                    $log = new OrderLog();
+                    $log->order_id = $order_id;
+                    $log->message = '客户申请退款。金额：'.$money.'原因：'.$reason;
+                    $log->operator = 'mt api rebates';
+                    $log->save();
                 }
-                $log->save();
+                if ($order && $notify_type == 'cancelRefund')
+                {
+                    $order->apply_refund = 0;
+                    $order->refund_at = null;
+                    $order->save();
+                    $log = new OrderLog();
+                    $log->order_id = $order_id;
+                    $log->message = '客户取消退款申请';
+                    $log->operator = 'mt api rebates';
+                    $log->save();
+                }
+                if ($order && $notify_type == 'agree')
+                {
+                    $order->apply_refund = 0;
+                    $order->refund_money = $money;
+                    $order->refund_at = date("Y-m-d");
+                    $order->save();
+                }
+                if ($order && $notify_type == 'reject')
+                {
+                    $order->apply_refund = 0;
+                    $order->refund_money = 0;
+                    $order->refund_at = null;
+                    $order->save();
+                }
             }
         }
         return $this->response->array($result);

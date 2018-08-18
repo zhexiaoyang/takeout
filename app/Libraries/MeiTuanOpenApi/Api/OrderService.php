@@ -114,17 +114,37 @@ class OrderService extends RpcService
     {
         $params = [
             "order_id" => $order_id,
-            'reason' => '请联系商家，谢谢！',
+            'reason' => '请先联系商家，谢谢！',
         ];
         $result = json_decode($this->client->call("/order/refund/reject", $params, 'GET'), true);
         $this->mt_res = $result;
         if ($result && $result['data'] == 'ok')
         {
-//            $log = new OrderLog();
-//            $log->order_id = $order_id;
-//            $log->message = '系统自动拒绝退款申请';
-//            $log->operator = "system";
-//            $log->save();
+            $log = new OrderLog();
+            $log->order_id = $order_id;
+            $log->message = '拒绝退款申请';
+            $log->operator = "system";
+            $log->save();
+            return true;
+        }
+        return $result;
+    }
+
+    public function agree($order_id)
+    {
+        $params = [
+            "order_id" => $order_id,
+            'reason' => '同意退款！',
+        ];
+        $result = json_decode($this->client->call("/order/refund/agree", $params, 'GET'), true);
+        $this->mt_res = $result;
+        if ($result && $result['data'] == 'ok')
+        {
+            $log = new OrderLog();
+            $log->order_id = $order_id;
+            $log->message = '同意申请退款';
+            $log->operator = Auth()->user()->name;;
+            $log->save();
             return true;
         }
         return false;
