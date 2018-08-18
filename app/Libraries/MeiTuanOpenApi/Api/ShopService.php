@@ -58,7 +58,7 @@ class ShopService extends RpcService
     public function update_shop(Shop $shop)
     {
         $params = [
-            "app_poi_code" => $shop->id,
+            "app_poi_code" => $shop->meituan_id,
 //            "app_poi_code" => 't_3Wp0e1dv7T',
             "name" => $shop->name,
             "address" => $shop->address,
