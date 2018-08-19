@@ -122,7 +122,7 @@
                     </div>
                 </div>
 
-                @if( ($order->apply_cancel || $order->apply_refund) && ((1800 - time() + strtotime($order->cancel_at)) > 0 || (1800 - time() + strtotime($order->apply_refund)) > 0))
+                @if( ($order->apply_cancel || $order->apply_refund) && ((1800 - time() + strtotime($order->cancel_at)) > 0 || (1800 - time() + strtotime($order->refund_at)) > 0))
                 <div class="o-block mt10" style="margin-bottom: 0; border: 0; border-top:1px solid #e1e0e0 ">
                     <div class="o-cont">
                         <ul style="margin-top: 22px;">
