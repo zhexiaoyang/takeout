@@ -96,7 +96,7 @@ class CreateMtOrder implements ShouldQueue
                         ];
                         if (\DB::table('order_details')->insert($goods))
                         {
-                            \DB::table('goods')->where(['shop_id' => $shop->id, 'deopt_id' => $v['app_food_code']])->decrement('stock', $v['quantity']);
+//                            \DB::table('goods')->where(['shop_id' => $shop->id, 'deopt_id' => $v['app_food_code']])->decrement('stock', $v['quantity']);
                         }
                     }
 
