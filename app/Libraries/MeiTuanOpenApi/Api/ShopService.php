@@ -89,4 +89,21 @@ class ShopService extends RpcService
         return $this->client->call("/poi/mget", $params, 'GET');
     }
 
+
+    public function open(Shop $shop)
+    {
+        $params = [
+            "app_poi_code" => $shop->meituan_id,
+        ];
+        return $this->client->call("/poi/open", $params);
+    }
+
+    public function close(Shop $shop)
+    {
+        $params = [
+            "app_poi_code" => $shop->meituan_id,
+        ];
+        return $this->client->call("/poi/close", $params);
+    }
+
 }

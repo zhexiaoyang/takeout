@@ -32,9 +32,11 @@ Route::group(['middleware' => ['auth']], function ($router) {
     Route::resource('deopts', 'DeoptsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
 
     Route::resource('shops', 'ShopsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
-    Route::get('shops/sync', 'ShopsController@sync')->name('shops.sync');
+//    Route::get('shops/sync', 'ShopsController@sync')->name('shops.sync');
     Route::get('shops/goods/{shop}', 'ShopsController@goods')->name('shops.goods');
     Route::get('shops/goodsOnline/{shop}', 'ShopsController@goodsOnline')->name('shops.goodsOnline');
+    Route::post('shops/open/{shop}', 'ShopsController@open')->name('shops.open');
+    Route::post('shops/close/{shop}', 'ShopsController@close')->name('shops.close');
 
     Route::resource('categories', 'CategoriesController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
     Route::resource('goods', 'GoodsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);

@@ -209,4 +209,34 @@ class ShopsController extends Controller
         }
         dd("同步成功");
     }
+
+    public function open(Shop $shop)
+    {
+
+        $shop_server = New ShopService(New Config(env('MT_APPID'),env('MT_SECRET')));
+        $result = $shop_server->open($shop);
+        $result = json_decode($result, true);
+        if ($result['data'] == 'ok')
+        {
+            return redirect()->back()->with('alert', '操作成功！');
+        }else{
+            $error = isset($result['error']['msg'])?$result['error']['msg']:'请求接口错误';
+            return back()->withErrors($error);
+        }
+    }
+
+    public function close(Shop $shop)
+    {
+
+        $shop_server = New ShopService(New Config(env('MT_APPID'),env('MT_SECRET')));
+        $result = $shop_server->close($shop);
+        $result = json_decode($result, true);
+        if ($result['data'] == 'ok')
+        {
+            return redirect()->back()->with('alert', '操作成功！');
+        }else{
+            $error = isset($result['error']['msg'])?$result['error']['msg']:'请求接口错误';
+            return back()->withErrors($error);
+        }
+    }
 }

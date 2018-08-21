@@ -69,6 +69,21 @@
                                     @if(Auth::user()->hasPermissionTo('manage_users'))
                                         <a href="{{ route('shop_details.show', $shop->id) }}" class="btn btn-primary btn-xs">财务信息</a>
                                     @endif
+
+                                    @if(Auth::user()->hasAnyRole(\Spatie\Permission\Models\Role::all()))
+                                        <form action="{{ route('shops.open', $shop->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认开店营业么？')">
+                                            {{ csrf_field() }}
+                                            <button type="submit" class="btn btn-success btn-xs">营业</button>
+                                        </form>
+                                    @endif
+
+                                    @if(Auth::user()->hasAnyRole(\Spatie\Permission\Models\Role::all()))
+                                        <form action="{{ route('shops.close', $shop->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认休息么？')">
+                                            {{ csrf_field() }}
+                                            <button type="submit" class="btn btn-danger btn-xs">休息</button>
+                                        </form>
+                                    @endif
+
                                     @if(0)
                                         <a href="{{ route('shops.goods', $shop->id) }}" class="btn btn-primary btn-xs">清空</a>
                                     @endif
