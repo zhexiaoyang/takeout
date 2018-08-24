@@ -46,6 +46,7 @@
                     <tr>
                         <th>ID</th>
                         <th>名称</th>
+                        <th>状态</th>
                         <th>地址</th>
                         <th>美团</th>
                         <th>系数</th>
@@ -57,6 +58,22 @@
                             <tr>
                                 <td>{{$shop->id}}</td>
                                 <td>{{$shop->name}}</td>
+                                <td>
+                                    @if(isset($shops_status[$shop->meituan_id]['line']))
+                                        @if($shops_status[$shop->meituan_id]['line'] === 1)
+                                            <span class="btn btn-success btn-xs">上线</span>
+                                        @else
+                                            <span class="btn btn-danger btn-xs">下线</span>
+                                        @endif
+                                    @endif
+                                    @if(isset($shops_status[$shop->meituan_id]['open']))
+                                        @if($shops_status[$shop->meituan_id]['open'] === 1)
+                                            <span class="btn btn-success btn-xs">营业</span>
+                                        @else
+                                            <span class="btn btn-danger btn-xs">休息</span>
+                                        @endif
+                                    @endif
+                                </td>
                                 <td>{{$shop->address}}</td>
                                 <td>{{$shop->meituan_id}}</td>
                                 <td>{{$shop->detail->coefficient or 15}}</td>
@@ -70,18 +87,23 @@
                                         <a href="{{ route('shop_details.show', $shop->id) }}" class="btn btn-primary btn-xs">财务信息</a>
                                     @endif
 
-                                    @if(Auth::user()->hasAnyRole(\Spatie\Permission\Models\Role::all()))
-                                        <form action="{{ route('shops.open', $shop->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认开店营业么？')">
-                                            {{ csrf_field() }}
-                                            <button type="submit" class="btn btn-success btn-xs">营业</button>
-                                        </form>
-                                    @endif
 
-                                    @if(Auth::user()->hasAnyRole(\Spatie\Permission\Models\Role::all()))
-                                        <form action="{{ route('shops.close', $shop->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认休息么？')">
-                                            {{ csrf_field() }}
-                                            <button type="submit" class="btn btn-danger btn-xs">休息</button>
-                                        </form>
+                                    @if(isset($shops_status[$shop->meituan_id]['open']))
+                                        @if($shops_status[$shop->meituan_id]['open'] === 1)
+                                            @if(Auth::user()->hasAnyRole(\Spatie\Permission\Models\Role::all()))
+                                                <form action="{{ route('shops.close', $shop->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认休息么？')">
+                                                    {{ csrf_field() }}
+                                                    <button type="submit" class="btn btn-primary btn-xs">休息</button>
+                                                </form>
+                                            @endif
+                                        @else
+                                            @if(Auth::user()->hasAnyRole(\Spatie\Permission\Models\Role::all()))
+                                                <form action="{{ route('shops.open', $shop->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认开店营业么？')">
+                                                    {{ csrf_field() }}
+                                                    <button type="submit" class="btn btn-primary btn-xs">营业</button>
+                                                </form>
+                                            @endif
+                                        @endif
                                     @endif
 
                                     @if(0)
