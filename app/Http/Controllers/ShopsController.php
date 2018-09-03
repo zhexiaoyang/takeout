@@ -30,7 +30,29 @@ class ShopsController extends Controller
             $shops = $shops->where('name','like',"%{$keyword}%");
         }
         $shops = $shops->orderBy('id','DESC')->paginate(10);
-        return view('shops.index', compact('shops','keyword'));
+        $shop_ids = [];
+        $shops_status = [];
+        foreach ($shops as $shop) {
+            $shop_ids[] = $shop->meituan_id;
+        }
+        if (!empty($shop_ids))
+        {
+            $shop_server = New ShopService(New Config(env('MT_APPID'),env('MT_SECRET')));
+            $res = $shop_server->shop_info(implode(',', $shop_ids));
+            $data = json_decode($res, true);
+            $shops_by_mt = $data['data'];
+//            dd($shops_by_mt);
+            if (!empty($shops_by_mt))
+            {
+                foreach ($shops_by_mt as $v) {
+                    $shops_status[$v['app_poi_code']]['line'] = (int)$v['is_online'] === 1 ? 1 : 0;
+                    $shops_status[$v['app_poi_code']]['open'] = (int)$v['open_level'] === 1 ? 1 : 0;
+                }
+            }
+        }
+//        dd($shops_status);
+//        dd($shops_status['5685381']['line']);
+        return view('shops.index', compact('shops','keyword', 'shops_status'));
 	}
 
     public function show(Shop $shop)

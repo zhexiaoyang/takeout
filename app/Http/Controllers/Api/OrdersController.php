@@ -81,7 +81,7 @@ class OrdersController extends Controller
                 {
                     $order->apply_refund = 1;
                     $order->refund_money = $order->total;
-                    $order->refund_at = date("Y-m-d");
+                    $order->refund_at = date("Y-m-d H:i:s");
                     $order->save();
                     $log = new OrderLog();
                     $log->order_id = $order_id;
@@ -105,7 +105,7 @@ class OrdersController extends Controller
                 {
                     $order->apply_refund = 0;
                     $order->refund_money = $order->total;
-                    $order->refund_at = date("Y-m-d");
+                    $order->refund_at = date("Y-m-d H:i:s");
                     $order->save();
                 }
                 if ($order_id && $notify_type == 'reject')
@@ -228,7 +228,7 @@ class OrdersController extends Controller
                 {
                     $order->apply_refund = 1;
                     $order->refund_money = $money;
-                    $order->refund_at = date("Y-m-d");
+                    $order->refund_at =  date("Y-m-d H:i:s");
                     $order->save();
                     $log = new OrderLog();
                     $log->order_id = $order_id;
@@ -251,7 +251,7 @@ class OrdersController extends Controller
                 {
                     $order->apply_refund = 0;
                     $order->refund_money = $money;
-                    $order->refund_at = date("Y-m-d");
+                    $order->refund_at =  date("Y-m-d H:i:s");
                     $order->save();
                 }
                 if ($order && $notify_type == 'reject')
