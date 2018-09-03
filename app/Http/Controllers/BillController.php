@@ -83,7 +83,7 @@ class BillController extends Controller
     public function makeBill($bill_id = '')
     {
         $this->setTime($bill_id);
-        $shops = Shop::select('id', 'name', 'dc')->where('id','>=', 100)->get()->toArray();
+        $shops = Shop::select('id', 'name', 'dc', 'refund_money')->where('id','>=', 100)->get()->toArray();
         $data = [];
         foreach ($shops as $shop) {
             $coefficient = $this->getCoefficient($shop['id']);
@@ -133,7 +133,7 @@ class BillController extends Controller
 
     public function getOrders($shop_id)
     {
-        return Order::select('poi_receive_detail','shipping_fee','original_price', 'shipping_fee','total')->where('shop_id',$shop_id)->where('status','>',30)->where('created_at', '>=', $this->start_time)->where('created_at', '<', $this->end_time)->get()->toArray();
+        return Order::select('poi_receive_detail','shipping_fee','original_price', 'shipping_fee','total', 'refund_money')->where('shop_id',$shop_id)->where('status','>',30)->where('created_at', '>=', $this->start_time)->where('created_at', '<', $this->end_time)->get()->toArray();
     }
 
     public function getCoefficient($shop_id)
