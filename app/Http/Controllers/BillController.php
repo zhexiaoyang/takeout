@@ -83,7 +83,7 @@ class BillController extends Controller
     public function makeBill($bill_id = '')
     {
         $this->setTime($bill_id);
-        $shops = Shop::select('id', 'name', 'dc', 'refund_money')->where('id','>=', 100)->get()->toArray();
+        $shops = Shop::select('id', 'name', 'dc')->where('id','>=', 100)->get()->toArray();
         $data = [];
         foreach ($shops as $shop) {
             $coefficient = $this->getCoefficient($shop['id']);
