@@ -95,7 +95,7 @@
                     </tbody>
                 </table>
                 <div style="margin-left: 10px">
-                    {!! $goods->appends(['keyword' => $keyword])->render() !!}
+                    {!! $goods->appends(['keyword' => $keyword,'shop_id' => $shop_id])->render() !!}
                 </div>
                 <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal" class="modal fade">
                     <div class="modal-dialog">
