@@ -54,12 +54,12 @@ class BillController extends Controller
             $dc = $shop->dc;
             foreach ($orders as $order)
             {
-                $sale_amount += $order['total'];
+                $sale_amount += ($order['total'] - $order['refund_money']);
                 if ($dc)
                 {
-                    $earnings += $order['total'];
+                    $earnings += ($order['total'] - $order['refund_money']);
                 }else{
-                    $earnings += ($order['total'] - $order['shipping_fee']);
+                    $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee']);
                 }
                 $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
                 if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
@@ -96,12 +96,12 @@ class BillController extends Controller
             {
                 foreach ($orders as $order)
                 {
-                    $sale_amount += $order['total'];
+                    $sale_amount += ($order['total'] - $order['refund_money']);
                     if ($dc)
                     {
-                        $earnings += $order['total'];
+                        $earnings += ($order['total'] - $order['refund_money']);
                     }else{
-                        $earnings += ($order['total'] - $order['shipping_fee']);
+                        $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee']);
                     }
                     $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
                     if (!empty($arr) && !empty($arr['actOrderChargeByMt']))

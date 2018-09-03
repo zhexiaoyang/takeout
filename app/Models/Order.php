@@ -48,9 +48,9 @@ class Order extends Model
         $shop = Shop::where(['id' => $shop_id])->first();
         if ($shop->dc)
         {
-            $earnings += $order['total'];
+            $earnings += ($order['total'] - $order['refund_money']);
         }else{
-            $earnings += ($order['total'] - $order['shipping_fee']);
+            $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee']);
         }
         $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
         if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
@@ -75,9 +75,9 @@ class Order extends Model
         $shop = Shop::where(['id' => $shop_id])->first();
         if ($shop->dc)
         {
-            $earnings += $order['total'];
+            $earnings += ($order['total'] - $order['refund_money']);
         }else{
-            $earnings += ($order['total'] - $order['shipping_fee']);
+            $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee']);
         }
         $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
         if (!empty($arr) && !empty($arr['actOrderChargeByMt']))

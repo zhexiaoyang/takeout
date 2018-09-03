@@ -48,7 +48,7 @@ class OrdersController extends Controller
         $stime = $request->stime;
         $etime = $request->etime;
         $shop_id = isset($request->shop_id)?$request->shop_id:0;
-        $orders = Order::allowShops()->select('id','order_id','shop_id','created_at', 'delivery_time', 'recipient_address','recipient_phone','recipient_name','total', 'status');
+        $orders = Order::allowShops()->select('id','order_id','shop_id','created_at', 'delivery_time', 'recipient_address','recipient_phone','recipient_name','total', 'status', 'refund_money');
         if ($keyword)
         {
             $orders = $orders->where('order_id','like',"%{$keyword}%")->orWhere('recipient_name', 'like', "%{$keyword}%")->orWhere('recipient_phone', 'like', "%{$keyword}%");
