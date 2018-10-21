@@ -147,63 +147,67 @@ class ShopsController extends Controller
     public function syncMeituan(Request $request)
     {
         $result = [];
-        $shop_ids = $request->get('shop_ids');
-        if ($shop_ids)
+        $shop_ids = [];
+
+        $shop_server = New ShopService(New Config(env('MT_APPID'),env('MT_SECRET')));
+
+        $res = $shop_server->shop_list();
+
+        if ($res)
         {
-            $shop_ids = preg_replace("/\s|，/", ",", $shop_ids);
-            $shop_ids = explode(',', $shop_ids);
-            if (!empty($shop_ids))
-            {
-                $shop_list = [];
+            $res = json_decode($res, true);
+            $shop_ids = $res['data'];
+        }
 
-                foreach ($shop_ids as $shop_id) {
-                    if ($shop_id && !Shop::where(['meituan_id' => $shop_id])->exists())
-                    {
-                        $shop_list[] = $shop_id;
-                    }
-                }
+        if (!empty($shop_ids))
+        {
+            $shop_list = [];
 
-                if (!empty($shop_list))
+            foreach ($shop_ids as $shop_id) {
+                if ($shop_id && ( (int)$shop_id > 9999 ) && !Shop::where(['meituan_id' => $shop_id])->exists())
                 {
+                    $shop_list[] = $shop_id;
+                }
+            }
 
-                    $shop_server = New ShopService(New Config(env('MT_APPID'),env('MT_SECRET')));
-                    $res = $shop_server->shop_info(implode(',', $shop_list));
-                    $data = json_decode($res, true);
-                    $shops = $data['data'];
-                    if (!empty($shops))
-                    {
-                        foreach ($shops as $shop) {
-                            $info = [
-                                'meituan_id' => $shop['app_poi_code'],
-                                'name' => $shop['name'],
-                                'address' => $shop['address'],
-                                'latitude' => $shop['latitude']/1000000,
-                                'longitude' => $shop['longitude']/1000000,
-                                'pic_url' => $shop['pic_url'],
-                                'pic_url_large' => $shop['pic_url_large'],
-                                'phone' => $shop['phone'],
-                                'standby_tel' => $shop['standby_tel'],
-                                'shipping_fee' => $shop['shipping_fee'],
-                                'shipping_time' => $shop['shipping_time'],
-                                'promotion_info' => $shop['promotion_info']==null?'':$shop['promotion_info'],
-                                'open_level' => $shop['open_level'],
-                                'is_online' => $shop['is_online'],
-                                'invoice_support' => $shop['invoice_support'],
-                                'invoice_min_price' => $shop['invoice_min_price'],
-                                'invoice_description' => $shop['invoice_description'],
-                                'third_tag_name' => $shop['third_tag_name'],
-                                'pre_book' => $shop['pre_book'],
-                                'time_select' => $shop['time_select'],
-                                'app_brand_code' => $shop['app_brand_code']==null?'':$shop['app_brand_code'],
-                                'mt_type_id' => $shop['mt_type_id']==null?0:$shop['app_brand_code'],
-                            ];
+            if (!empty($shop_list))
+            {
+                $res = $shop_server->shop_info(implode(',', $shop_list));
+                $data = json_decode($res, true);
+                $shops = $data['data'];
+                if (!empty($shops))
+                {
+                    foreach ($shops as $shop) {
+                        $info = [
+                            'meituan_id' => $shop['app_poi_code'],
+                            'name' => $shop['name'],
+                            'address' => $shop['address'],
+                            'latitude' => $shop['latitude']/1000000,
+                            'longitude' => $shop['longitude']/1000000,
+                            'pic_url' => $shop['pic_url'],
+                            'pic_url_large' => $shop['pic_url_large'],
+                            'phone' => $shop['phone'],
+                            'standby_tel' => $shop['standby_tel'],
+                            'shipping_fee' => $shop['shipping_fee'],
+                            'shipping_time' => $shop['shipping_time'],
+                            'promotion_info' => $shop['promotion_info']==null?'':$shop['promotion_info'],
+                            'open_level' => $shop['open_level'],
+                            'is_online' => $shop['is_online'],
+                            'invoice_support' => $shop['invoice_support'],
+                            'invoice_min_price' => $shop['invoice_min_price'],
+                            'invoice_description' => $shop['invoice_description'],
+                            'third_tag_name' => $shop['third_tag_name'],
+                            'pre_book' => $shop['pre_book'],
+                            'time_select' => $shop['time_select'],
+                            'app_brand_code' => $shop['app_brand_code']==null?'':$shop['app_brand_code'],
+                            'mt_type_id' => $shop['mt_type_id']==null?0:$shop['app_brand_code'],
+                        ];
 //                dd($info);
-                            if ($info['meituan_id'] && Shop::create($info))
-                            {
-                                $result[] = $shop['app_poi_code'].':创建成功';
-                            }else{
-                                $result[] = $shop['app_poi_code'].':创建失败';
-                            }
+                        if ($info['meituan_id'] && Shop::create($info))
+                        {
+                            $result[] = $shop['app_poi_code'].':创建成功';
+                        }else{
+                            $result[] = $shop['app_poi_code'].':创建失败';
                         }
                     }
                 }

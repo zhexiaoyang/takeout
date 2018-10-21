@@ -29,7 +29,7 @@
                 <header class="panel-heading">
                     门店列表
                     <div class="panel-body">
-                        <form class="form-inline" role="form" action="{{route('shops.index')}}" method="get">
+                        <form class="form-inline" role="form" action="{{route('shops.index')}}" method="get" style="display: inline;">
                             <div class="form-group">
                                 <label class="sr-only" for="keyword">关键字</label>
                                 <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">
@@ -38,10 +38,13 @@
                             @if(Auth::user()->hasPermissionTo('shop_add'))
 {{--                                <a href="{{route('shops.create')}}" class="btn btn-success">添加门店</a>--}}
                             @endif
-                            @if(Auth::user()->hasRole('Superman'))
-                                <a href="#myModal" data-toggle="modal" class="btn btn-warning">同步药店</a>
-                            @endif
                         </form>
+                        @if(Auth::user()->hasRole('Superman'))
+                            <form role="form" action="{{ route('shops.syncMeituan') }}" method="post" onsubmit="return alert(this, '确认同步药店么？')" style="display: inline;">
+                                {{ csrf_field() }}
+                                <button type="submit" class="btn btn-warning">同步药店</button>
+                            </form>
+                        @endif
                     </div>
                 </header>
                 <table class="table table-striped table-advance table-hover">
@@ -120,29 +123,6 @@
                 <div style="margin-left: 10px">
                     {!! $shops->appends(['keyword' => $keyword])->render() !!}
                 </div>
-
-                @if(Auth::user()->hasRole('Superman'))
-                <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal" class="modal fade">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-                                <h4 class="modal-title">同步门店</h4>
-                            </div>
-                            <div class="modal-body">
-                                <form role="form" action="{{ route('shops.syncMeituan') }}" accept-charset="UTF-8" method="post">
-                                    {{ csrf_field() }}
-                                    <div class="form-group">
-                                        <label for="name-field">门店</label>
-                                        <textarea name="shop_ids" id="" cols="30" rows="10" class="form-control"></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-success">同步</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endif
             </section>
         </div>
     </div>
