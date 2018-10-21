@@ -33,6 +33,7 @@ Route::group(['middleware' => ['auth']], function ($router) {
 
     Route::resource('shops', 'ShopsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
 //    Route::get('shops/sync', 'ShopsController@sync')->name('shops.sync');
+    Route::post('shops/syncMeituan', 'ShopsController@syncMeituan')->name('shops.syncMeituan');
     Route::get('shops/goods/{shop}', 'ShopsController@goods')->name('shops.goods');
     Route::get('shops/goodsOnline/{shop}', 'ShopsController@goodsOnline')->name('shops.goodsOnline');
     Route::post('shops/open/{shop}', 'ShopsController@open')->name('shops.open');
