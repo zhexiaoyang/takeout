@@ -6,6 +6,7 @@ use App\Models\Order;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Auth;
+use Cache;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,9 +30,15 @@ class AppServiceProvider extends ServiceProvider
 
         view()->composer('*', function ($view) {
             if (Auth::id()) {
-                $print_orders = Order::allowShops()->select(['id', 'order_id'])->where('is_print', 0)->where('status', '<', 20)->orderBy('id', 'desc')->get()->toArray();
-                $apply_cancels = Order::allowShops()->select(['id', 'order_id'])->where('apply_cancel', '=', 1)->where('cancel_at', '>', date('Y-m-d H:i:s', (time() - 1800)))->orderBy('id', 'desc')->get()->toArray();
-                $refunds = Order::allowShops()->select(['id', 'order_id'])->where('apply_refund', '=', 1)->where('refund_at', '>', date('Y-m-d H:i:s', (time() - 1800)))->orderBy('id', 'desc')->get()->toArray();
+                $print_orders = Cache::remember('users', 2, function () {
+                    return Order::allowShops()->select(['id', 'order_id'])->where('is_print', 0)->where('status', '<', 20)->orderBy('id', 'desc')->get()->toArray();
+                });
+                $apply_cancels = Cache::remember('users', 2, function () {
+                    return Order::allowShops()->select(['id', 'order_id'])->where('apply_cancel', '=', 1)->where('cancel_at', '>', date('Y-m-d H:i:s', (time() - 1800)))->orderBy('id', 'desc')->get()->toArray();
+                });
+                $refunds = Cache::remember('users', 2, function () {
+                    return Order::allowShops()->select(['id', 'order_id'])->where('apply_refund', '=', 1)->where('refund_at', '>', date('Y-m-d H:i:s', (time() - 1800)))->orderBy('id', 'desc')->get()->toArray();
+                });
                 $view->with(compact(['print_orders', 'apply_cancels', 'refunds']));
             }
         });
