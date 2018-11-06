@@ -151,12 +151,6 @@
                                                     {{ csrf_field() }}
                                                     <button type="submit" class="btn btn-danger btn-xs">取消订单</button>
                                                 </form>
-                                                @if($order->shop->dc == 1)
-                                                    <form action="{{ route('orders.arrived', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认完成订单么？')">
-                                                        {{ csrf_field() }}
-                                                        <button type="submit" class="btn btn-success btn-xs">完成订单</button>
-                                                    </form>
-                                                @endif
                                             @endif
                                             <a target="_blank" _v-1fbece8c="" href="{{route('orders.printOrder', $order->id)}}">
                                                 <button class="btn btn-success btn-xs">打印小票</button>
@@ -179,6 +173,14 @@
                                                     <a target="_blank" _v-1fbece8c="" href="{{route('orders.show', $order->id)}}">
                                                         <button class="btn btn-danger btn-xs" style="margin-left: 10px">处理问题</button>
                                                     </a>
+                                            @endif
+                                            @if($order->status < 20)
+                                                @if($order->shop->dc == 1)
+                                                    <form action="{{ route('orders.arrived', $order->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认完成订单么？')">
+                                                        {{ csrf_field() }}
+                                                        <button type="submit" class="btn btn-success btn-xs">完成订单</button>
+                                                    </form>
+                                                @endif
                                             @endif
                                         </div>
                                     </div>
