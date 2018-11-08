@@ -105,6 +105,8 @@ class GoodsService extends RpcService
         $params = [
             "app_poi_code" => $shop->meituan_id,
             'app_medicine_code' => $good->deopt->id,
+            'category_code' => $good->category->id,
+            'category_name' => $good->category->name,
             'stock' => $stock,
             'price' => $price
         ];
