@@ -23,7 +23,7 @@ class DeoptsController extends Controller
         {
             $deopts = $deopts->where('name','like',"%{$keyword}%")->orWhere('common_name', 'like', "%{$keyword}%")->orWhere('upc', 'like', "%{$keyword}%");
         }
-        $deopts = $deopts->paginate(10);
+        $deopts = $deopts->orderBy('id', 'desc')->paginate(10);
 		return view('deopts.index', compact('deopts','keyword'));
 	}
 
@@ -37,10 +37,31 @@ class DeoptsController extends Controller
 		return view('deopts.create_and_edit', compact('deopt'));
 	}
 
-	public function store(DeoptRequest $request)
+	public function store(DeoptRequest $request, Deopt $deopt)
 	{
-		$deopt = Deopt::create($request->all());
-		return redirect()->route('deopts.show', $deopt->id)->with('message', 'Created successfully.');
+        $deopt->fill($request->all());
+        if (!$deopt->unit)
+        {
+            $deopt->unit = '';
+        }
+        if (!$deopt->price)
+        {
+            $deopt->price = 0;
+        }
+        if (!$deopt->description)
+        {
+            $deopt->description = '';
+        }
+        if (!$deopt->picture)
+        {
+            $deopt->picture = '';
+        }
+        if (!$deopt->common_name)
+        {
+            $deopt->common_name = '';
+        }
+        $deopt->save();
+		return redirect()->route('deopts.show', $deopt->id)->with('message', '创建成功');
 	}
 
 	public function edit(Deopt $deopt)

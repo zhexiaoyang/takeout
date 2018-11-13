@@ -12,7 +12,10 @@ class DeoptRequest extends Request
             case 'POST':
             {
                 return [
-                    // CREATE ROLES
+                    'name'      => 'required',
+                    'approval'  => 'required',
+                    'upc'       => 'required',
+                    'spec'       => 'required',
                 ];
             }
             // UPDATE
@@ -20,7 +23,9 @@ class DeoptRequest extends Request
             case 'PATCH':
             {
                 return [
-                    // UPDATE ROLES
+                    'name'       => 'required',
+                    'approval'        => 'required',
+                    'upc' => 'required',
                 ];
             }
             case 'GET':
@@ -35,7 +40,10 @@ class DeoptRequest extends Request
     public function messages()
     {
         return [
-            // Validation messages
+            'name.required' => '药品名称不能为空',
+            'approval.required' => '国药准字号不能为空',
+            'upc.required' => '条形码不能为空',
+            'spec.required' => '规格不能为空',
         ];
     }
 }

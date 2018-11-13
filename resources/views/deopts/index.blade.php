@@ -35,7 +35,9 @@
                                 <input value="{{$keyword or ''}}" type="text" class="form-control" id="keyword" name="keyword" placeholder="关键字...">
                             </div>
                             <button type="submit" class="btn btn-info">搜索</button>
-{{--                            <a href="{{route('deopts.create')}}" class="btn btn-success">添加标品</a>--}}
+                            @if(Auth::user()->hasPermissionTo('manage_users'))
+                            <a href="{{route('deopts.create')}}" class="btn btn-success">添加标品</a>
+                            @endif
                         </form>
                     </div>
                 </header>
