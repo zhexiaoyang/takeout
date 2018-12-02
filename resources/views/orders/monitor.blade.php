@@ -135,6 +135,11 @@
                                                 <p class="comment" _v-1fbece8c="">
                                                     <span _v-1fbece8c="">门店：</span>{{$order->shop->name}}
                                                 </p>
+                                                @if($order->caution)
+                                                    <p class="comment" _v-1fbece8c="" style="color: red; font-weight: 800;font-size: 14px">
+                                                        <span _v-1fbece8c="" style="color: red; font-weight: 800;font-size: 14px">备注：</span>{{$order->caution}}
+                                                    </p>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="ft" _v-1fbece8c="">

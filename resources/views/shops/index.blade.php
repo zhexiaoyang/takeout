@@ -56,6 +56,9 @@
                         <th>地址</th>
                         <th>美团</th>
                         <th>系数</th>
+                        @if(Auth::user()->hasRole('Superman'))
+                            <th>配送方式</th>
+                        @endif
                         <th>编辑</th>
                     </tr>
                     </thead>
@@ -83,6 +86,16 @@
                                 <td>{{$shop->address}}</td>
                                 <td>{{$shop->meituan_id}}</td>
                                 <td>{{$shop->detail->coefficient or 15}}</td>
+
+                                @if(Auth::user()->hasRole('Superman'))
+                                    <td>
+                                        @if($shop->dc)
+                                            自配送
+                                        @else
+                                            美团配送
+                                        @endif
+                                    </td>
+                                @endif
                                 <td>
                                     <a href="{{ route('shops.show', $shop->id) }}" class="btn btn-primary btn-xs">查看</a>
                                     @if(Auth::user()->hasPermissionTo('shop_edit'))
@@ -94,16 +107,29 @@
                                     @endif
 
 
-                                    @if(isset($shops_status[$shop->meituan_id]['open']))
-                                        @if($shops_status[$shop->meituan_id]['open'] === 1)
-                                            @if(Auth::user()->hasAnyRole(\Spatie\Permission\Models\Role::all()))
+                                    @if(Auth::user()->hasRole('Superman'))
+
+                                        @if($shop->dc == 1)
+                                            <form action="{{ route('shops.psmt', $shop->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认修改成美团配送么？')">
+                                                {{ csrf_field() }}
+                                                <button type="submit" class="btn btn-primary btn-xs">美团配送</button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('shops.psyd', $shop->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认修改成自配送么？')">
+                                                {{ csrf_field() }}
+                                                <button type="submit" class="btn btn-primary btn-xs">自配送</button>
+                                            </form>
+                                        @endif
+                                    @endif
+
+                                    @if(Auth::user()->hasAnyRole(\Spatie\Permission\Models\Role::all()))
+                                        @if(isset($shops_status[$shop->meituan_id]['open']))
+                                            @if($shops_status[$shop->meituan_id]['open'] === 1)
                                                 <form action="{{ route('shops.close', $shop->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认休息么？')">
                                                     {{ csrf_field() }}
                                                     <button type="submit" class="btn btn-primary btn-xs">休息</button>
                                                 </form>
-                                            @endif
-                                        @else
-                                            @if(Auth::user()->hasAnyRole(\Spatie\Permission\Models\Role::all()))
+                                            @else
                                                 <form action="{{ route('shops.open', $shop->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认开店营业么？')">
                                                     {{ csrf_field() }}
                                                     <button type="submit" class="btn btn-primary btn-xs">营业</button>

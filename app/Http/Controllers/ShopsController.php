@@ -24,7 +24,7 @@ class ShopsController extends Controller
     public function index(Request $request)
 	{
         $keyword = $request->keyword;
-        $shops = Shop::allowShops()->select('id','name', 'address','ele_id','baidu_id','meituan_id');
+        $shops = Shop::allowShops()->select('id','name', 'address','ele_id','baidu_id','meituan_id','dc');
         if ($keyword)
         {
             $shops = $shops->where('name','like',"%{$keyword}%");
@@ -331,6 +331,28 @@ class ShopsController extends Controller
         }else{
             $error = isset($result['error']['msg'])?$result['error']['msg']:'请求接口错误';
             return back()->withErrors($error);
+        }
+    }
+
+    public function psmt(Shop $shop)
+    {
+
+        if ($shop->update(['dc' => 0]))
+        {
+            return redirect()->back()->with('alert', '操作成功！');
+        }else{
+            return back()->withErrors('操作失败');
+        }
+    }
+
+    public function psyd(Shop $shop)
+    {
+
+        if ($shop->update(['dc' => 1]))
+        {
+            return redirect()->back()->with('alert', '操作成功！');
+        }else{
+            return back()->withErrors('操作失败');
         }
     }
 }

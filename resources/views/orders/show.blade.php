@@ -54,17 +54,6 @@
 
     <div class="row">
         <div id="pageAudit" style="min-width: 1200px; overflow-x: auto;">
-            <div class="fix_message">
-                <span class="bg-grey-noButton1 mr10">#3 </span>
-                <span style="font-size: 17px" class="tags">
-                    <span>请于2018-05-02 15:06前送达</span>
-                </span>
-                <span class="moneys">
-                    <span>客户实付：
-                        <span style="color: #cc0000; font-size: 18px; font-weight: bold;">￥69.50</span>
-                    </span>
-                </span>
-            </div>
             <div class="common-page style-blue">
                 <!--按钮层-->
                 <div style="height: 35px;">
@@ -112,6 +101,10 @@
                                     <span style="color: #cc0000; font-size: 24px">￥{{ $order->total }}
                                     </span>
                                 </span>
+                            </li>
+
+                            <li style="width: 100%;">
+                                <span style="color: red;font-weight: 800;font-size: 16px;">备注：{{ $order->caution }}</span>
                             </li>
                         </ul>
                         <div class="t-menu-info">

@@ -38,6 +38,8 @@ Route::group(['middleware' => ['auth']], function ($router) {
     Route::get('shops/goodsOnline/{shop}', 'ShopsController@goodsOnline')->name('shops.goodsOnline');
     Route::post('shops/open/{shop}', 'ShopsController@open')->name('shops.open');
     Route::post('shops/close/{shop}', 'ShopsController@close')->name('shops.close');
+    Route::post('shops/psmt/{shop}', 'ShopsController@psmt')->name('shops.psmt');
+    Route::post('shops/psyd/{shop}', 'ShopsController@psyd')->name('shops.psyd');
 
     Route::resource('categories', 'CategoriesController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
     Route::resource('goods', 'GoodsController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
