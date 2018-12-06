@@ -8,7 +8,7 @@
     @for($i=0; $i<2; $i++)
     <div id="printTemplate">
         <div class="print-item f-l tl">
-            {{ $i===0?'商家联':'客户联' }}
+            #{{ $order->day_seq }}&nbsp;&nbsp;{{ $i===0?'商家联':'客户联' }}
         </div>
         <div class="print-item f-s tl">
             {{ $order->shop->name }}</div><div class="print-item f-s tl">下单时间：{{ $order->created_at }}</div><div class="print-item f-s tl">订单编号：{{ $order->order_id }}
