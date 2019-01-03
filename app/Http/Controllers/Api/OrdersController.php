@@ -134,24 +134,50 @@ class OrdersController extends Controller
             $this->log->save();
             $order_id = $request->get('order_id');
             $status = $request->get('logistics_status');
+            $dispatcher_name = urldecode($request->get('dispatcher_name'));
+            $dispatcher_mobile = $request->get('dispatcher_mobile');
             if ($status && $order_id)
             {
                 $order = Order::where('order_id', $order_id)->first();
                 if ($order)
                 {
+                    if ($status == 10)
+                    {
+                        $order->status = 6;
+                        $order->shipper_phone = $dispatcher_name . '(' .$dispatcher_mobile .')';
+                        $order->save();
+                        $log = new OrderLog();
+                        $log->order_id = $order_id;
+                        $log->message = '配送员正赶往商家';
+                        $log->operator = 'mt api status';
+                        $log->save();
+                    }
+                    if ($status == 15)
+                    {
+                        $order->status = 7;
+                        $order->shipper_phone = $dispatcher_name . '(' .$dispatcher_mobile .')';
+                        $order->save();
+                        $log = new OrderLog();
+                        $log->order_id = $order_id;
+                        $log->message = '配送员已到店';
+                        $log->operator = 'mt api status';
+                        $log->save();
+                    }
                     if ($status == 20)
                     {
                         $order->status = 8;
+                        $order->shipper_phone = $dispatcher_name . '(' .$dispatcher_mobile .')';
                         $order->save();
-                    $log = new OrderLog();
-                    $log->order_id = $order_id;
-                    $log->message = '订单配送中';
-                    $log->operator = 'mt api status';
-                    $log->save();
+                        $log = new OrderLog();
+                        $log->order_id = $order_id;
+                        $log->message = '订单配送中';
+                        $log->operator = 'mt api status';
+                        $log->save();
                     }
                     if ($status == 40)
                     {
                         $order->status = 33;
+                        $order->shipper_phone = $dispatcher_name . '(' .$dispatcher_mobile .')';
                         $order->save();
                     $log = new OrderLog();
                     $log->order_id = $order_id;

@@ -23,7 +23,7 @@ class OrdersController extends Controller
     {
         $status = $request->status;
         $keyword = $request->keyword;
-        $orders = Order::allowShops()->with('shop')->select('id','order_id','shop_id','created_at', 'delivery_time', 'recipient_address','recipient_phone','recipient_name','caution','total', 'status', 'apply_cancel', 'apply_refund', 'refund_money');
+        $orders = Order::allowShops()->with('shop')->select('id','order_id','shop_id','created_at', 'delivery_time', 'recipient_address','recipient_phone','recipient_name','caution','total', 'status', 'apply_cancel', 'apply_refund', 'refund_money', 'shipper_phone');
         if ($keyword)
         {
             $orders = $orders->where('order_id','like',"%{$keyword}%")->orWhere('recipient_name', 'like', "%{$keyword}%")->orWhere('recipient_phone', 'like', "%{$keyword}%");
