@@ -122,7 +122,7 @@
                                         @endif
                                     @endif
 
-                                    @if(Auth::user()->hasAnyRole(\Spatie\Permission\Models\Role::all()))
+                                    {{--@if(Auth::user()->hasAnyRole(\Spatie\Permission\Models\Role::all()))--}}
                                         @if(isset($shops_status[$shop->meituan_id]['open']))
                                             @if($shops_status[$shop->meituan_id]['open'] === 1)
                                                 <form action="{{ route('shops.close', $shop->id) }}" method="post" style="display: inline" onsubmit="return alert(this, '确认休息么？')">
@@ -136,7 +136,7 @@
                                                 </form>
                                             @endif
                                         @endif
-                                    @endif
+                                    {{--@endif--}}
 
                                     @if(0)
                                         <a href="{{ route('shops.goods', $shop->id) }}" class="btn btn-primary btn-xs">清空</a>
