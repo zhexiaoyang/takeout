@@ -147,6 +147,7 @@ class GoodsController extends Controller
 
     public function file(Request $request)
     {
+        set_time_limit(300);
         $file = $request->goods;
         $shop_id = $request->shop_id;
         $shop = Shop::where(['id' => $shop_id])->first();
