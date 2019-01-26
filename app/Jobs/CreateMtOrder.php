@@ -56,6 +56,7 @@ class CreateMtOrder implements ShouldQueue
                 'total' => $data['total'],
                 'original_price' => $data['original_price'],
                 'shipping_fee' => $data['shipping_fee'],
+                'package_bag_money' => $data['package_bag_money']/100,
                 'caution' => urldecode($data['caution']),
                 'has_invoiced' => $data['has_invoiced'],
                 'invoice_title' => urldecode($data['invoice_title']),
