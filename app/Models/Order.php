@@ -6,7 +6,7 @@ use Auth;
 
 class Order extends Model
 {
-    protected $fillable = ['order_id', 'wm_order_id_view', 'app_poi_code', 'wm_poi_name', 'wm_poi_address', 'wm_poi_phone', 'recipient_address', 'recipient_phone', 'recipient_name', 'shipping_fee', 'total', 'original_price', 'caution', 'shipper_phone', 'status', 'city_id', 'has_invoiced', 'invoice_title', 'taxpayer_id', 'ctime', 'utime', 'delivery_time', 'is_third_shipping', 'pay_type', 'pick_type', 'latitude', 'longitude', 'day_seq', 'is_favorites', 'is_poi_first_order', 'dinners_number', 'logistics_code'];
+    protected $fillable = ['order_id', 'wm_order_id_view', 'app_poi_code', 'wm_poi_name', 'wm_poi_address', 'wm_poi_phone', 'recipient_address', 'recipient_phone', 'recipient_name', 'shipping_fee', 'total', 'original_price', 'caution', 'shipper_phone', 'status', 'city_id', 'has_invoiced', 'invoice_title', 'taxpayer_id', 'ctime', 'utime', 'delivery_time', 'is_third_shipping', 'pay_type', 'pick_type', 'latitude', 'longitude', 'day_seq', 'is_favorites', 'is_poi_first_order', 'dinners_number', 'logistics_code', 'package_bag_money'];
 
     public function shop()
     {
@@ -48,9 +48,9 @@ class Order extends Model
         $shop = Shop::where(['id' => $shop_id])->first();
         if ($shop->dc)
         {
-            $earnings += ($order['total'] - $order['refund_money']);
+            $earnings += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
         }else{
-            $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee']);
+            $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee'] - $order['package_bag_money']);
         }
         $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
         if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
@@ -75,9 +75,9 @@ class Order extends Model
         $shop = Shop::where(['id' => $shop_id])->first();
         if ($shop->dc)
         {
-            $earnings += ($order['total'] - $order['refund_money']);
+            $earnings += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
         }else{
-            $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee']);
+            $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee'] - $order['package_bag_money']);
         }
         $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
         if (!empty($arr) && !empty($arr['actOrderChargeByMt']))

@@ -257,7 +257,7 @@
                                     <li>
                                         <span class="extra_msg_box">
                                             <span class="extra_msg_width_tip">商品金额</span>
-                                            <span class="extra_tips_right">￥{{ $order->original_price - $order->shipping_fee }}
+                                            <span class="extra_tips_right">￥{{ $order->original_price - $order->shipping_fee - $order->package_bag_money }}
                                             </span>
                                          </span>
                                     </li>

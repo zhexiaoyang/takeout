@@ -54,12 +54,12 @@ class BillController extends Controller
             $dc = $shop->dc;
             foreach ($orders as $order)
             {
-                $sale_amount += ($order['total'] - $order['refund_money']);
+                $sale_amount += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
                 if ($dc)
                 {
-                    $earnings += ($order['total'] - $order['refund_money']);
+                    $earnings += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
                 }else{
-                    $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee']);
+                    $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee'] - $order['package_bag_money']);
                 }
                 $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
                 if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
@@ -96,12 +96,12 @@ class BillController extends Controller
             {
                 foreach ($orders as $order)
                 {
-                    $sale_amount += ($order['total'] - $order['refund_money']);
+                    $sale_amount += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
                     if ($dc)
                     {
-                        $earnings += ($order['total'] - $order['refund_money']);
+                        $earnings += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
                     }else{
-                        $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee']);
+                        $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee'] - $order['package_bag_money']);
                     }
                     $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
                     if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
@@ -133,7 +133,7 @@ class BillController extends Controller
 
     public function getOrders($shop_id)
     {
-        return Order::select('poi_receive_detail','shipping_fee','original_price', 'shipping_fee','total', 'refund_money')->where('shop_id',$shop_id)->where('status','>',30)->where('created_at', '>=', $this->start_time)->where('created_at', '<', $this->end_time)->get()->toArray();
+        return Order::select('poi_receive_detail','shipping_fee','original_price', 'shipping_fee','total', 'refund_money', 'package_bag_money')->where('shop_id',$shop_id)->where('status','>',30)->where('created_at', '>=', $this->start_time)->where('created_at', '<', $this->end_time)->get()->toArray();
     }
 
     public function getCoefficient($shop_id)
