@@ -74,7 +74,7 @@
                                 <a target="_blank" href="{{route('orders.show', $order->id)}}">{{$order->order_id}}</a>
                             </td>
                             <td>{{$order->shop->name}}</td>
-                            <td>{{$order->total}}</td>
+                            <td>{{$order->total - $order->package_bag_money}}</td>
                             @if(Auth::user()->hasAnyRole(\Spatie\Permission\Models\Role::all()))
                             <td>{{$order->refund_money}}</td>
                             <td>{{$order->earnings($order->id)}}</td>
