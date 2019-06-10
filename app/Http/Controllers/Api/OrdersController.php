@@ -262,6 +262,18 @@ class OrdersController extends Controller
                     $log->operator = 'mt api rebates';
                     $log->save();
                 }
+                if ($order && $notify_type == 'part')
+                {
+                    $order->apply_refund = 1;
+                    $order->refund_money = $money;
+                    $order->refund_at =  date("Y-m-d H:i:s");
+                    $order->save();
+                    $log = new OrderLog();
+                    $log->order_id = $order_id;
+                    $log->message = '客户申请部分退款。金额：'.$money.'原因：'.$reason;
+                    $log->operator = 'mt api rebates';
+                    $log->save();
+                }
                 if ($order && $notify_type == 'cancelRefund')
                 {
                     $order->apply_refund = 0;
