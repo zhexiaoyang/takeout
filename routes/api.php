@@ -29,4 +29,6 @@ $api->version('v1', [
     $api->post('orderPrivacy', 'OrdersController@privacy')->name('api.order.privacy');
 //    催单推送URL
     $api->post('orderReminder', 'OrdersController@reminder')->name('api.order.reminder');
+//    队列
+    $api->get('leng', 'QueueNumber@leng')->name('api.queue.leng');
 });
