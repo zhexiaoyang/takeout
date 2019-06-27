@@ -67,7 +67,7 @@ class RpcClient
         Log::alert($log_id."|request: " . json_encode($params, JSON_UNESCAPED_UNICODE));
         $ch = curl_init();
         $this_header = array(
-            "Content-type: multipart/form-data; charset=utf-8"
+            "Content-type: text/html; charset=utf-8"
         );
         curl_setopt ($ch,CURLOPT_HTTPHEADER,$this_header);
         curl_setopt ($ch, CURLOPT_URL, $url);
@@ -75,13 +75,21 @@ class RpcClient
         curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt ($ch, CURLOPT_TIMEOUT, 10);
         switch ($type){
-            case "GET" : curl_setopt($ch, CURLOPT_HTTPGET, true);break;
-            case "POST": curl_setopt($ch, CURLOPT_POST,true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS,$params);break;
-            case "PUT" : curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-            curl_setopt($ch, CURLOPT_POSTFIELDS,$params);break;
-            case "DELETE":curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-            curl_setopt($ch, CURLOPT_POSTFIELDS,$params);break;
+            case "GET" :
+                curl_setopt($ch, CURLOPT_HTTPGET, true);break;
+            case "POST":
+                $this_header = array(
+                    "Content-type: multipart/form-data; charset=utf-8"
+                );
+                curl_setopt ($ch,CURLOPT_HTTPHEADER,$this_header);
+                curl_setopt($ch, CURLOPT_POST,true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS,$params);break;
+            case "PUT" :
+                curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+                curl_setopt($ch, CURLOPT_POSTFIELDS,$params);break;
+            case "DELETE":
+                curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+                curl_setopt($ch, CURLOPT_POSTFIELDS,$params);break;
         }
         $response = curl_exec($ch);
 //        dd($response);
