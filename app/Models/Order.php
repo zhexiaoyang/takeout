@@ -38,6 +38,8 @@ class Order extends Model
 
     public function earnings($order_id)
     {
+
+        $sids = [780,746,767,762,760,746,747,740,742,743,736,710,711,408];
         $earnings = 0;
         $order = $this->find($order_id)->toArray();
         $shop_id = isset($order['shop_id'])?$order['shop_id']:0;
@@ -59,11 +61,16 @@ class Order extends Model
                 $earnings += $mt['moneyCent']/100;
             }
         }
+        if ($earnings <= 4 && in_array($shop_id, $sids))
+        {
+            $earnings = 0;
+        }
         return $earnings;
     }
 
     public function refunds($order_id)
     {
+        $sids = [780,746,767,762,760,746,747,740,742,743,736,710,711,408];
         $earnings = 0;
         $coefficient = 15;
         $order = $this->find($order_id)->toArray();
@@ -85,6 +92,11 @@ class Order extends Model
             foreach ($arr['actOrderChargeByMt'] as $mt) {
                 $earnings += $mt['moneyCent']/100;
             }
+        }
+
+        if ($earnings <= 4 && in_array($shop_id, $sids))
+        {
+            $earnings = 0;
         }
 
         $shop_detail = ShopDetail::where(['shop_id' => $shop_id])->first();

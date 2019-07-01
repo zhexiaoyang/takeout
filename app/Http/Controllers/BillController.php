@@ -85,6 +85,7 @@ class BillController extends Controller
         $this->setTime($bill_id);
         $shops = Shop::select('id', 'name', 'dc')->where('id','>=', 100)->get()->toArray();
         $data = [];
+        $sids = [780,746,767,762,760,746,747,740,742,743,736,710,711,408];
         foreach ($shops as $shop) {
             $coefficient = $this->getCoefficient($shop['id']);
             $bill_id = date("Ymd",strtotime($this->start_time)).date("d",strtotime($this->end_time) - 3600*24).sprintf("%04d",$shop['id']);
@@ -113,6 +114,10 @@ class BillController extends Controller
                 }
             }
 //            echo $bill_id.'   门店ID：'.$shop['id'].'   门店订单数：'.count($orders).'    总金额：'.$sale_amount.'   '.$shop['name']."\n";
+            if ($earnings <= 4 && in_array($shop['id'], $sids))
+            {
+                $earnings = 0;
+            }
             $_arr['remit_id'] = $bill_id;
             $_arr['shop_id'] = $shop['id'];
             $_arr['shop_name'] = $shop['name'];
