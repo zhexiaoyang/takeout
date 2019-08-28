@@ -90,11 +90,11 @@ class UsersController extends Controller
     {
         $this->authorize('before', User::class);
 
-        $user->password = substr($user->phone, -6);
+        $user->password = '654321';
 
         $user->save();
 
-        return redirect()->route('users.index')->with('alert', '重置成功,新密码为手机号后6位！');
+        return redirect()->route('users.index')->with('alert', '重置成功');
     }
 
     public function getReset(User $user)

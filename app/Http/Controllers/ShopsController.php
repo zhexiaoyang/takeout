@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Deopt;
 use App\Models\Good;
 use App\Models\Shop;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ShopRequest;
@@ -27,7 +28,7 @@ class ShopsController extends Controller
         $shops = Shop::allowShops()->select('id','name', 'address','ele_id','baidu_id','meituan_id','dc');
         if ($keyword)
         {
-            $shops = $shops->where('name','like',"%{$keyword}%");
+            $shops = $shops->where('name','like',"%{$keyword}%")->orWhere('meituan_id','like',"%{$keyword}%");
         }
         $shops = $shops->orderBy('id','DESC')->paginate(10);
         $shop_ids = [];
@@ -202,10 +203,14 @@ class ShopsController extends Controller
                             'app_brand_code' => $shop['app_brand_code']==null?'':$shop['app_brand_code'],
                             'mt_type_id' => $shop['mt_type_id']==null?0:$shop['app_brand_code'],
                         ];
-//                dd($info);
+
                         if ($info['meituan_id'] && Shop::create($info))
                         {
                             $result[] = $shop['app_poi_code'].':创建成功';
+                            $user = new User();
+                            $user->name = 'yjt'.$shop['app_poi_code'];
+                            $user->password = bcrypt('654321');
+                            $user->save();
                         }else{
                             $result[] = $shop['app_poi_code'].':创建失败';
                         }
