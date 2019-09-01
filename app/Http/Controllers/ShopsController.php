@@ -204,13 +204,15 @@ class ShopsController extends Controller
                             'mt_type_id' => $shop['mt_type_id']==null?0:$shop['app_brand_code'],
                         ];
 
-                        if ($info['meituan_id'] && Shop::create($info))
+                        if ($info['meituan_id'] && ($shop_res = Shop::create($info)))
                         {
                             $result[] = $shop['app_poi_code'].':创建成功';
                             $user = new User();
                             $user->name = 'yjt'.$shop['app_poi_code'];
                             $user->password = bcrypt('654321');
-                            $user->save();
+                            if ($user->save()) {
+                                $user->shops()->attach($shop_res->id);
+                            }
                         }else{
                             $result[] = $shop['app_poi_code'].':创建失败';
                         }
