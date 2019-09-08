@@ -55,7 +55,9 @@
                         <th>状态</th>
                         <th>地址</th>
                         <th>美团</th>
-                        <th>系数</th>
+                        @if(Auth::user()->hasRole('Finance') || Auth::user()->hasRole('Superman'))
+                            <th>系数</th>
+                        @endif
                         @if(Auth::user()->hasRole('Superman'))
                             <th>配送方式</th>
                         @endif
@@ -85,7 +87,9 @@
                                 </td>
                                 <td>{{$shop->address}}</td>
                                 <td>{{$shop->meituan_id}}</td>
+                                @if(Auth::user()->hasRole('Finance') || Auth::user()->hasRole('Superman'))
                                 <td>{{$shop->detail->coefficient or 15}}</td>
+                                @endif
 
                                 @if(Auth::user()->hasRole('Superman'))
                                     <td>

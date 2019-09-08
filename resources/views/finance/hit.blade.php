@@ -70,10 +70,13 @@
                             {{--<div class="col-lg-1">--}}
                                 {{--<button type="submit" class="btn btn-warning">清空</button>--}}
                             {{--</div>--}}
-                            <div class="col-lg-2">
+                            <div class="col-lg-1">
                                 <span type="submit" class="btn btn-success" onclick="bills()">批量打款</span>
                             </div>
                             @if(Auth::user()->hasAnyRole(\Spatie\Permission\Models\Role::all()))
+                            <div class="col-lg-2">
+                                <span type="submit" class="btn btn-danger" onclick="resetp()">批量重新生成</span>
+                            </div>
                             <div class="col-lg-1">
                                 <a href="{{ route('finance.hitexport',['keyword' => $keyword,'status' => $status,'shop_id' => $shop_id,'stime' => $stime,'etime' => $etime]) }}" class="btn btn-info" onclick="if(confirm('确认导出当前查询数据么？')==false)return false;">导出</a>
                             </div>
@@ -184,6 +187,73 @@
                     }
                 });
             return false;
+        }
+
+        function resetp() {
+
+            var shop_id = '';
+
+            $(".hit:checkbox:checked").each(function () {
+                shop_id = $(this).attr('shop_id');
+            })
+
+            if (shop_id == '')
+            {
+                swal("请选择需要重新生成的账单");
+                return;
+            }else{
+                swal({
+                        title: '确定重新生成账单',
+                        text: "",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定！",
+                        cancelButtonText: "取消！",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                },
+                function(isConfirm){
+                    if (isConfirm) {
+                        var bids = new Array();
+                        var i=0;
+                        $(".hit:checkbox:checked").each(function(){
+                            // console.log($(this).val());
+                            bids[i++] = $(this).val();
+                        });
+                        $.post("{{ route('bill.resetAll') }}", {'bids':bids,'_token': $('meta[name="csrf-token"]').attr('content')}, function (res) {
+                            if (res.code == 0)
+                            {
+                                swal({
+                                    title: "重新生成成功",
+                                    type: "success",
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                }, function () {
+                                    setTimeout(function () {
+                                        history.go(0)
+                                    },500)
+                                });
+                            }else{
+                                swal({
+                                    title: "重新生成失败",
+                                    type: "error",
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+                            }
+                        })
+                    } else {
+                        swal("操作被取消!", "","error");
+                        swal({
+                            title: "操作被取消！",
+                            type: "error",
+                            timer: 1000,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            }
         }
 
         function bills() {

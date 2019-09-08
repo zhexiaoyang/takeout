@@ -66,6 +66,7 @@ Route::group(['middleware' => ['auth']], function ($router) {
     Route::get('finance/sales', 'FinanceController@sales')->name('finance.sales');
 
     Route::post('bill/reset/{remits}', 'BillController@reset')->name('bill.reset');
+    Route::post('bill/resetAll', 'BillController@resetAll')->name('bill.resetAll');
     Route::post('bill/status/{remits}', 'BillController@status')->name('bill.status');
     Route::post('bill/updates', 'BillController@updates')->name('bill.updates');
 

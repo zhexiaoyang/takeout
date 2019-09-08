@@ -39,7 +39,24 @@ class BillController extends Controller
         return response()->json($result);
     }
 
-    public function reset(Remits $remits)
+    public function resetAll(Request $request)
+    {
+        $result['code'] = 0;
+        $bids = $request->bids;
+        if (!empty($bids) && $remits = Remits::whereIn('id', $bids)->get() )
+        {
+            if (!empty($remits)) {
+                foreach ($remits as $remit) {
+                    if (!$this->reset($remit, 0)) {
+                        $result['code'] = 1000;
+                    }
+                }
+            }
+        }
+        return response()->json($result);
+    }
+
+    public function reset(Remits $remits, $red = 1)
     {
 //        dd($remits->remit_id);
         $this->setTime($remits->remit_id);
@@ -76,8 +93,13 @@ class BillController extends Controller
         $remits->fine = 0;
         $remits->return = $earnings * (1 - $coefficient/100);
         $remits->status = $sale_amount?0:1;
-        $remits->save();
-        return redirect()->back()->with('alert', '重置成功');
+        $res = $remits->save();
+
+        if ($red === 1) {
+            return redirect()->back()->with('alert', '重置成功');
+        }
+
+        return $res;
     }
 
     public function makeBill($bill_id = '')
