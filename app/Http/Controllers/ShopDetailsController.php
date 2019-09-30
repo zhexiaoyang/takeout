@@ -34,7 +34,42 @@ class ShopDetailsController extends Controller
 		return view('shop_details.create_and_edit', compact('shop', 'shop_detail'));
 	}
 
-	public function store(ShopDetailRequest $request)
+    public function createMany($shop_ids)
+    {
+        if ($shop_ids) {
+            $shops = Shop::whereIn("id", explode(",", $shop_ids))->get();
+            return view('shop_details.create_many', compact('shops', 'shop_ids'));
+        }
+    }
+
+    public function saveMany(Request $request)
+    {
+//        dd($request->all());
+        $data = $request->only("opening_bank","username","account_number","is_invoice","type","name","number","coefficient");
+        $shop_ids = explode(",", $request->shop_ids);
+        if (!empty($shop_ids)) {
+            foreach ($shop_ids as $shop_id) {
+                if ($shop_detail = ShopDetail::where("shop_id", $shop_id)->first()) {
+                    $shop_detail->opening_bank = $data['opening_bank'];
+                    $shop_detail->username = $data['username'];
+                    $shop_detail->account_number = $data['account_number'];
+                    $shop_detail->is_invoice = $data['is_invoice'];
+                    $shop_detail->type = $data['type'];
+                    $shop_detail->name = $data['name'];
+                    $shop_detail->number = $data['number'];
+                    $shop_detail->coefficient = $data['coefficient'];
+                    $shop_detail->save();
+                } else {
+                    $_data = array_merge($data,['shop_id' => $shop_id]);
+                    ShopDetail::create($_data);
+                    unset($_data);
+                }
+            }
+        }
+        return redirect()->route('finance.hit')->with('message', '编辑成功');
+    }
+
+    public function store(ShopDetailRequest $request)
 	{
 		$shop_detail = ShopDetail::create($request->all());
 		return redirect()->route('shop_details.edit', $shop_detail->shop_id)->with('message', '创建成功');

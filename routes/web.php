@@ -74,5 +74,7 @@ Route::group(['middleware' => ['auth']], function ($router) {
     Route::get('ShopDetail/show/{shop_id}', 'ShopDetailsController@show')->name('shop_details.show');
     Route::get('ShopDetail/create/{shop_id}', 'ShopDetailsController@create')->name('shop_details.create');
     Route::get('ShopDetail/info/{shop_id?}', 'ShopDetailsController@info')->name('shop_details.info');
+    Route::get('ShopDetail/createMany/{shop_ids?}', 'ShopDetailsController@createMany')->name('shop_details.create_many');
+    Route::post('ShopDetail/storeMany', 'ShopDetailsController@saveMany')->name('shop_details.save_many');
 
 });

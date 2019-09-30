@@ -80,6 +80,9 @@
                             <div class="col-lg-1">
                                 <a href="{{ route('finance.hitexport',['keyword' => $keyword,'status' => $status,'shop_id' => $shop_id,'stime' => $stime,'etime' => $etime]) }}" class="btn btn-info" onclick="if(confirm('确认导出当前查询数据么？')==false)return false;">导出</a>
                             </div>
+                            <div class="col-lg-1">
+                                <span type="submit" class="btn btn-danger" onclick="makehao()">批量设置打款信息</span>
+                            </div>
                             @endif
                         </div>
                     </form>
@@ -161,6 +164,47 @@
             $(".close").click();
             return false;
         }
+        function makehao() {
+
+            var shop_id = [];
+
+            $(".hit:checkbox:checked").each(function () {
+                shop_id.push($(this).attr('shop_id'));
+            })
+
+            if (shop_id == '')
+            {
+                swal("请选择需要设置打款信息的账单");
+                return;
+            }else{
+                swal({
+                        title: '确定设置打款信息',
+                        text: "",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定！",
+                        cancelButtonText: "取消！",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                    function(isConfirm){
+                        if (isConfirm) {
+                            window.location.href="{{ route('shop_details.create_many') }}/"+shop_id.join(',')
+                        } else {
+                            swal("操作被取消!", "","error");
+                            swal({
+                                title: "操作被取消！",
+                                type: "error",
+                                timer: 1000,
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+            }
+        }
+
+
         function alert(obj, mes) {
             swal({
                     title: mes,
