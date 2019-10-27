@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Deopt;
 use App\Models\Good;
 use App\Models\Shop;
+use App\Models\ShopDetail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -14,6 +15,7 @@ use MeiTuanOpenApi\Api\CategoryService;
 use MeiTuanOpenApi\Api\GoodsService;
 use MeiTuanOpenApi\Api\ShopService;
 use MeiTuanOpenApi\Config\Config;
+use Excel;
 
 class ShopsController extends Controller
 {
@@ -43,7 +45,7 @@ class ShopsController extends Controller
             $data = json_decode($res, true);
             $shops_by_mt = $data['data'];
 //            dd($shops_by_mt);
-            if (!empty($shops_by_mt))
+            if (is_array($shops_by_mt) && !empty($shops_by_mt))
             {
                 foreach ($shops_by_mt as $v) {
                     $shops_status[$v['app_poi_code']]['line'] = (int)$v['is_online'] === 1 ? 1 : 0;
@@ -361,5 +363,76 @@ class ShopsController extends Controller
         }else{
             return back()->withErrors('操作失败');
         }
+    }
+
+    public function file(Request $request)
+    {
+        set_time_limit(300);
+        $file = $request->shops;
+        $result = [];
+
+        $folder_name = "uploads/goods/shops_" . date("Ym/d", time());
+        $upload_path = public_path() . '/' . $folder_name;
+        $extension = strtolower($file->getClientOriginalExtension()) ?: 'xls';
+        $filename = time() . '_' . str_random(10) . '.' . $extension;
+        $file->move($upload_path, $filename);
+        Excel::load($upload_path.'/'.$filename, function($reader)use($result) {
+            $reader->each(function($item)use($result) {
+                $data = $item->toArray();
+                if (!empty($data['id']) && !empty($data['ti']) && !empty($data['bank']) && !empty($data['user']) && !empty($data['number'])) {
+                    $_tmp = $data['id'] . '——' . ($data['name'] ?? '名称不存在') . ':';
+                    $shop = Shop::where("meituan_id", $data['id'])->first();
+                    if ($shop) {
+                        if (isset($shop->detail->id)) {
+                            $shop_detail = ShopDetail::where("id", $shop->detail->id)->first();
+                            $shop_detail->opening_bank = $data['bank'];
+                            $shop_detail->username = $data['user'];
+                            $shop_detail->account_number = $data['number'];
+                            $shop_detail->coefficient = $data['ti'];
+                            if ($shop_detail->save()) {
+                                $_tmp .= '打款信息-更新-成功';
+                            } else {
+                                $_tmp .= '打款信息-更新-失败';
+                            }
+                        } else {
+                            $shop_detail = new ShopDetail;
+                            $shop_detail->shop_id = $shop->id;
+                            $shop_detail->opening_bank = $data['bank'];
+                            $shop_detail->username = $data['user'];
+                            $shop_detail->account_number = $data['number'];
+                            $shop_detail->coefficient = $data['ti'];
+                            if ($shop_detail->save()) {
+                                $_tmp .= '打款信息-创建-成功';
+                            } else {
+                                $_tmp .= '打款信息-创建-失败';
+                            }
+                        }
+
+                        $type = $data['type'] ?? 0;
+
+                        if ($shop->dc != $type) {
+                            $shop->dc = $type;
+                            if ($shop->save()) {
+                                $_tmp .= ' | 是否美团配送：更新-成功';
+                            } else {
+                                $_tmp .= ' | 是否美团配送：更新-失败';
+                            }
+                        } else {
+                            $_tmp .= ' | 是否美团配送：暂无变化';
+                        }
+
+                        $result[] = $_tmp;
+
+                    } else {
+                        $result[] = $_tmp . '药店不存在';
+                    }
+                    if(!empty($result)) {
+                        foreach ($result as $item) {
+                            echo $item. "<br>";
+                        }
+                    }
+                }
+            });
+        });
     }
 }

@@ -45,6 +45,32 @@
                                 <button type="submit" class="btn btn-warning">同步药店</button>
                             </form>
                         @endif
+                        @if(Auth::user()->hasRole('Superman'))
+                            <a href="#myModal" data-toggle="modal" class="btn btn-danger">导入财务信息</a>
+                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                            <h4 class="modal-title">导入结算信息</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form role="form" action="{{ route('shops.file') }}" accept-charset="UTF-8" enctype="multipart/form-data" target="_blank" method="post">
+                                                {{ csrf_field() }}
+                                                <div class="form-group">
+                                                    <label for="exampleInputFile">选择文件</label>
+                                                    <input type="file" id="exampleInputFile3" name="shops">
+                                                    <span>美团配送：0，自配送：1</span>
+                                                    <br>
+                                                    <a href="{{ route('download.detail') }}" target="_blank">点击下载模板</a>
+                                                </div>
+                                                <button type="submit" class="btn btn-success" onclick="up_goods()">上传</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </header>
                 <table class="table table-striped table-advance table-hover">

@@ -60,6 +60,9 @@ Route::group(['middleware' => ['auth']], function ($router) {
     Route::get('download/excel', function() {
         return response()->download(storage_path('app/template.xls'), '上传商品模板.xls');
     })->name('download.excel');
+    Route::get('download/detail', function() {
+        return response()->download(storage_path('app/template2.xlsx'), '打款详情模板.xlsx');
+    })->name('download.detail');
 
     Route::get('finance/hit', 'FinanceController@hit')->name('finance.hit');
     Route::get('finance/hitexport', 'FinanceController@hitExport')->name('finance.hitexport');
@@ -76,5 +79,7 @@ Route::group(['middleware' => ['auth']], function ($router) {
     Route::get('ShopDetail/info/{shop_id?}', 'ShopDetailsController@info')->name('shop_details.info');
     Route::get('ShopDetail/createMany/{shop_ids?}', 'ShopDetailsController@createMany')->name('shop_details.create_many');
     Route::post('ShopDetail/storeMany', 'ShopDetailsController@saveMany')->name('shop_details.save_many');
+
+    Route::post('shops/file', 'ShopsController@file')->name('shops.file');
 
 });
