@@ -98,7 +98,7 @@
                             </li>
                             <li style="width: 20%;float: right; text-align: right; margin-right: 20px">
                                 <span style="font-size: 18px">客户实付：
-                                    <span style="color: #cc0000; font-size: 24px">￥{{ $order->total }}
+                                    <span style="color: #cc0000; font-size: 24px">￥{{ $order->total - $order->package_bag_money }}
                                     </span>
                                 </span>
                             </li>
@@ -293,7 +293,7 @@
                                     @endif
                                     <li>
                                         <span class="line">客户实付金额：&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <span style="color: #cc0000; font-size: 24px">￥{{ $order->total }}</span>
+                                            <span style="color: #cc0000; font-size: 24px">￥{{ $order->total - $order->package_bag_money }}</span>
                                         </span>
                                     </li>
                                 </ul>

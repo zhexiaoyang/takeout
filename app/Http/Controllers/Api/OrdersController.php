@@ -53,6 +53,12 @@ class OrdersController extends Controller
                     $log->message = '取消订单成功';
                     $log->operator = 'mt api cancel';
                     $log->save();
+			\Log::info("cancel-order-info",[$order->toArray()]);
+                    if (in_array($order->shop_id, [2346,1536,1877,1532,1495,825,970,968,984,969,978,2044])) {
+                            file_get_contents('http://psapi.625buy.com/api/order/cancel?type=1&order_id='.$order_id);
+			\Log::info("美全达取消订单", [$order->shop_id]);
+                    }
+		    //file_get_contents('http://psapi.625buy.com/api/order/sync?type=1&order_id='.$order_id;
                 }
             }
         }
@@ -207,7 +213,7 @@ class OrdersController extends Controller
     public function complete(Request $request)
     {
         $result = ['data' => 'ok'];
-        if (!empty($_GET))
+        if (!empty($_POST))
         {
             $this->log->api = 'api/orderComplete';
             $this->log->response = json_encode($result, JSON_UNESCAPED_UNICODE);

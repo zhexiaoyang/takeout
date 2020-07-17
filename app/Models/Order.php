@@ -39,54 +39,59 @@ class Order extends Model
     public function earnings($order_id)
     {
 
-        $sids = [780,746,767,762,760,746,747,740,742,743,736,710,711,408];
         $earnings = 0;
         $order = $this->find($order_id)->toArray();
         $shop_id = isset($order['shop_id'])?$order['shop_id']:0;
+
         if (!$shop_id)
         {
             return 0;
         }
+
         $shop = Shop::where(['id' => $shop_id])->first();
-        if ($shop->dc)
-        {
-            $earnings += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
-        }else{
-            $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee'] - $order['package_bag_money']);
-        }
+
         $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
+
         if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
         {
             foreach ($arr['actOrderChargeByMt'] as $mt) {
                 $earnings += $mt['moneyCent']/100;
             }
         }
-        if ($earnings <= 4 && in_array($shop_id, $sids))
-        {
-            $earnings = 0;
+
+        if ($shop->dc) {
+            $earnings += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
+        }else{
+            $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee'] - $order['package_bag_money']);
         }
+
         return $earnings;
     }
 
     public function refunds($order_id)
     {
-        $sids = [780,746,767,762,760,746,747,740,742,743,736,710,711,408];
         $earnings = 0;
         $coefficient = 15;
         $order = $this->find($order_id)->toArray();
         $shop_id = isset($order['shop_id'])?$order['shop_id']:0;
+        $returns = 0;
+
         if (!$shop_id)
         {
             return 0;
         }
+
         $shop = Shop::where(['id' => $shop_id])->first();
-        if ($shop->dc)
+
+        $shop_detail = ShopDetail::where(['shop_id' => $shop_id])->first();
+
+        if ($shop_detail && $shop_detail->coefficient)
         {
-            $earnings += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
-        }else{
-            $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee'] - $order['package_bag_money']);
+            $coefficient = $shop_detail->coefficient;
         }
+
         $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
+
         if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
         {
             foreach ($arr['actOrderChargeByMt'] as $mt) {
@@ -94,16 +99,23 @@ class Order extends Model
             }
         }
 
-        if ($earnings <= 4 && in_array($shop_id, $sids))
-        {
-            $earnings = 0;
+        if ($shop->dc) {
+            $earnings += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
+            $returns = $earnings * (1 - $coefficient/100);
+        }else{
+            $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee'] - $order['package_bag_money']);
+
+            if ( ($shop['id'] > 2494) || ($coefficient == 12) ) {
+                if ( ($earnings * $coefficient / 100) >= 4 ) {
+                    $returns = $earnings * (1 - $coefficient/100);
+                } else {
+                    $returns = $earnings - 4;
+                }
+            } else {
+                $returns = $earnings * (1 - $coefficient/100);
+            }
         }
 
-        $shop_detail = ShopDetail::where(['shop_id' => $shop_id])->first();
-        if ($shop_detail && $shop_detail->coefficient)
-        {
-            $coefficient = $shop_detail->coefficient;
-        }
-        return $earnings * (1 - $coefficient/100);
+        return $returns;
     }
 }

@@ -56,7 +56,8 @@ class CreateMtOrder implements ShouldQueue
                 'total' => $data['total'],
                 'original_price' => $data['original_price'],
                 'shipping_fee' => $data['shipping_fee'],
-                'package_bag_money' => $data['package_bag_money']/100,
+                //'package_bag_money' => $data['package_bag_money']/100,
+                'package_bag_money' => 0.5,
                 'caution' => urldecode($data['caution']),
                 'has_invoiced' => $data['has_invoiced'],
                 'invoice_title' => urldecode($data['invoice_title']),
@@ -131,6 +132,9 @@ class CreateMtOrder implements ShouldQueue
                 $log->message = '创建订单成功';
                 $log->operator = 'system';
                 $log->save();
+        	if (in_array($data['app_poi_code'], [9239455,8370242,8802698,8370262,8262745,7424267,7587302,7587304,7588884,7587305,7588883,8976885])) {
+            		file_get_contents('http://psapi.625buy.com/api/order/sync?type=1&order_id='.$data['order_id']);
+        	}
             }
         }
     }

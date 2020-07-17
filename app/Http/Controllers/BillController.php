@@ -65,33 +65,54 @@ class BillController extends Controller
         $orders = $this->getOrders($shop_id);
         $sale_amount = 0;
         $earnings = 0;
+        $earning_total = 0;
+        $returns = 0;
+        $return_total = 0;
         if (!empty($orders))
         {
             $shop = Shop::where(['id' => $shop_id])->first();
             $dc = $shop->dc;
             foreach ($orders as $order)
             {
-                $sale_amount += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
-                if ($dc)
-                {
-                    $earnings += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
-                }else{
-                    $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee'] - $order['package_bag_money']);
-                }
                 $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
+
                 if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
                 {
                     foreach ($arr['actOrderChargeByMt'] as $mt) {
                         $earnings += $mt['moneyCent']/100;
                     }
                 }
+
+                $sale_amount += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
+
+                if ($dc) {
+                    $earnings += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
+                    $returns = $earnings * (1 - $coefficient/100);
+                }else{
+                    $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee'] - $order['package_bag_money']);
+
+                    if ( ($shop['id'] > 2494) || ($coefficient == 12) ) {
+                        if ( ($earnings * $coefficient / 100) >= 4 ) {
+                            $returns = $earnings * (1 - $coefficient/100);
+                        } else {
+                            $returns = $earnings - 4;
+                        }
+                    } else {
+                        $returns = $earnings * (1 - $coefficient/100);
+                    }
+                }
+		\Log::info("重置账单",["order_id" => $order['order_id'], "return" => $returns]);
+                $return_total += $returns;
+                $earning_total += $earnings;
+                $earnings = 0;
+                $returns = 0;
             }
         }
         $remits->coefficient = $coefficient;
         $remits->sale_amount = $sale_amount;
-        $remits->earnings = $earnings;
+        $remits->earnings = $earning_total;
         $remits->fine = 0;
-        $remits->return = $earnings * (1 - $coefficient/100);
+        $remits->return = $return_total;
         $remits->status = $sale_amount?0:1;
         $res = $remits->save();
 
@@ -107,7 +128,7 @@ class BillController extends Controller
         $this->setTime($bill_id);
         $shops = Shop::select('id', 'name', 'dc')->where('id','>=', 100)->get()->toArray();
         $data = [];
-        $sids = [780,746,767,762,760,746,747,740,742,743,736,710,711,408];
+        // $sids = [780,746,767,762,760,746,747,740,742,743,736,710,711,408];
         foreach ($shops as $shop) {
             $coefficient = $this->getCoefficient($shop['id']);
             $bill_id = date("Ymd",strtotime($this->start_time)).date("d",strtotime($this->end_time) - 3600*24).sprintf("%04d",$shop['id']);
@@ -115,17 +136,13 @@ class BillController extends Controller
             $dc = $shop['dc'];
             $sale_amount = 0;
             $earnings = 0;
+            $earning_total = 0;
+            $returns = 0;
+	    $return_total = 0;
             if (!empty($orders))
             {
                 foreach ($orders as $order)
                 {
-                    $sale_amount += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
-                    if ($dc)
-                    {
-                        $earnings += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
-                    }else{
-                        $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee'] - $order['package_bag_money']);
-                    }
                     $arr = json_decode(trim(urldecode($order['poi_receive_detail']),'"'), true);
                     if (!empty($arr) && !empty($arr['actOrderChargeByMt']))
                     {
@@ -133,21 +150,44 @@ class BillController extends Controller
                             $earnings += $mt['moneyCent']/100;
                         }
                     }
+
+                    $sale_amount += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
+
+                    if ($dc) {
+                        $earnings += ($order['total'] - $order['refund_money'] - $order['package_bag_money']);
+                        $returns = $earnings * (1 - $coefficient/100);
+                    }else{
+                        $earnings += ($order['total'] - $order['refund_money'] - $order['shipping_fee'] - $order['package_bag_money']);
+
+                        if ( ($shop['id'] > 2494) || ($coefficient == 12) ) {
+                            if ( ($earnings * $coefficient / 100) >= 4 ) {
+                                $returns = $earnings * (1 - $coefficient/100);
+                            } else {
+                                $returns = $earnings - 4;
+                            }
+                        } else {
+                            $returns = $earnings * (1 - $coefficient/100);
+                        }
+                    }
+                    $return_total += $returns;
+                    $earning_total += $earnings;
+                    $earnings = 0;
+                    $returns = 0;
                 }
             }
 //            echo $bill_id.'   门店ID：'.$shop['id'].'   门店订单数：'.count($orders).'    总金额：'.$sale_amount.'   '.$shop['name']."\n";
-            if ($earnings <= 4 && in_array($shop['id'], $sids))
-            {
-                $earnings = 0;
-            }
+            // if ($earnings <= 4 && in_array($shop['id'], $sids))
+            // {
+            //     $earnings = 0;
+            // }
             $_arr['remit_id'] = $bill_id;
             $_arr['shop_id'] = $shop['id'];
             $_arr['shop_name'] = $shop['name'];
             $_arr['coefficient'] = $coefficient;
             $_arr['sale_amount'] = $sale_amount;
-            $_arr['earnings'] = $earnings;
+            $_arr['earnings'] = $earning_total;
             $_arr['fine'] = 0;
-            $_arr['return'] = $earnings * (1 - $coefficient/100);
+            $_arr['return'] = $return_total;
             $_arr['status'] = $sale_amount?0:1;
             $_arr['start_time'] = $this->start_time;
             $_arr['end_time'] = date("Y-m-d", strtotime($this->end_time) - 3600*24);
@@ -160,7 +200,7 @@ class BillController extends Controller
 
     public function getOrders($shop_id)
     {
-        return Order::select('poi_receive_detail','shipping_fee','original_price', 'shipping_fee','total', 'refund_money', 'package_bag_money')->where('shop_id',$shop_id)->where('status','>',30)->where('created_at', '>=', $this->start_time)->where('created_at', '<', $this->end_time)->get()->toArray();
+        return Order::select('order_id','poi_receive_detail','shipping_fee','original_price', 'shipping_fee','total', 'refund_money', 'package_bag_money')->where('shop_id',$shop_id)->where('status','>',30)->where('created_at', '>=', $this->start_time)->where('created_at', '<', $this->end_time)->get()->toArray();
     }
 
     public function getCoefficient($shop_id)

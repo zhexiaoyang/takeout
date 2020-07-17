@@ -106,8 +106,8 @@ class OrdersController extends Controller
         $res = $server->reject($order->order_id);
         if ( $res === true )
         {
-            $order->status = 25;
-            $order->save();
+//            $order->status = 25;
+//            $order->save();
             return redirect()->back()->with('alert', '拒绝退款成功！');
         }else{
             $error = isset($res['error']['msg'])?$res['error']['msg']:'操作失败';

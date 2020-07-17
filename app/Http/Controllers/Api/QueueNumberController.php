@@ -12,6 +12,6 @@ class QueueNumber extends Controller
      */
     public function leng()
     {
-        return Redis::keys();
+        return Redis::keys('');
     }
 }
